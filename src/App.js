@@ -19,6 +19,8 @@ export default class AppComponent extends React.Component {
   }
 
   componentDidMount() {
+    Notification.requestPermission();
+
     if (this.state.chat != null) return;
     const allChats = DataStore.getChats();
     if (allChats != null && allChats.length) {

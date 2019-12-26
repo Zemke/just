@@ -23,7 +23,6 @@ api.sendMessage = ({chat, from, to, body}) =>
     .add({chat, from, to, body, when: Date.now()});
 
 api.onMessage = (cb) => {
-  // todo web notification
   return firestore
     .collection('messages')
     .where('chat', 'in', api.getChats().filter(c => c.code).map(c => c.code))
@@ -34,10 +33,12 @@ api.onMessage = (cb) => {
           cb && cb({...doc.data(), id: doc.id}, doc.type)));
 };
 
-api.getChats = () => {
-  let items = window.localStorage.getItem("chats");
-  return items != null ? JSON.parse(items) : [];
-};
+function getItemOrDefault(key, theDefault) {
+  let items = window.localStorage.getItem(key);
+  return items != null ? JSON.parse(items) : theDefault;
+}
+
+api.getChats = () => getItemOrDefault("chats", []);
 
 api.addChat = ({name, code}) => {
   const chats = api.getChats();
@@ -45,6 +46,14 @@ api.addChat = ({name, code}) => {
   window.localStorage.setItem("chats", JSON.stringify(chats));
   return chats;
 };
+
+api.addDelivered = id => {
+  const delivereds = getItemOrDefault("delivereds", []);
+  delivereds.push(id);
+  window.localStorage.setItem("delivereds", JSON.stringify(delivereds));
+};
+
+api.getDelivereds = () => getItemOrDefault("delivereds", []);
 
 api.getMyName = () => window.localStorage.getItem('myName') || 'Kevin';
 

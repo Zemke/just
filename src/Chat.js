@@ -47,7 +47,12 @@ export default class AppComponent extends React.Component {
 
   componentDidMount() {
     // todo handle types (added, modified, removed)
-    DataStore.onMessage((message, type) =>
-      this.setState(state => ({messages: [...state.messages, message]})));
+    DataStore.onMessage((message, type) => {
+      if (DataStore.getDelivereds().indexOf(message.id) === -1) {
+        DataStore.addDelivered(message.id);
+        new Notification(message.from, {body: message.body});
+      }
+      this.setState(state => ({messages: [...state.messages, message]}));
+    });
   }
 }
