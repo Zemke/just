@@ -78,3 +78,6 @@ export default class AppComponent extends React.Component {
     );
   }
 }
+
+
+// todo localStorage data cannot be shared between devices.

@@ -49,7 +49,7 @@ export default class AppComponent extends React.Component {
               .map(message =>
                 <li key={message.id}>
                   chat: {message.chat}<br/>
-                  from: {message.from}<br/>
+                  from: {message.from}<br/> {/*todo map sender and receiver*/}
                   to: {message.to}<br/>
                   body: {message.body}<br/>
                   when: {message.when}
