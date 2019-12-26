@@ -11,9 +11,9 @@ export default class AppComponent extends React.Component {
   onSubmit = async e => {
     e.preventDefault();
     const payload = {
-      chat: 'epicChatId',
-      from: 'me',
-      to: 'lea',
+      chat: this.props.chat.code,
+      from: DataStore.getMyName(),
+      to: this.props.chat.name,
       body: this.state.field
     };
     await DataStore.sendMessage(payload);

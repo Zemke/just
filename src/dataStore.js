@@ -23,9 +23,10 @@ api.sendMessage = ({chat, from, to, body}) =>
     .add({chat, from, to, body, when: Date.now()});
 
 api.onMessage = (cb) => {
-  // todo only the user's chats
+  // todo web notification
   return firestore
     .collection('messages')
+    .where('chat', 'in', api.getChats().filter(c => c.code).map(c => c.code))
     .onSnapshot(snapshot =>
       snapshot
         .docChanges()
@@ -44,5 +45,7 @@ api.addChat = ({name, code}) => {
   window.localStorage.setItem("chats", JSON.stringify(chats));
   return chats;
 };
+
+api.getMyName = () => window.localStorage.getItem('myName') || 'Kevin';
 
 export default api;

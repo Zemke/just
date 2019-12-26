@@ -22,7 +22,7 @@ export default class AppComponent extends React.Component {
     if (this.state.chat != null) return;
     const allChats = DataStore.getChats();
     if (allChats != null && allChats.length) {
-      this.setState({chats: allChats[0]});
+      this.setState({chat: allChats[0]});
     }
   }
 }
