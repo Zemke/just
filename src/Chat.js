@@ -4,7 +4,7 @@ import DataStore from './dataStore';
 
 export default class AppComponent extends React.Component {
 
-  state = {field: '', messages: []};
+  state = {field: '', messages: [], chats: []};
 
   onChange = async val => this.setState({field: val});
 
@@ -24,17 +24,31 @@ export default class AppComponent extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
+          <button onClick={this.props.goToCreateChat}>Create</button>
+          <select onChange={e => this.props.goToChat(JSON.parse(e.target.value))}>
+            <option defaultValue>Select chat</option>
+            {this.state.chats.map(chat =>
+              <option key={chat.code}
+                      value={JSON.stringify(chat)}>
+                {chat.name}
+              </option>
+            )}
+          </select>
           <h1>Just</h1>
           <form onSubmit={e => this.onSubmit(e)}>
             <input onChange={e => this.onChange(e.target.value)}
                    value={this.state.field}/>
           </form>
 
+          {this.props.chat.code}
+
           <ul>
             {this.state.messages
-              .sort((a, b) => a - b)
+              .sort((c1, c2) => c1 - c2)
+              .filter(c => c.chat === this.props.chat.code)
               .map(message =>
                 <li key={message.id}>
+                  chat: {message.chat}<br/>
                   from: {message.from}<br/>
                   to: {message.to}<br/>
                   body: {message.body}<br/>
@@ -56,5 +70,7 @@ export default class AppComponent extends React.Component {
       }
       this.setState(state => ({messages: [...state.messages, message]}));
     });
+
+    this.setState({chats: DataStore.getChats()});
   }
 }

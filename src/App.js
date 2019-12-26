@@ -12,7 +12,9 @@ export default class AppComponent extends React.Component {
 
   render() {
     if (this.state.chat != null) {
-      return <Chat chat={this.state.chat}/>;
+      return <Chat chat={this.state.chat}
+                   goToCreateChat={() => this.setState({chat: null})}
+                   goToChat={chat => this.setState({chat})}/>;
     }
 
     return <Create goToChat={id => this.goToChat(id)}/>;
