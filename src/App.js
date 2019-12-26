@@ -1,26 +1,26 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import DataStore from './dataStore';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class AppComponent extends React.Component {
+
+  state = {field: ''};
+
+  onChange = async () => {
+    await DataStore.sendMessage(this.state.field);
+    this.setState({field: ''});
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1>Just</h1>
+          <form>
+            <input onChange={this.onChange} value={this.state.field}/>
+          </form>
+        </header>
+      </div>
+    );
+  }
 }
-
-export default App;
