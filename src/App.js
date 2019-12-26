@@ -4,10 +4,19 @@ import DataStore from './dataStore';
 
 export default class AppComponent extends React.Component {
 
-  state = {field: ''};
+  state = {field: '', messages: []};
 
-  onChange = async () => {
-    await DataStore.sendMessage(this.state.field);
+  onChange = async val => this.setState({field: val});
+
+  onSubmit = async e => {
+    e.preventDefault();
+    const payload = {
+      chat: 'epicChatId',
+      from: 'me',
+      to: 'lea',
+      body: this.state.field
+    };
+    await DataStore.sendMessage(payload);
     this.setState({field: ''});
   };
 
@@ -16,11 +25,29 @@ export default class AppComponent extends React.Component {
       <div className="App">
         <header className="App-header">
           <h1>Just</h1>
-          <form>
-            <input onChange={this.onChange} value={this.state.field}/>
+          <form onSubmit={e => this.onSubmit(e)}>
+            <input onChange={e => this.onChange(e.target.value)}
+                   value={this.state.field}/>
           </form>
+
+          <ul>
+            {this.state.messages.map(message =>
+              <li key={message.id}>
+                from: {message.from}<br/>
+                to: {message.to}<br/>
+                body: {message.body}<br/>
+                when: {message.when}
+              </li>
+            )}
+          </ul>
         </header>
       </div>
     );
+  }
+
+  componentDidMount() {
+    // todo handle types (added, modified, removed)
+    DataStore.onMessage((message, type) =>
+      this.setState(state => ({messages: [...state.messages, message]})));
   }
 }

@@ -1,10 +1,9 @@
 import * as firebase from "firebase/app";
-import "firebase/auth";
-// import "firebase/firestore";
-import "firebase/database";
-import "firebase/analytics";
+import "firebase/firestore";
 
-const firebaseConfig = {
+// todo auth
+
+firebase.initializeApp({
   apiKey: "AIzaSyCpeA-4i6sZalkiqjB3ks6u1__hO4E2o8U",
   authDomain: "just-pwa.firebaseapp.com",
   databaseURL: "https://just-pwa.firebaseio.com",
@@ -13,25 +12,24 @@ const firebaseConfig = {
   messagingSenderId: "389806956797",
   appId: "1:389806956797:web:18d5c9ae865eda5b51de94",
   measurementId: "G-8FFPRPW39V"
-};
+});
 
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
-const database = firebase.database();
-
-
+const firestore = firebase.firestore();
 const api = {};
 
-api.sendMessage = {
-  // todo
-};
+api.sendMessage = ({chat, from, to, body}) =>
+  firestore
+    .collection('messages')
+    .add({chat, from, to, body, when: Date.now()});
 
-api.getMessages = {
-  // todo
-};
-
-api.onMessage = {
-  // todo
+api.onMessage = (cb) => {
+  return firestore
+    .collection('messages')
+    .onSnapshot(snapshot =>
+      snapshot
+        .docChanges()
+        .forEach(({doc}) =>
+          cb && cb({...doc.data(), id: doc.id}, doc.type)));
 };
 
 export default api;
