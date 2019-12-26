@@ -9,7 +9,7 @@ export default class AppComponent extends React.Component {
 
   onAnotherPersonsCode = e => {
     e.preventDefault();
-    if (!this.state.nameOfChat) {
+    if (!this.state.nameOfChat.trim()) {
       alert("Please give a name to the chat so you know who you’re writing to.");
       return;
     }
