@@ -31,14 +31,16 @@ export default class AppComponent extends React.Component {
           </form>
 
           <ul>
-            {this.state.messages.map(message =>
-              <li key={message.id}>
-                from: {message.from}<br/>
-                to: {message.to}<br/>
-                body: {message.body}<br/>
-                when: {message.when}
-              </li>
-            )}
+            {this.state.messages
+              .sort((a, b) => a - b)
+              .map(message =>
+                <li key={message.id}>
+                  from: {message.from}<br/>
+                  to: {message.to}<br/>
+                  body: {message.body}<br/>
+                  when: {message.when}
+                </li>
+              )}
           </ul>
         </header>
       </div>
