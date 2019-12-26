@@ -23,6 +23,7 @@ api.sendMessage = ({chat, from, to, body}) =>
     .add({chat, from, to, body, when: Date.now()});
 
 api.onMessage = (cb) => {
+  // todo only the user's chats
   return firestore
     .collection('messages')
     .onSnapshot(snapshot =>
@@ -30,6 +31,18 @@ api.onMessage = (cb) => {
         .docChanges()
         .forEach(({doc}) =>
           cb && cb({...doc.data(), id: doc.id}, doc.type)));
+};
+
+api.getChats = () => {
+  let items = window.localStorage.getItem("chats");
+  return items != null ? JSON.parse(items) : [];
+};
+
+api.addChat = ({name, code}) => {
+  const chats = api.getChats();
+  chats.push({name, code});
+  window.localStorage.setItem("chats", JSON.stringify(chats));
+  return chats;
 };
 
 export default api;
