@@ -9,13 +9,16 @@ export default class AppComponent extends React.Component {
 
   onAnotherPersonsCode = e => {
     e.preventDefault();
+    if (!this.state.nameOfChat) {
+      alert("Please give a name to the chat so you know who you’re writing to.");
+      return;
+    }
     const payload = {
       code: this.state.anotherPersonsCode,
       name: this.state.nameOfChat
     };
     DataStore.addChat(payload);
     this.props.goToChat(payload.name);
-    // todo validate chat has name
   };
 
   render() {
