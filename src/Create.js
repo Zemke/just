@@ -21,7 +21,20 @@ export default class AppComponent extends React.Component {
     this.props.goToChat(payload.name);
   };
 
+  createChat = () => {
+    if (!this.state.nameOfChat.trim()) {
+      alert("Please give a name to the chat so you know who you’re writing to.");
+      return;
+    }
+    DataStore.addChat({
+      code: this.state.uuid,
+      name: this.state.nameOfChat
+    });
+  };
+
   render() {
+    // TODO Do this in a staged fashion.
+    //  First the name, then code enter or copy.
     return (
       <>
         <p>
@@ -55,6 +68,10 @@ export default class AppComponent extends React.Component {
             placeholder="Your comrade’s code"/>
           <button type="submit" value="Okay"/>
         </form>
+
+        <button onClick={this.createChat} type="button">
+          Use this button if you've shared your code.
+        </button>
 
         {/* todo Scan QR with camera */}
       </>
