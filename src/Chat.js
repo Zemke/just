@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import DataStore from './dataStore';
 import otherUser from "./otherUser";
+import Auth from "./auth";
 
 export default class AppComponent extends React.Component {
 
@@ -33,6 +34,11 @@ export default class AppComponent extends React.Component {
     await DataStore.deleteChatWithUser(this.state.otherUser);
   };
 
+  signOut = () =>
+    Auth
+      .signOut()
+      .then(() => this.props.signOut());
+
   render() {
     const otherUsers = this.props.messages
       .reduce((acc, m) => {
@@ -45,6 +51,7 @@ export default class AppComponent extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
+          <button onClick={this.signOut}>Sign out</button>
           <button onClick={this.deleteChat}>Delete</button>
           <button onClick={this.props.goToShareYourCode}>Share your code</button>
           <button onClick={this.props.goToEnterAnotherCode}>Enter another code</button>

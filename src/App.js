@@ -58,6 +58,7 @@ export default class AppComponent extends React.Component {
     if (this.state.messages && this.state.messages.length) {
       return <Chat messages={this.state.messages}
                    currentUser={this.state.currentUser}
+                   signOut={() => this.setState({currentUser: null, messages: []})}
                    goToEnterAnotherCode={this.enterAnotherCode}
                    goToShareYourCode={this.shareYourCode}/>
     }

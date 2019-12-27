@@ -34,4 +34,9 @@ api.onAuthStateChanged = cb =>
     .auth()
     .onAuthStateChanged(cb);
 
+api.signOut = () =>
+  firebase
+    .auth()
+    .signOut();
+
 export default api;
