@@ -14,16 +14,17 @@ firebase.initializeApp({
   measurementId: "G-8FFPRPW39V"
 });
 
-const firestore = firebase.firestore();
 const api = {};
 
 api.sendMessage = ({chat, from, to, body}) =>
-  firestore
+  firebase
+    .firestore()
     .collection('messages')
     .add({chat, from, to, body, when: Date.now()});
 
 api.onMessage = (cb) => {
-  return firestore
+  return firebase
+    .firestore()
     .collection('messages')
     .where('chat', 'in', api.getChats().filter(c => c.code).map(c => c.code))
     .onSnapshot(snapshot =>
