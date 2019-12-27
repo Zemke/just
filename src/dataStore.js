@@ -21,55 +21,32 @@ api.sendMessage = ({from, to, body}) =>
   firebase
     .firestore()
     .collection('messages')
-    .add({from, to, body, when: serverTimestamp()});
+    .add({from, to, body, users: [from, to], when: serverTimestamp()});
 
 const mapTimestamp = message => {
   message.when = message.when?.toMillis();
   return message;
 };
 
-const onMessage = (cb, fromOrTo, userUid) =>
+api.onMessage = async cb =>
   firebase
     .firestore()
     .collection('messages')
-    .where(fromOrTo, '==', userUid)
+    .where('users', 'array-contains', (await Auth.current()).uid)
     .onSnapshot(snapshot =>
       snapshot
         .docChanges()
         .forEach(({doc, type}) =>
           cb({...mapTimestamp(doc.data()), id: doc.id}, doc, type)));
 
-api.onMessage = cb =>
-  Auth
-    .current()
-    .then(user => {
-      // todo maybe store redundant array of both participating users
-      //  to have a contains where clause and only one listener.
-      onMessage(cb, "from", user.uid);
-      onMessage(cb, "to", user.uid);
-    });
-
-const getConversation = (userUidA, userUidB) =>
-  Promise
-    .all([
-      (firebase
-        .firestore()
-        .collection('messages')
-        .where('from', '==', userUidA)
-        .where('to', '==', userUidB)
-        .get()),
-      (firebase
-        .firestore()
-        .collection('messages')
-        .where('from', '==', userUidB)
-        .where('to', '==', userUidA)
-        .get())
-    ])
-    .then(res => res[0].docs.concat(...res[1].docs));
-
 api.deleteChatWithUser = async userUid =>
-  getConversation(userUid, (await Auth.current()).uid)
-    .then(docs => docs.forEach(doc => doc.ref.delete()));
+  firebase
+    .firestore()
+    .collection('messages')
+    .where('users', 'array-contains', userUid)
+    .where('users', 'array-contains', (await Auth.current()).uid)
+    .get()
+    .then(res => res.docs.forEach(doc => doc.ref.delete()));
 
 api.setDelivered = message =>
   message.update({delivered: true});
