@@ -35,9 +35,9 @@ export default class AppComponent extends React.Component {
     if (!this.state.currentUser) {
       return <SignIn/>
     } else if (this.state.enterAnotherCode) {
-      return <EnterAnotherCode/>
+      return <EnterAnotherCode currentUser={this.state.currentUser}/>
     } else if (this.state.shareYourCode) {
-      return <ShareYourCode/>
+      return <ShareYourCode currentUser={this.state.currentUser}/>
     }
 
     const otherUsers = (this.state.messages || [])

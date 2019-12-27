@@ -17,11 +17,11 @@ const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
 const api = {};
 
-api.sendMessage = ({chat, from, to, body}) =>
+api.sendMessage = ({from, to, body}) =>
   firebase
     .firestore()
     .collection('messages')
-    .add({chat, from, to, body, when: serverTimestamp()});
+    .add({from, to, body, when: serverTimestamp()});
 
 const onMessage = (cb, fromOrTo, userUid) =>
   firebase
