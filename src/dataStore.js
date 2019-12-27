@@ -1,8 +1,6 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 
-// todo auth
-
 firebase.initializeApp({
   apiKey: "AIzaSyCpeA-4i6sZalkiqjB3ks6u1__hO4E2o8U",
   authDomain: "just-pwa.firebaseapp.com",
