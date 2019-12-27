@@ -47,7 +47,8 @@ export default class AppComponent extends React.Component {
       <div className="App">
         <header className="App-header">
           <button onClick={this.deleteChat}>Delete</button>
-          {/*<button onClick={this.props.goToCreateChat}>Create</button>*/}
+          <button onClick={this.props.goToShareYourCode}>Share your code</button>
+          <button onClick={this.props.goToEnterAnotherCode}>Enter another code</button>
           <select onChange={e => this.setState({otherUser: e.target.value})}>
             <option defaultValue value={this.state.otherUser}>
               {this.state.otherUser}
