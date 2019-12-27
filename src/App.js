@@ -23,12 +23,27 @@ export default class AppComponent extends React.Component {
   shareYourCode = () =>
     this.setState({shareYourCode: true, enterAnotherCode: false});
 
-  onMessage = (message, doc) => {
-    if (message.to === this.state.currentUser.uid && !message.delivered) {
-      DataStore.setDelivered(doc.ref);
-      new Notification(message.from, {body: message.body});
+  onMessage = (message, doc, type) => {
+    if (type === 'added') {
+      if (message.to === this.state.currentUser.uid && !message.delivered) {
+        DataStore.setDelivered(doc.ref);
+        new Notification(message.from, {body: message.body});
+      }
+      this.setState(state => ({messages: [...state.messages, message]}));
+    } else if (type === 'removed') {
+      this.setState({
+        messages: this.state.messages
+          .filter(m => m.id === doc.id)
+      });
+    } else if (type === 'modified') {
+      this.setState({
+        messages: this.state.messages
+          .map(m => {
+            if (m.id !== message.id) return m;
+            return message;
+          })
+      });
     }
-    this.setState(state => ({messages: [...state.messages, message]}));
   };
 
   render() {

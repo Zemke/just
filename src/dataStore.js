@@ -36,9 +36,8 @@ const onMessage = (cb, fromOrTo, userUid) =>
     .onSnapshot(snapshot =>
       snapshot
         .docChanges()
-        .filter(({type}) => type === 'added')
-        .forEach(({doc}) =>
-          cb({...mapTimestamp(doc.data()), id: doc.id}, doc)));
+        .forEach(({doc, type}) =>
+          cb({...mapTimestamp(doc.data()), id: doc.id}, doc, type)));
 
 api.onMessage = cb =>
   Auth

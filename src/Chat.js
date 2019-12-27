@@ -31,7 +31,6 @@ export default class AppComponent extends React.Component {
       return;
     }
     await DataStore.deleteChatWithUser(this.state.otherUser);
-    // todo go to another chat or to start when there's no other chat
   };
 
   render() {
@@ -67,11 +66,11 @@ export default class AppComponent extends React.Component {
             .sort((c1, c2) => c2.when - c1.when)
             .map(message =>
               <div key={message.id}>
-                chat: {message.chat}<br/>
                 from: {message.from}<br/> {/*todo map sender and receiver*/}
                 to: {message.to}<br/>
                 body: {message.body}<br/>
-                when: {message.when}
+                when: {message.when}<br/>
+                delivered: {Boolean(message.delivered).toString()}
               </div>
             )}
         </header>
