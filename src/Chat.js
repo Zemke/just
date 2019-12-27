@@ -31,8 +31,7 @@ export default class AppComponent extends React.Component {
     if (!window.confirm("The chat will be irreversibly deleted. Are you sure?")) {
       return;
     }
-    await DataStore.deleteChatWithUser(
-      otherUser((await Auth.current()).uid, this.props.messages));
+    await DataStore.deleteChatWithUser(this.state.otherUser);
     // todo go to another chat or to start when there's no other chat
   };
 
