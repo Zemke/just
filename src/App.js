@@ -6,7 +6,6 @@ import Auth from "./auth";
 import EnterAnotherCode from "./EnterAnotherCode";
 import ShareYourCode from "./ShareYourCode";
 import Start from './Start';
-import otherUser from "./otherUser";
 import Chat from "./Chat";
 
 export default class AppComponent extends React.Component {
@@ -41,15 +40,9 @@ export default class AppComponent extends React.Component {
       return <ShareYourCode currentUser={this.state.currentUser}/>
     }
 
-    const otherUsers = (this.state.messages || [])
-      .map(m => otherUser(this.state.currentUser, [m]))
-      .reduce((prev, curr) => {
-        if (prev.indexOf(curr) === -1) prev.push(curr);
-        return curr;
-      }, []);
-
-    if (otherUsers.length) {
-      return <Chat otherUsers={otherUsers}/>
+    if (this.state.messages && this.state.messages.length) {
+      return <Chat messages={this.state.messages}
+                   currentUser={this.state.currentUser}/>
     }
 
     return <Start

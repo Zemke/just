@@ -23,6 +23,11 @@ api.sendMessage = ({from, to, body}) =>
     .collection('messages')
     .add({from, to, body, when: serverTimestamp()});
 
+const mapTimestamp = message => {
+  message.when = message.when?.toMillis();
+  return message;
+};
+
 const onMessage = (cb, fromOrTo, userUid) =>
   firebase
     .firestore()
@@ -31,8 +36,9 @@ const onMessage = (cb, fromOrTo, userUid) =>
     .onSnapshot(snapshot =>
       snapshot
         .docChanges()
-        .forEach(({doc, type}) =>
-          type === 'added' && cb({...doc.data(), id: doc.id}, doc)));
+        .filter(({type}) => type === 'added')
+        .forEach(({doc}) =>
+          cb({...mapTimestamp(doc.data()), id: doc.id}, doc)));
 
 api.onMessage = cb =>
   Auth
