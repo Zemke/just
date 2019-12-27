@@ -50,6 +50,7 @@ export default class SignInComponent extends React.Component {
               DataStore.removeSignInEmail();
               window.history.pushState(null, null, '/');
               this.setState({signedIn: result.user, isSignInLink: false});
+              this.props.signedIn(result.user);
             });
         } else {
           window.history.pushState(null, null, '/');

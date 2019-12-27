@@ -23,6 +23,19 @@ export default class AppComponent extends React.Component {
   shareYourCode = () =>
     this.setState({shareYourCode: true, enterAnotherCode: false});
 
+  onMessageSubscription = null;
+
+  signOut = () => {
+    this.setState({currentUser: null, messages: []});
+    this.onMessageSubscription && this.onMessageSubscription();
+  };
+
+  signIn = currentUser => {
+    this.setState({currentUser});
+    this.onMessageSubscription && this.onMessageSubscription();
+    this.onMessageSubscription = DataStore.onMessage(this.onMessage);
+  };
+
   onMessage = (message, doc, type) => {
     if (type === 'added') {
       if (message.to === this.state.currentUser.uid && !message.delivered) {
@@ -48,7 +61,7 @@ export default class AppComponent extends React.Component {
 
   render() {
     if (!this.state.currentUser) {
-      return <SignIn/>
+      return <SignIn signedIn={currentUser => this.signIn(currentUser)}/>
     } else if (this.state.enterAnotherCode) {
       return <EnterAnotherCode currentUser={this.state.currentUser}/>
     } else if (this.state.shareYourCode) {
@@ -58,7 +71,7 @@ export default class AppComponent extends React.Component {
     if (this.state.messages && this.state.messages.length) {
       return <Chat messages={this.state.messages}
                    currentUser={this.state.currentUser}
-                   signOut={() => this.setState({currentUser: null, messages: []})}
+                   signOut={this.signOut}
                    goToEnterAnotherCode={this.enterAnotherCode}
                    goToShareYourCode={this.shareYourCode}/>
     }
@@ -76,7 +89,11 @@ export default class AppComponent extends React.Component {
         Notification.requestPermission();
         this.setState(
           {currentUser},
-          () => DataStore.onMessage(this.onMessage));
+          () => this.onMessageSubscription = DataStore.onMessage(this.onMessage));
       });
+  }
+
+  componentWillUnmount() {
+    this.onMessageSubscription && this.onMessageSubscription();
   }
 }
