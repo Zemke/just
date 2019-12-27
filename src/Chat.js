@@ -21,10 +21,22 @@ export default class AppComponent extends React.Component {
     this.setState({field: ''});
   };
 
+  deleteChat = async () => {
+    if (!window.confirm("The chat will be irreversibly deleted. Are you sure?")) {
+      return;
+    }
+    const currentUserUid = (await Auth.current()).uid;
+    const otherUserUid = [this.state.messages[0].from, this.state.messages[0].to]
+      .filter(userUid => userUid !== currentUserUid)[0];
+    await DataStore.deleteChatWithUser(otherUserUid);
+    // todo go to another chat or to start when there's no other chat
+  };
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
+          <button onClick={this.deleteChat}>Delete</button>
           <button onClick={this.props.goToCreateChat}>Create</button>
           <select onChange={e => this.props.goToChat(JSON.parse(e.target.value))}>
             <option defaultValue>Select chat</option>
@@ -63,8 +75,7 @@ export default class AppComponent extends React.Component {
   }
 
   componentDidMount() {
-    // todo handle types (added, modified, removed)
-    DataStore.onMessage((message, type) => {
+    DataStore.onMessage(message => {
       if (DataStore.getDelivereds().indexOf(message.id) === -1) {
         DataStore.addDelivered(message.id);
         new Notification(message.from, {body: message.body});

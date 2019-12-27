@@ -40,6 +40,26 @@ api.onMessage = cb =>
       onMessage(cb, "to", user.uid);
     });
 
+const getConversation = (userUidA, userUidB) =>
+  Promise.all([
+    (firebase
+      .firestore()
+      .collection('messages')
+      .where('from', '==', userUidA)
+      .where('to', '==', userUidB)
+      .get()),
+    (firebase
+      .firestore()
+      .collection('messages')
+      .where('from', '==', userUidB)
+      .where('to', '==', userUidA)
+      .get())
+  ]);
+
+api.deleteChatWithUser = async userUid =>
+  getConversation(userUid, await Auth.current())
+    .then(docs => docs.forEach(doc => doc.ref.delete()));
+
 function getItemOrDefault(key, theDefault) {
   let items = window.localStorage.getItem(key);
   return items != null ? JSON.parse(items) : theDefault;
