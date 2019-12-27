@@ -40,11 +40,7 @@ export default class SignInComponent extends React.Component {
 
       Auth
         .signIn(DataStore.getSignInEmail())
-        .then(result => {
-          console.log(result);
-          debugger;
-          DataStore.removeSignInEmail();
-        })
+        .then(() => DataStore.removeSignInEmail())
         .catch(alert);
     }
   }
