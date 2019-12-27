@@ -39,7 +39,7 @@ export default class AppComponent extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
-          {/*<button onClick={this.deleteChat}>Delete</button>*/}
+          <button onClick={this.deleteChat}>Delete</button>
           {/*<button onClick={this.props.goToCreateChat}>Create</button>*/}
           {/*<select onChange={e => this.props.goToChat(JSON.parse(e.target.value))}>*/}
           {/*  <option defaultValue>Select chat</option>*/}

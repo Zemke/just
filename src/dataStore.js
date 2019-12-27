@@ -51,23 +51,25 @@ api.onMessage = cb =>
     });
 
 const getConversation = (userUidA, userUidB) =>
-  Promise.all([
-    (firebase
-      .firestore()
-      .collection('messages')
-      .where('from', '==', userUidA)
-      .where('to', '==', userUidB)
-      .get()),
-    (firebase
-      .firestore()
-      .collection('messages')
-      .where('from', '==', userUidB)
-      .where('to', '==', userUidA)
-      .get())
-  ]);
+  Promise
+    .all([
+      (firebase
+        .firestore()
+        .collection('messages')
+        .where('from', '==', userUidA)
+        .where('to', '==', userUidB)
+        .get()),
+      (firebase
+        .firestore()
+        .collection('messages')
+        .where('from', '==', userUidB)
+        .where('to', '==', userUidA)
+        .get())
+    ])
+    .then(res => res[0].docs.concat(...res[1].docs));
 
 api.deleteChatWithUser = async userUid =>
-  getConversation(userUid, await Auth.current())
+  getConversation(userUid, (await Auth.current()).uid)
     .then(docs => docs.forEach(doc => doc.ref.delete()));
 
 api.setDelivered = message =>
