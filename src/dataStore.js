@@ -58,4 +58,8 @@ api.getDelivereds = () => getItemOrDefault("delivereds", []);
 
 api.getMyName = () => window.localStorage.getItem('myName') || 'Kevin';
 
+api.saveSignInEmail = emailForSignIn => window.localStorage.setItem('emailForSignIn', emailForSignIn);
+api.getSignInEmail = () => window.localStorage.getItem('emailForSignIn');
+api.removeSignInEmail = () => window.localStorage.removeItem('emailForSignIn');
+
 export default api;
