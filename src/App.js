@@ -14,7 +14,8 @@ export default class AppComponent extends React.Component {
   state = {
     currentUser: null,
     enterAnotherCode: false,
-    shareYourCode: false
+    shareYourCode: false,
+    messages: []
   };
 
   enterAnotherCode = () =>
@@ -25,7 +26,7 @@ export default class AppComponent extends React.Component {
 
   onMessage = (message, doc) => {
     if (message.to === this.state.currentUser.uid && !message.delivered) {
-      DataStore.setDelivered(doc);
+      DataStore.setDelivered(doc.ref);
       new Notification(message.from, {body: message.body});
     }
     this.setState(state => ({messages: [...state.messages, message]}));

@@ -9,7 +9,7 @@ export default class EnterAnotherCode extends React.Component {
     e.preventDefault();
     await DataStore.sendMessage({
       to: this.state.anotherCode,
-      from: this.props.currentUser,
+      from: this.props.currentUser.uid,
       body: this.state.firstMessage,
     });
   };

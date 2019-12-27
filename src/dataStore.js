@@ -31,8 +31,8 @@ const onMessage = (cb, fromOrTo, userUid) =>
     .onSnapshot(snapshot =>
       snapshot
         .docChanges()
-        .forEach(({doc}) =>
-          doc.type === 'added' && cb({...doc.data(), id: doc.id}, doc)));
+        .forEach(({doc, type}) =>
+          type === 'added' && cb({...doc.data(), id: doc.id}, doc)));
 
 api.onMessage = cb =>
   Auth
