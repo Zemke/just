@@ -1,5 +1,6 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
+import Auth from "./auth";
 
 firebase.initializeApp({
   apiKey: "AIzaSyCpeA-4i6sZalkiqjB3ks6u1__hO4E2o8U",
@@ -20,17 +21,24 @@ api.sendMessage = ({chat, from, to, body}) =>
     .collection('messages')
     .add({chat, from, to, body, when: Date.now()});
 
-api.onMessage = (cb) => {
-  return firebase
+const onMessage = (cb, fromOrTo, userUid) =>
+  firebase
     .firestore()
     .collection('messages')
-    .where('chat', 'in', api.getChats().filter(c => c.code).map(c => c.code))
+    .where(fromOrTo, '==', userUid)
     .onSnapshot(snapshot =>
       snapshot
         .docChanges()
         .forEach(({doc}) =>
-          cb && cb({...doc.data(), id: doc.id}, doc.type)));
-};
+          cb({...doc.data(), id: doc.id}, doc.type)));
+
+api.onMessage = cb =>
+  Auth
+    .current()
+    .then(user => {
+      onMessage(cb, "from", user.uid);
+      onMessage(cb, "to", user.uid);
+    });
 
 function getItemOrDefault(key, theDefault) {
   let items = window.localStorage.getItem(key);
@@ -53,8 +61,6 @@ api.addDelivered = id => {
 };
 
 api.getDelivereds = () => getItemOrDefault("delivereds", []);
-
-api.getMyName = () => window.localStorage.getItem('myName') || 'Kevin';
 
 api.saveSignInEmail = emailForSignIn => window.localStorage.setItem('emailForSignIn', emailForSignIn);
 api.getSignInEmail = () => window.localStorage.getItem('emailForSignIn');
