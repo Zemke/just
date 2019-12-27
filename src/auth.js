@@ -25,9 +25,9 @@ api.signIn = email =>
     .signInWithEmailLink(email, window.location.href);
 
 api.current = () =>
-  new Promise((resolve, reject) =>
+  new Promise(resolve =>
     api.onAuthStateChanged(
-      user => user ? resolve(user) : reject()));
+      user => user ? resolve(user) : resolve(null)));
 
 api.onAuthStateChanged = cb =>
   firebase

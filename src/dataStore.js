@@ -13,8 +13,7 @@ firebase.initializeApp({
   measurementId: "G-8FFPRPW39V"
 });
 
-const serverTimestamp = () =>
-  firebase.firestore.FieldValue.serverTimestamp();
+const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
 const api = {};
 
@@ -33,12 +32,14 @@ const onMessage = (cb, fromOrTo, userUid) =>
       snapshot
         .docChanges()
         .forEach(({doc}) =>
-          cb({...doc.data(), id: doc.id}, doc.type)));
+          doc.type === 'added' && cb({...doc.data(), id: doc.id}, doc)));
 
 api.onMessage = cb =>
   Auth
     .current()
     .then(user => {
+      // todo maybe store redundant array of both participating users
+      //  to have a contains where clause and only one listener.
       onMessage(cb, "from", user.uid);
       onMessage(cb, "to", user.uid);
     });
@@ -63,27 +64,8 @@ api.deleteChatWithUser = async userUid =>
   getConversation(userUid, await Auth.current())
     .then(docs => docs.forEach(doc => doc.ref.delete()));
 
-function getItemOrDefault(key, theDefault) {
-  let items = window.localStorage.getItem(key);
-  return items != null ? JSON.parse(items) : theDefault;
-}
-
-api.getChats = () => getItemOrDefault("chats", []);
-
-api.addChat = ({name, code}) => {
-  const chats = api.getChats();
-  chats.push({name, code});
-  window.localStorage.setItem("chats", JSON.stringify(chats));
-  return chats;
-};
-
-api.addDelivered = id => {
-  const delivereds = getItemOrDefault("delivereds", []);
-  delivereds.push(id);
-  window.localStorage.setItem("delivereds", JSON.stringify(delivereds));
-};
-
-api.getDelivereds = () => getItemOrDefault("delivereds", []);
+api.setDelivered = message =>
+  message.update({delivered: true});
 
 api.saveSignInEmail = emailForSignIn => window.localStorage.setItem('emailForSignIn', emailForSignIn);
 api.getSignInEmail = () => window.localStorage.getItem('emailForSignIn');

@@ -30,7 +30,8 @@ export default class SignInComponent extends React.Component {
   }
 
   componentDidMount() {
-    Auth.current()
+    Auth
+      .current()
       .then(console.log)
       .catch(() => console.log("no auth"));
 

@@ -1,40 +1,70 @@
 import React from 'react';
 import './App.css';
-import Create from "./Create";
-import Chat from "./Chat";
-import DataStore from "./dataStore";
 import SignIn from "./SignIn";
+import DataStore from "./dataStore";
 import Auth from "./auth";
+import EnterAnotherCode from "./EnterAnotherCode";
+import ShareYourCode from "./ShareYourCode";
+import Start from './Start';
+import otherUser from "./otherUser";
+import Chat from "./Chat";
 
 export default class AppComponent extends React.Component {
 
-  state = {chat: null};
+  state = {
+    currentUser: null,
+    enterAnotherCode: false,
+    shareYourCode: false
+  };
 
-  goToChat = chat => this.setState({chat});
+  enterAnotherCode = () =>
+    this.setState({enterAnotherCode: true, shareYourCode: false});
+
+  shareYourCode = () =>
+    this.setState({shareYourCode: true, enterAnotherCode: false});
+
+  onMessage = (message, doc) => {
+    if (message.to === this.state.currentUser.uid && !message.delivered) {
+      DataStore.setDelivered(doc);
+      new Notification(message.from, {body: message.body});
+    }
+    this.setState(state => ({messages: [...state.messages, message]}));
+  };
 
   render() {
-    if (this.state.signIn) {
+    if (!this.state.currentUser) {
       return <SignIn/>
-    } else if (this.state.chat != null) {
-      return <Chat chat={this.state.chat}
-                   goToCreateChat={() => this.setState({chat: null})}
-                   goToChat={chat => this.setState({chat})}/>;
+    } else if (this.state.enterAnotherCode) {
+      return <EnterAnotherCode/>
+    } else if (this.state.shareYourCode) {
+      return <ShareYourCode/>
     }
 
-    return <Create goToChat={id => this.goToChat(id)}/>;
+    const otherUsers = (this.state.messages || [])
+      .map(m => otherUser(this.state.currentUser, [m]))
+      .reduce((prev, curr) => {
+        if (prev.indexOf(curr) === -1) prev.push(curr);
+        return curr;
+      }, []);
+
+    if (otherUsers.length) {
+      return <Chat otherUsers={otherUsers}/>
+    }
+
+    return <Start
+      enterAnotherCode={this.enterAnotherCode}
+      shareYourCode={this.shareYourCode}/>;
   }
 
   componentDidMount() {
-    Auth.current()
-      .then(() => {
+    Auth
+      .current()
+      .then(currentUser => {
+        if (!currentUser) return;
         Notification.requestPermission();
-
-        if (this.state.chat != null) return;
-        const allChats = DataStore.getChats();
-        if (allChats != null && allChats.length) {
-          this.setState({chat: allChats[0]});
-        }
-      })
-      .catch(() => this.setState({signIn: true}));
+        this.setState(
+          {currentUser},
+          () => DataStore.onMessage(this.onMessage));
+      });
   }
 }

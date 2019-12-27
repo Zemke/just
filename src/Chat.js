@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import DataStore from './dataStore';
 import Auth from './auth';
+import otherUser from "./otherUser";
 
 export default class AppComponent extends React.Component {
 
@@ -25,10 +26,8 @@ export default class AppComponent extends React.Component {
     if (!window.confirm("The chat will be irreversibly deleted. Are you sure?")) {
       return;
     }
-    const currentUserUid = (await Auth.current()).uid;
-    const otherUserUid = [this.state.messages[0].from, this.state.messages[0].to]
-      .filter(userUid => userUid !== currentUserUid)[0];
-    await DataStore.deleteChatWithUser(otherUserUid);
+    await DataStore.deleteChatWithUser(
+      otherUser((await Auth.current()).uid, this.state.messages));
     // todo go to another chat or to start when there's no other chat
   };
 
@@ -72,17 +71,5 @@ export default class AppComponent extends React.Component {
         </header>
       </div>
     );
-  }
-
-  componentDidMount() {
-    DataStore.onMessage(message => {
-      if (DataStore.getDelivereds().indexOf(message.id) === -1) {
-        DataStore.addDelivered(message.id);
-        new Notification(message.from, {body: message.body});
-      }
-      this.setState(state => ({messages: [...state.messages, message]}));
-    });
-
-    this.setState({chats: DataStore.getChats()});
   }
 }
