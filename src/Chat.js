@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import DataStore from './dataStore';
+import Auth from './auth';
 
 export default class AppComponent extends React.Component {
 
@@ -12,7 +13,7 @@ export default class AppComponent extends React.Component {
     e.preventDefault();
     const payload = {
       chat: this.props.chat.code,
-      from: DataStore.getMyName(),
+      from: (await Auth.current()).uid,
       to: this.props.chat.name,
       body: this.state.field
     };
