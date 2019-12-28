@@ -25,14 +25,14 @@ export default class AppComponent extends React.Component {
 
   onMessageSubscription = null;
 
-  signOut = () => {
+  signOut = async () => {
     this.setState({currentUser: null, messages: []});
-    this.onMessageSubscription && this.onMessageSubscription();
+    this.onMessageSubscription && (await this.onMessageSubscription)();
   };
 
-  signIn = currentUser => {
+  signIn = async currentUser => {
     this.setState({currentUser});
-    this.onMessageSubscription && this.onMessageSubscription();
+    this.onMessageSubscription && (await this.onMessageSubscription)();
     this.onMessageSubscription = DataStore.onMessage(this.onMessage);
   };
 
@@ -93,7 +93,7 @@ export default class AppComponent extends React.Component {
       });
   }
 
-  componentWillUnmount() {
-    this.onMessageSubscription && this.onMessageSubscription();
+  async componentWillUnmount() {
+    this.onMessageSubscription && (await this.onMessageSubscription)();
   }
 }
