@@ -1,0 +1,33 @@
+.chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: stretch;
+  align-content: stretch;
+}
+
+.chat > .body {
+  flex: 1 1 0;
+}
+
+.chat > .head {
+  height: 5rem;
+}
+
+.chat > .foot {
+  height: 2.3rem;
+  display: flex;
+}
+
+.chat > .foot form,
+.chat > .foot input {
+  display: flex;
+  flex: 1;
+}
+
+.chat > .foot input {
+  padding: .2rem .5rem;
+  font-size: .8rem;
+  border: 0;
+  display: block;
+}

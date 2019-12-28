@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './Chat.css';
 import DataStore from './dataStore';
 import otherUser from "./otherUser";
 import Auth from "./auth";
@@ -49,24 +49,24 @@ export default class AppComponent extends React.Component {
       }, []);
 
     return (
-      <div className="App">
-        <header className="App-header">
-          <button onClick={this.signOut}>Sign out</button>
-          <button onClick={this.deleteChat}>Delete</button>
-          <button onClick={this.props.goToShareYourCode}>Share your code</button>
-          <button onClick={this.props.goToEnterAnotherCode}>Enter another code</button>
-          <select onChange={e => this.setState({otherUser: e.target.value})}>
-            <option defaultValue value={this.state.otherUser}>
-              {this.state.otherUser}
-            </option>
-            {otherUsers.map(oU => <option key={oU} value={oU}>{oU}</option>)}
-          </select>
-          <h1>Just</h1>
-          <form onSubmit={e => this.onSubmit(e)}>
-            <input onChange={e => this.onChange(e.target.value)}
-                   value={this.state.field}/>
-          </form>
-
+      <div className="chat">
+        <div className="head">
+          <div className="changeChat"> {/* todo chat names */}
+            <select onChange={e => this.setState({otherUser: e.target.value})}>
+              <option defaultValue value={this.state.otherUser}>
+                {this.state.otherUser}
+              </option>
+              {otherUsers.map(oU => <option key={oU} value={oU}>{oU}</option>)}
+            </select>
+          </div>
+          <div className="menu">
+            <button onClick={this.signOut}>Sign out</button>
+            <button onClick={this.deleteChat}>Delete</button>
+            <button onClick={this.props.goToShareYourCode}>Share your code</button>
+            <button onClick={this.props.goToEnterAnotherCode}>Enter another code</button>
+          </div>
+        </div>
+        <div className="body">
           {this.props.messages
             .filter(m =>
               otherUser(this.props.currentUser.uid, [m]) === this.state.otherUser)
@@ -80,7 +80,13 @@ export default class AppComponent extends React.Component {
                 delivered: {Boolean(message.delivered).toString()}
               </div>
             )}
-        </header>
+        </div>
+        <div className="foot">
+          <form onSubmit={e => this.onSubmit(e)}>
+            <input onChange={e => this.onChange(e.target.value)}
+                   value={this.state.field}/>
+          </form>
+        </div>
       </div>
     );
   }
