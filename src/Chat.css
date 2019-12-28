@@ -10,6 +10,44 @@
   flex: 1 1 0;
 }
 
+.chat > .body .message {
+  position: relative;
+  display: inline-block;
+  color: #151515;
+  z-index: 1;
+  max-width: 60%;
+  margin: .1rem 1rem;
+  padding: .4rem;
+  background: transparent;
+  font-size: .9rem;
+  border-radius: .7rem;
+  overflow: hidden;
+}
+
+.chat > .body .message-wrapper {
+  overflow: auto;
+}
+
+.chat > .body .message.from {
+  border-bottom-left-radius: 0;
+}
+
+.chat > .body .message.to {
+  border-bottom-right-radius: 0;
+  float: right;
+}
+
+.chat > .body .message > .overlay {
+  filter: blur(.1rem);
+  background: snow;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
 .chat > .head {
   height: 5rem;
 }
@@ -27,7 +65,7 @@
 
 .chat > .foot input {
   padding: .2rem .5rem;
-  font-size: .8rem;
+  font-size: .9rem;
   border: 0;
   display: block;
 }

@@ -72,12 +72,11 @@ export default class AppComponent extends React.Component {
               otherUser(this.props.currentUser.uid, [m]) === this.state.otherUser)
             .sort((c1, c2) => c2.when - c1.when)
             .map(message =>
-              <div key={message.id}>
-                from: {message.from}<br/> {/*todo map sender and receiver*/}
-                to: {message.to}<br/>
-                body: {message.body}<br/>
-                when: {message.when}<br/>
-                delivered: {Boolean(message.delivered).toString()}
+              <div key={message.id} className="message-wrapper">
+                <div className={"message " + (this.state.otherUser === message.from ? "from" : "to")}>
+                  <div className="overlay"/>
+                  <p>{message.body}</p>
+                </div>
               </div>
             )}
         </div>
