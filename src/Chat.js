@@ -83,6 +83,7 @@ export default class AppComponent extends React.Component {
         <div className="foot">
           <form onSubmit={e => this.onSubmit(e)}>
             <input onChange={e => this.onChange(e.target.value)}
+                   placeholder="Type here"
                    value={this.state.field}/>
           </form>
         </div>

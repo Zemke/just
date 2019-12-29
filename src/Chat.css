@@ -55,12 +55,15 @@
 .chat > .foot {
   height: 2.3rem;
   display: flex;
+  padding: .6rem;
+  backdrop-filter: blur(1rem);
 }
 
 .chat > .foot form,
 .chat > .foot input {
   display: flex;
   flex: 1;
+  border-radius: 2rem;
 }
 
 .chat > .foot input {
