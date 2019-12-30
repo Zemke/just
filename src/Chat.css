@@ -8,6 +8,9 @@
 
 .chat > .body {
   flex: 1 1 0;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  overflow-y: scroll; /* todo mobile scrollbar */
 }
 
 .chat > .body .message {
@@ -49,14 +52,55 @@
 }
 
 .chat > .head {
-  height: 5rem;
+  backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
 }
+
+.chat > .head .changeChat select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: .8rem 0;
+  margin-left: 1rem;
+  border: none;
+  background: transparent;
+  text-shadow: 0 0 0.2rem #151515;
+  color: snow;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.chat > .head .menu {
+  float: right;
+  display: none;
+}
+
+.chat > .head .hamburger {
+  float: right;
+  padding: .8rem 0;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+.chat > .head .hamburger > .dot1,
+.chat > .head .hamburger > .dot2,
+.chat > .head .hamburger > .dot3 {
+  background-color: snow;
+  display: block;
+  width: .3rem;
+  height: .3rem;
+  margin-top: .2rem;
+  box-shadow: 0 0 0.2rem #151515;
+  border-radius: 50%;
+}
+
 
 .chat > .foot {
   height: 2.3rem;
   display: flex;
   padding: .6rem;
   backdrop-filter: blur(1rem);
+  -webkit-backdrop-filter: blur(1rem);
 }
 
 .chat > .foot form,

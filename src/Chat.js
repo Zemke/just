@@ -51,6 +51,11 @@ export default class AppComponent extends React.Component {
     return (
       <div className="chat">
         <div className="head">
+          <div className="hamburger">
+            <div className="dot1"/>
+            <div className="dot2"/>
+            <div className="dot3"/>
+          </div>
           <div className="changeChat"> {/* todo chat names */}
             <select onChange={e => this.setState({otherUser: e.target.value})}>
               <option defaultValue value={this.state.otherUser}>
