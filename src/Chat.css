@@ -1,9 +1,6 @@
 .chat {
-  display: flex;
-  flex-direction: column;
   height: 100%;
-  align-items: stretch;
-  align-content: stretch;
+  overflow-y: scroll;
 }
 
 .chat > .body {
@@ -52,6 +49,11 @@
 }
 
 .chat > .head {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
   backdrop-filter: blur(1rem);
   -webkit-backdrop-filter: blur(1rem);
 }
@@ -66,7 +68,7 @@
   background: transparent;
   text-shadow: 0 0 0.2rem #151515;
   color: snow;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: bold;
 }
 
@@ -96,9 +98,12 @@
 
 
 .chat > .foot {
-  height: 2.3rem;
   display: flex;
-  padding: .6rem;
+  z-index: 999;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   backdrop-filter: blur(1rem);
   -webkit-backdrop-filter: blur(1rem);
 }
@@ -108,10 +113,11 @@
   display: flex;
   flex: 1;
   border-radius: 2rem;
+  margin: .4rem;
 }
 
 .chat > .foot input {
-  padding: .2rem .5rem;
+  padding: .5rem;
   font-size: .9rem;
   border: 0;
   display: block;
