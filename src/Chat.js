@@ -75,7 +75,7 @@ export default class AppComponent extends React.Component {
           {this.props.messages
             .filter(m =>
               otherUser(this.props.currentUser.uid, [m]) === this.state.otherUser)
-            .sort((c1, c2) => c2.when - c1.when)
+            .sort((c1, c2) => c1.when - c2.when)
             .map(message =>
               <div key={message.id} className="message-wrapper">
                 <div className={"message " + (this.state.otherUser === message.from ? "from" : "to")}>
