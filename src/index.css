@@ -35,3 +35,9 @@ code {
 #root {
   height: 100%;
 }
+
+#appendToBodyContainer {
+  position: absolute;
+  left: 0;
+  right: 0;
+}

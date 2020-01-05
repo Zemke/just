@@ -1,8 +1,11 @@
 .chat > .head .hamburger {
   float: right;
-  padding: .8rem 0;
-  margin-right: 1rem;
+  padding: .8rem 1rem;
   cursor: pointer;
+}
+
+.chat > .head .hamburger > * {
+  pointer-events: none;
 }
 
 .chat > .head .hamburger > .dot1,
@@ -16,3 +19,9 @@
   box-shadow: 0 0 0.2rem #151515;
   border-radius: 50%;
 }
+
+.dropdown.chatHeadMenu {
+  top: 3.3rem;
+  right: .7rem;
+}
+

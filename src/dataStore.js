@@ -51,6 +51,15 @@ api.deleteChatWithUser = async userUid =>
 api.setDelivered = message =>
   message.update({delivered: true});
 
+api.saveChatName = (chat, newName) => {
+  const names = JSON.parse(window.localStorage.getItem('names')) || {};
+  names[chat] = newName;
+  window.localStorage.setItem('names', JSON.stringify(names));
+  return names;
+};
+
+api.getChatName = chat => (JSON.parse(window.localStorage.getItem('names')) || {})[chat] || chat;
+
 api.saveSignInEmail = emailForSignIn => window.localStorage.setItem('emailForSignIn', emailForSignIn);
 api.getSignInEmail = () => window.localStorage.getItem('emailForSignIn');
 api.removeSignInEmail = () => window.localStorage.removeItem('emailForSignIn');

@@ -2,8 +2,8 @@ import React from 'react';
 import './Chat.css';
 import DataStore from './dataStore';
 import otherUser from "./otherUser";
-import Auth from "./auth";
 import ChatMenu from "./ChatMenu";
+import ChatSelect from "./ChatSelect";
 
 export default class AppComponent extends React.Component {
 
@@ -28,18 +28,6 @@ export default class AppComponent extends React.Component {
     this.setState({field: ''});
   };
 
-  deleteChat = async () => {
-    if (!window.confirm("The chat will be irreversibly deleted. Are you sure?")) {
-      return;
-    }
-    await DataStore.deleteChatWithUser(this.state.otherUser);
-  };
-
-  signOut = () =>
-    Auth
-      .signOut()
-      .then(() => this.props.signOut());
-
   render() {
     const otherUsers = this.props.messages
       .reduce((acc, m) => {
@@ -52,20 +40,10 @@ export default class AppComponent extends React.Component {
     return (
       <div className="chat">
         <div className="head">
-          <ChatMenu/>
-          <div className="changeChat"> {/* todo chat names */}
-            <select onChange={e => this.setState({otherUser: e.target.value})}>
-              <option defaultValue value={this.state.otherUser}>
-                {this.state.otherUser}
-              </option>
-              {otherUsers.map(oU => <option key={oU} value={oU}>{oU}</option>)}
-            </select>
-          </div>
-          <div className="menu">
-            <button onClick={this.signOut}>Sign out</button>
-            <button onClick={this.deleteChat}>Delete</button>
-            <button onClick={this.props.goToShareYourCode}>Share your code</button>
-            <button onClick={this.props.goToEnterAnotherCode}>Enter another code</button>
+          <ChatMenu goToShareYourCode={this.props.goToShareYourCode}
+                    goToEnterAnotherCode={this.props.goToEnterAnotherCode}/>
+          <div className="changeChat">
+            <ChatSelect otherUsers={otherUsers} otherUser={this.state.otherUser}/>
           </div>
         </div>
         <div className="body">

@@ -54,14 +54,11 @@
   left: 0;
   right: 0;
   z-index: 999;
-  backdrop-filter: blur(1rem);
-  -webkit-backdrop-filter: blur(1rem);
+  backdrop-filter: blur(.5rem);
+  -webkit-backdrop-filter: blur(.5rem);
 }
 
-.chat > .head .changeChat select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+.chat > .head .changeChat .otherUser {
   padding: .8rem 0;
   margin-left: 1rem;
   border: none;
@@ -70,11 +67,8 @@
   color: snow;
   font-size: 1.3rem;
   font-weight: bold;
-}
-
-.chat > .head .menu {
-  float: right;
-  display: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .chat > .foot {
@@ -84,8 +78,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  backdrop-filter: blur(1rem);
-  -webkit-backdrop-filter: blur(1rem);
+  backdrop-filter: blur(.5rem);
+  -webkit-backdrop-filter: blur(.5rem);
 }
 
 .chat > .foot form,
@@ -93,7 +87,7 @@
   display: flex;
   flex: 1;
   border-radius: 2rem;
-  margin: .4rem;
+  margin: .3rem .4rem;
 }
 
 .chat > .foot input {
