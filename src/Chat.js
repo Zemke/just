@@ -3,6 +3,7 @@ import './Chat.css';
 import DataStore from './dataStore';
 import otherUser from "./otherUser";
 import Auth from "./auth";
+import ChatMenu from "./ChatMenu";
 
 export default class AppComponent extends React.Component {
 
@@ -51,11 +52,7 @@ export default class AppComponent extends React.Component {
     return (
       <div className="chat">
         <div className="head">
-          <div className="hamburger">
-            <div className="dot1"/>
-            <div className="dot2"/>
-            <div className="dot3"/>
-          </div>
+          <ChatMenu/>
           <div className="changeChat"> {/* todo chat names */}
             <select onChange={e => this.setState({otherUser: e.target.value})}>
               <option defaultValue value={this.state.otherUser}>
