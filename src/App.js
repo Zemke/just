@@ -36,27 +36,30 @@ export default class AppComponent extends React.Component {
     this.onMessageSubscription = DataStore.onMessage(this.onMessage);
   };
 
-  onMessage = (message, doc, type) => {
-    if (type === 'added') {
-      if (message.to === this.state.currentUser.uid && !message.delivered) {
-        DataStore.setDelivered(doc.ref);
-        new Notification(message.from, {body: message.body});
-      }
-      this.setState(state => ({messages: [...state.messages, message]}));
-    } else if (type === 'removed') {
-      this.setState({
-        messages: this.state.messages
-          .filter(m => m.id === doc.id)
+  onMessage = messages => {
+    this.setState(state => {
+      let messageBatch = [...state.messages];
+
+      messages.forEach(({message, doc, type}) => {
+        if (type === 'added') {
+          if (message.to === this.state.currentUser.uid && !message.delivered) {
+            DataStore.setDelivered(doc.ref);
+            new Notification(message.from, {body: message.body});
+          }
+          messageBatch.push(message);
+        } else if (type === 'removed') {
+          messageBatch = messageBatch.filter(m => m.id === doc.id);
+        } else if (type === 'modified') {
+          messageBatch
+            .map(m => {
+              if (m.id !== message.id) return m;
+              return message;
+            });
+        }
       });
-    } else if (type === 'modified') {
-      this.setState({
-        messages: this.state.messages
-          .map(m => {
-            if (m.id !== message.id) return m;
-            return message;
-          })
-      });
-    }
+
+      return {messages: messageBatch, initMessages: true};
+    });
   };
 
   render() {

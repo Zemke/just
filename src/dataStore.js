@@ -34,10 +34,9 @@ api.onMessage = async cb =>
     .collection('messages')
     .where('users', 'array-contains', (await Auth.current()).uid)
     .onSnapshot(snapshot =>
-      snapshot
+      cb(snapshot
         .docChanges()
-        .forEach(({doc, type}) =>
-          cb({...mapTimestamp(doc.data()), id: doc.id}, doc, type)));
+        .map(({doc, type}) => ({message: {...mapTimestamp(doc.data()), id: doc.id}, doc, type}))));
 
 api.deleteChatWithUser = async userUid =>
   firebase
