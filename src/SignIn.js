@@ -39,7 +39,6 @@ export default class SignInComponent extends React.Component {
       .current()
       .then(user => {
         if (user) {
-          console.log(user);
           this.setState({signedIn: user});
           window.history.pushState(null, null, '/');
         } else if (Auth.isSignInLink(window.location.href)) {

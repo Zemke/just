@@ -16,8 +16,6 @@ export default function Chat(props) {
   useEffect(() => {
     if (!chatEl) return;
     const maxScrollTop = chatEl.scrollHeight - chatEl.offsetHeight;
-    console.log('props.initMessages', props.initMessages);
-    console.log('initMessages', initMessages);
     if (maxScrollTop === chatEl.scrollTop || (props.initMessages && !initMessages)) {
       chatEl.scrollTo(0, maxScrollTop);
       setInitMessages(true);
@@ -42,8 +40,6 @@ export default function Chat(props) {
       if (acc.indexOf(otherUser1) === -1) acc.push(otherUser1);
       return acc;
     }, []);
-
-  console.log('render');
 
   return (
     <div className="chat" ref={setChatEl}>
