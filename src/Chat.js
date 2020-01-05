@@ -20,7 +20,7 @@ export default function Chat(props) {
       chatEl.scrollTo(0, maxScrollTop);
       setInitMessages(true);
     }
-  });
+  }, [chatEl, props.initMessages, initMessages]);
 
   const onSubmit = async e => {
     e.preventDefault();
