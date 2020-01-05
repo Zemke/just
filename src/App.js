@@ -14,7 +14,8 @@ export default class AppComponent extends React.Component {
     currentUser: null,
     enterAnotherCode: false,
     shareYourCode: false,
-    messages: []
+    messages: [],
+    initMessages: false
   };
 
   enterAnotherCode = () =>
@@ -76,7 +77,8 @@ export default class AppComponent extends React.Component {
                    currentUser={this.state.currentUser}
                    signOut={this.signOut}
                    goToEnterAnotherCode={this.enterAnotherCode}
-                   goToShareYourCode={this.shareYourCode}/>
+                   goToShareYourCode={this.shareYourCode}
+                   initMessages={this.state.initMessages}/>
     }
 
     return <Start

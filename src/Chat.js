@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './Chat.css';
 import DataStore from './dataStore';
 import extractOtherUser from "./otherUser";
@@ -7,9 +7,22 @@ import ChatSelect from "./ChatSelect";
 
 export default function Chat(props) {
 
+  const [chatEl, setChatEl] = useState(null);
+  const [initMessages, setInitMessages] = useState(false);
   const [field, setField] = useState('');
   const [otherUser] = useState(extractOtherUser(
     props.currentUser.uid, props.messages.sort((c1, c2) => c1 - c2)));
+
+  useEffect(() => {
+    if (!chatEl) return;
+    const maxScrollTop = chatEl.scrollHeight - chatEl.offsetHeight;
+    console.log('props.initMessages', props.initMessages);
+    console.log('initMessages', initMessages);
+    if (maxScrollTop === chatEl.scrollTop || (props.initMessages && !initMessages)) {
+      chatEl.scrollTo(0, maxScrollTop);
+      setInitMessages(true);
+    }
+  });
 
   const onSubmit = async e => {
     e.preventDefault();
@@ -30,8 +43,10 @@ export default function Chat(props) {
       return acc;
     }, []);
 
+  console.log('render');
+
   return (
-    <div className="chat">
+    <div className="chat" ref={setChatEl}>
       <div className="head">
         <ChatMenu goToShareYourCode={props.goToShareYourCode}
                   goToEnterAnotherCode={props.goToEnterAnotherCode}/>
