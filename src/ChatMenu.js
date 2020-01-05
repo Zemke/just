@@ -8,10 +8,7 @@ export default function ChatMenu(props) {
 
   const [dropdownTrigger, setDropdownTrigger] = useState(null);
 
-  const rename = async () => {
-    const newName = window.prompt("Name of chat:");
-    await DataStore.saveChatName(newName);
-  };
+  const rename = async () => props.rename(window.prompt("Name of chat:"));
 
   const signOut = () =>
     Auth

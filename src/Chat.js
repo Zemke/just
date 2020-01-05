@@ -10,7 +10,7 @@ export default function Chat(props) {
   const [chatEl, setChatEl] = useState(null);
   const [initMessages, setInitMessages] = useState(false);
   const [field, setField] = useState('');
-  const [otherUser] = useState(extractOtherUser(
+  const [otherUser, setOtherUser] = useState(extractOtherUser(
     props.currentUser.uid, props.messages.sort((c1, c2) => c1 - c2)));
 
   useEffect(() => {
@@ -33,6 +33,9 @@ export default function Chat(props) {
     setField('');
   };
 
+  const rename = async newName =>
+    setOtherUser(await DataStore.saveChatName(otherUser, newName));
+
   const otherUsers = props.messages
     .reduce((acc, m) => {
       const otherUser1 = extractOtherUser(props.currentUser.uid, [m]);
@@ -45,7 +48,8 @@ export default function Chat(props) {
     <div className="chat" ref={setChatEl}>
       <div className="head">
         <ChatMenu goToShareYourCode={props.goToShareYourCode}
-                  goToEnterAnotherCode={props.goToEnterAnotherCode}/>
+                  goToEnterAnotherCode={props.goToEnterAnotherCode}
+                  rename={rename}/>
         <div className="changeChat">
           <ChatSelect otherUsers={otherUsers} otherUser={otherUser}/>
         </div>
