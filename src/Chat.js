@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './Chat.css';
 import DataStore from './dataStore';
 import extractOtherUser from "./otherUser";
@@ -7,20 +7,23 @@ import ChatSelect from "./ChatSelect";
 
 export default function Chat(props) {
 
-  const [chatEl, setChatEl] = useState(null);
+  const chatEl = useRef(null);
   const [initMessages, setInitMessages] = useState(false);
   const [field, setField] = useState('');
   const [otherUser, setOtherUser] = useState(extractOtherUser(
     props.currentUser.uid, props.messages.sort((c1, c2) => c1 - c2)));
 
+  const arbitraryTolerance = 70;
+
   useEffect(() => {
-    if (!chatEl) return;
-    const maxScrollTop = chatEl.scrollHeight - chatEl.offsetHeight;
-    if (maxScrollTop === chatEl.scrollTop || (props.initMessages && !initMessages)) {
-      chatEl.scrollTo(0, maxScrollTop);
+    if (!chatEl.current) return;
+    const maxScrollTop = chatEl.current.scrollHeight - chatEl.current.offsetHeight;
+    if (chatEl.current.scrollTop >= maxScrollTop - arbitraryTolerance
+          || (props.initMessages && !initMessages)) {
+      chatEl.current.scrollTo(0, maxScrollTop);
       setInitMessages(true);
     }
-  }, [chatEl, props.initMessages, initMessages]);
+  }, [props.initMessages, initMessages, props.messages]);
 
   const onSubmit = async e => {
     e.preventDefault();
@@ -45,7 +48,7 @@ export default function Chat(props) {
     }, []);
 
   return (
-    <div className="chat" ref={setChatEl}>
+    <div className="chat" ref={chatEl}>
       <div className="head">
         <ChatMenu goToShareYourCode={props.goToShareYourCode}
                   goToEnterAnotherCode={props.goToEnterAnotherCode}
