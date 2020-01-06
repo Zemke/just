@@ -97,3 +97,7 @@
   border: 0;
   display: block;
 }
+
+.chat > .foot input:focus {
+  outline: none;
+}

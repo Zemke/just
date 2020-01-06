@@ -8,6 +8,7 @@ import ChatSelect from "./ChatSelect";
 export default function Chat(props) {
 
   const chatEl = useRef(null);
+  const inputField = useRef(null);
   const [initMessages, setInitMessages] = useState(false);
   const [field, setField] = useState('');
   const [otherUser, setOtherUser] = useState(extractOtherUser(
@@ -24,6 +25,14 @@ export default function Chat(props) {
       setInitMessages(true);
     }
   }, [props.initMessages, initMessages, props.messages]);
+
+  useEffect(() => {
+    const documentKeydownHandler = () => inputField.current.focus();
+    document.addEventListener('keydown', documentKeydownHandler);
+    return function cleanup() {
+      document.removeEventListener('keydown', documentKeydownHandler);
+    };
+  });
 
   const onSubmit = async e => {
     e.preventDefault();
@@ -75,7 +84,8 @@ export default function Chat(props) {
         <form onSubmit={e => onSubmit(e)}>
           <input onChange={e => setField(e.target.value)}
                  placeholder="Type here"
-                 value={field}/>
+                 value={field}
+                 ref={inputField}/>
         </form>
       </div>
     </div>
