@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './App.css';
 import SignIn from "./SignIn";
 import DataStore from "./dataStore";
@@ -8,106 +8,112 @@ import ShareYourCode from "./ShareYourCode";
 import Start from './Start';
 import Chat from "./Chat";
 
-export default class AppComponent extends React.Component {
+export default function App() {
 
-  state = {
-    currentUser: null,
-    enterAnotherCode: false,
-    shareYourCode: false,
-    messages: [],
-    initMessages: false,
-    loading: true,
-  };
+  // todo this doesn't work
+  //  probably other hooks can help and improve
+  //  https://reactjs.org/docs/hooks-reference.html
 
-  enterAnotherCode = () =>
-    this.setState({enterAnotherCode: true, shareYourCode: false});
+  const onMessageSubscription = useRef(null);
 
-  shareYourCode = () =>
-    this.setState({shareYourCode: true, enterAnotherCode: false});
+  const [currentUser, setCurrentUser] = useState(null);
+  const [enterAnotherCode, setEnterAnotherCode] = useState(false);
+  const [shareYourCode, setShareYourCode] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [initMessages, setInitMessages] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  onMessageSubscription = null;
-
-  signOut = async () => {
-    this.setState({currentUser: null, messages: []});
-    this.onMessageSubscription && (await this.onMessageSubscription)();
-  };
-
-  signIn = async currentUser => {
-    this.setState({currentUser, loading: true});
-    this.onMessageSubscription && (await this.onMessageSubscription)();
-    this.onMessageSubscription = DataStore.onMessage(this.onMessage);
-  };
-
-  onMessage = messages => {
-    this.setState(state => {
-      let messageBatch = [...state.messages];
-
-      messages.forEach(({message, doc, type}) => {
-        if (type === 'added') {
-          if (message.to === this.state.currentUser.uid && !message.delivered) {
-            DataStore.setDelivered(doc.ref);
-            new Notification(message.from, {body: message.body});
-          }
-          messageBatch.push(message);
-        } else if (type === 'removed') {
-          messageBatch = messageBatch.filter(m => m.id === doc.id);
-        } else if (type === 'modified') {
-          messageBatch
-            .map(m => {
-              if (m.id !== message.id) return m;
-              return message;
-            });
-        }
-      });
-
-      return {messages: messageBatch, initMessages: true, loading: false};
-    });
-  };
-
-  render() {
-    if (this.state.loading) {
-      return <div className="translucent translucent-center"><p>On my way...</p></div>;
-    }
-
-    if (!this.state.currentUser) {
-      return <SignIn signedIn={currentUser => this.signIn(currentUser)}/>;
-    } else if (this.state.enterAnotherCode) {
-      return <EnterAnotherCode currentUser={this.state.currentUser}/>;
-    } else if (this.state.shareYourCode) {
-      return <ShareYourCode currentUser={this.state.currentUser}/>;
-    }
-
-    if (this.state.messages && this.state.messages.length) {
-      return <Chat messages={this.state.messages}
-                   currentUser={this.state.currentUser}
-                   signOut={this.signOut}
-                   goToEnterAnotherCode={this.enterAnotherCode}
-                   goToShareYourCode={this.shareYourCode}
-                   initMessages={this.state.initMessages}/>
-    }
-
-    return <Start
-      enterAnotherCode={this.enterAnotherCode}
-      shareYourCode={this.shareYourCode}/>;
-  }
-
-  componentDidMount() {
+  useEffect(() => {
     Auth
       .current()
       .then(currentUser => {
         if (!currentUser) {
-          this.setState({loading: false});
+          setLoading(false);
           return;
         }
         Notification.requestPermission();
-        setTimeout(() => this.setState({loading: false}), 300);
-        this.setState(
-          {currentUser},
-          () => this.onMessageSubscription = DataStore.onMessage(this.onMessage));
+        setTimeout(() => setLoading(true), 300);
+        setCurrentUser(currentUser);
+
+        // todo should be sync aftet setCurrentUser
+        this.onMessageSubscription = DataStore.onMessage(this.onMessage);
       });
+
+    return async () =>
+      onMessageSubscription.current && (await onMessageSubscription.current)();
+  });
+
+  useEffect(() => {
+    onMessageSubscription.current = DataStore.onMessage(onMessage);
+  }, [currentUser]);
+
+  const signOut = async () => {
+    setCurrentUser(null);
+    setMessages([]);
+    onMessageSubscription.current && (await onMessageSubscription.current)();
+  };
+
+  const signIn = async currentUser => {
+    setCurrentUser(currentUser);
+    setLoading(true);
+    onMessageSubscription.current && (await onMessageSubscription.current)();
+    onMessageSubscription.current = DataStore.onMessage(onMessage);
+  };
+
+  const onMessage = messages => {
+    let messageBatch = [...messages];
+
+    messages.forEach(({message, doc, type}) => {
+      if (type === 'added') {
+        if (message.to === currentUser.uid && !message.delivered) {
+          DataStore.setDelivered(doc.ref);
+          new Notification(message.from, {body: message.body});
+        }
+        messageBatch.push(message);
+      } else if (type === 'removed') {
+        messageBatch = messageBatch.filter(m => m.id === doc.id);
+      } else if (type === 'modified') {
+        messageBatch
+          .map(m => {
+            if (m.id !== message.id) return m;
+            return message;
+          });
+      }
+    });
+
+    setMessages(messageBatch);
+    setInitMessages(true);
+    setLoading(false);
+  };
+
+  if (loading) {
+    return <div className="translucent translucent-center"><p>On my way...</p></div>;
   }
 
-  async componentWillUnmount() {
-    this.onMessageSubscription && (await this.onMessageSubscription)();
+  if (!currentUser) {
+    return <SignIn signedIn={currentUser => signIn(currentUser)}/>;
+  } else if (enterAnotherCode) {
+    return <EnterAnotherCode currentUser={currentUser}/>;
+  } else if (shareYourCode) {
+    return <ShareYourCode currentUser={currentUser}/>;
   }
+
+  if (messages && messages.length) {
+    return <Chat messages={messages}
+                 currentUser={currentUser}
+                 signOut={signOut}
+                 goToEnterAnotherCode={enterAnotherCode}
+                 goToShareYourCode={shareYourCode}
+                 initMessages={initMessages}/>
+  }
+
+  return <Start
+    enterAnoth3erCode={() => {
+      setShareYourCode(false);
+      setEnterAnotherCode(true);
+    }}
+    shareYourCode={() => {
+      setShareYourCode(true);
+      setEnterAnotherCode(false);
+    }}/>;
 }
