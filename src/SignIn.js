@@ -9,7 +9,7 @@ export default function SignInComponent(props) {
   const [isSignInLink, setIsSignInLink] = useState(false);
   const [signedIn, setSignedIn] = useState(null);
   const [emailSent, setEmailSent] = useState(false);
-  const [disabled, setDisabled] = useState(false);
+  const [emailSending, setEmailSending] = useState(false);
 
   useEffect(() => {
     Auth
@@ -37,14 +37,14 @@ export default function SignInComponent(props) {
   });
 
   const onSubmit = e => {
-    setDisabled(true);
+    setEmailSending(true);
     e.preventDefault();
     Auth
       .sendMail(email)
       .then(() => {
         DataStore.saveSignInEmail(email);
         setEmailSent(true);
-        setDisabled(false);
+        setEmailSending(false);
       });
   };
 
@@ -52,9 +52,11 @@ export default function SignInComponent(props) {
   if (signedIn) {
     info = <p>You are signed in with {signedIn.email}.</p>;
   } else if (isSignInLink) {
-    info = <p>You are being signed in.</p>;
+    info = <p>You are being signed in with {DataStore.getSignInEmail()}.</p>;
+  } else if (emailSending) {
+    info = <p>Hold the line.</p>;
   } else if (emailSent) {
-    info = <p>You have been sent an email.</p>;
+    info = <p>You’ve been sent an email at <span className="bold">{email}</span>.</p>;
   }
 
 
@@ -73,7 +75,7 @@ export default function SignInComponent(props) {
                 className="form-control text-center"
                 onChange={e => setEmail(e.target.value)}/>
             </div>
-            <button type="submit" disabled={disabled} className="form-control">Sign In</button>
+            <button type="submit" disabled={emailSending} className="form-control">Sign In</button>
           </form>
         ) : info}
       </div>

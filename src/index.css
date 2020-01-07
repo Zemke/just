@@ -86,3 +86,7 @@ button.form-control:focus {
   max-width: 20rem;
   margin: 0 auto;
 }
+
+.bold {
+  font-weight: bold;
+}
