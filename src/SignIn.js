@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Auth from './auth';
 import DataStore from "./dataStore";
+import './translucent.css';
 
 export default function SignInComponent(props) {
 
@@ -44,20 +45,35 @@ export default function SignInComponent(props) {
       });
   };
 
+  let info = null;
   if (signedIn) {
-    return <p>You are signed in with {signedIn.email}.</p>;
+    info = <p>You are signed in with {signedIn.email}.</p>;
   } else if (isSignInLink) {
-    return <p>You are being signed in.</p>;
+    info = <p>You are being signed in.</p>;
   } else if (emailSent) {
-    return <p>You have been sent an email.</p>;
+    info = <p>You have been sent an email.</p>;
   }
 
+
   return (
-    <form onSubmit={onSubmit}>
-      <input
-        value={email}
-        onChange={e => setEmail(e.target.value)}/>
-      <button type="submit">Sign In</button>
-    </form>
+    <div className="translucent translucent-center text-center">
+      <div>
+        <h1>Just</h1>
+
+        {info === null ? (
+          <form onSubmit={onSubmit}>
+            <label>Sign in with only your email address</label>
+            <div>
+              <input
+                type="email"
+                value={email}
+                className="form-control text-center w-60"
+                onChange={e => setEmail(e.target.value)}/>
+            </div>
+            <button type="submit" className="form-control">Sign In</button>
+          </form>
+        ) : info}
+      </div>
+    </div>
   );
 }

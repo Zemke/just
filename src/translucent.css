@@ -1,0 +1,22 @@
+.translucent {
+  backdrop-filter: blur(.9rem);
+  -webkit-backdrop-filter: blur(.9rem);
+  position: absolute;
+  text-shadow: 0 0 0.2rem #151515;
+  color: snow;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+.translucent.translucent-center {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: stretch;
+  justify-content: center;
+  padding-bottom: 17rem;
+}

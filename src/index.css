@@ -40,3 +40,40 @@ code {
   left: 0;
   right: 0;
 }
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h1, h2 {
+  margin-bottom: 2rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+input.form-control,
+button.form-control {
+  padding: .5rem;
+  font-size: 1rem;
+  margin: .5rem;
+  border-radius: 1rem;
+  border: none;
+  color: #151515;
+}
+
+button.form-control {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+input.form-control:focus,
+button.form-control:focus {
+  outline: none;
+  box-shadow: 0 0 0.2rem #151515;
+}
+
+.w-60 {
+  width: 60%;
+}
