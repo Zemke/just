@@ -95,7 +95,10 @@ export default class AppComponent extends React.Component {
     Auth
       .current()
       .then(currentUser => {
-        if (!currentUser) return;
+        if (!currentUser) {
+          this.setState({loading: false});
+          return;
+        }
         Notification.requestPermission();
         setTimeout(() => this.setState({loading: false}), 300);
         this.setState(
