@@ -15,7 +15,8 @@ export default class AppComponent extends React.Component {
     enterAnotherCode: false,
     shareYourCode: false,
     messages: [],
-    initMessages: false
+    initMessages: false,
+    loading: true,
   };
 
   enterAnotherCode = () =>
@@ -59,17 +60,21 @@ export default class AppComponent extends React.Component {
         }
       });
 
-      return {messages: messageBatch, initMessages: true};
+      return {messages: messageBatch, initMessages: true, loading: false};
     });
   };
 
   render() {
+    if (this.state.loading) {
+      return <div className="translucent translucent-center"><p>On my way...</p></div>;
+    }
+
     if (!this.state.currentUser) {
-      return <SignIn signedIn={currentUser => this.signIn(currentUser)}/>
+      return <SignIn signedIn={currentUser => this.signIn(currentUser)}/>;
     } else if (this.state.enterAnotherCode) {
-      return <EnterAnotherCode currentUser={this.state.currentUser}/>
+      return <EnterAnotherCode currentUser={this.state.currentUser}/>;
     } else if (this.state.shareYourCode) {
-      return <ShareYourCode currentUser={this.state.currentUser}/>
+      return <ShareYourCode currentUser={this.state.currentUser}/>;
     }
 
     if (this.state.messages && this.state.messages.length) {
@@ -92,6 +97,7 @@ export default class AppComponent extends React.Component {
       .then(currentUser => {
         if (!currentUser) return;
         Notification.requestPermission();
+        setTimeout(() => this.setState({loading: false}), 300);
         this.setState(
           {currentUser},
           () => this.onMessageSubscription = DataStore.onMessage(this.onMessage));
