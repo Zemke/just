@@ -15,9 +15,7 @@ export default function Dropdown(props) {
         : setCollapsed(true);
     document.addEventListener("click", outsideClickListener);
 
-    return function cleanup() {
-      document.removeEventListener("click", outsideClickListener);
-    };
+    return () => document.removeEventListener("click", outsideClickListener);
   });
 
   return ReactDOM.createPortal(

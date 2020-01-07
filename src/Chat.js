@@ -29,9 +29,7 @@ export default function Chat(props) {
   useEffect(() => {
     const documentKeydownHandler = () => inputField.current.focus();
     document.addEventListener('keydown', documentKeydownHandler);
-    return function cleanup() {
-      document.removeEventListener('keydown', documentKeydownHandler);
-    };
+    return () => document.removeEventListener('keydown', documentKeydownHandler);
   });
 
   const onSubmit = async e => {
