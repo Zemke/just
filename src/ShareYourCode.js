@@ -1,11 +1,24 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
+import QRCode from 'bluedrop-qrcode-generator';
 
-export default class ShareYourCode extends React.Component {
+export default function ShareYourCode(props) {
 
-  render() {
-    return (<>
-      {this.props.currentUser.uid}
-      {/* todo generate QR code */}
-    </>);
-  }
+  const qrCodeEl = useRef(null);
+
+  // eslint-disable-next-line no-undef
+  console.log(QRCode);
+  useEffect(() => {
+    // eslint-disable-next-line no-undef
+    new QRCode(qrCodeEl.current, props.currentUser.uid);
+  });
+
+  return (
+    <div className="translucent translucent-center text-center">
+      <h1>Share your code</h1>
+      <p>{props.currentUser.uid}</p>
+      <div className="margin-top">
+        <div className="flex" ref={qrCodeEl}/>
+      </div>
+    </div>
+  );
 }
