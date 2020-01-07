@@ -61,12 +61,14 @@ button.form-control {
   border-radius: 1rem;
   border: none;
   color: #151515;
+  background-color: snow;
 }
 
 button.form-control {
   padding-left: 1rem;
   padding-right: 1rem;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 input.form-control:focus,
@@ -75,6 +77,12 @@ button.form-control:focus {
   box-shadow: 0 0 0.2rem #151515;
 }
 
-.w-60 {
-  width: 60%;
+.flex {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  align-content: center;
+  max-width: 20rem;
+  margin: 0 auto;
 }

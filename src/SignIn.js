@@ -66,11 +66,11 @@ export default function SignInComponent(props) {
         {info === null ? (
           <form onSubmit={onSubmit}>
             <label>Sign in with only your email address</label>
-            <div>
+            <div className="flex">
               <input
                 type="email"
                 value={email}
-                className="form-control text-center w-60"
+                className="form-control text-center"
                 onChange={e => setEmail(e.target.value)}/>
             </div>
             <button type="submit" disabled={disabled} className="form-control">Sign In</button>
