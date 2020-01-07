@@ -5,10 +5,7 @@ export default function ShareYourCode(props) {
 
   const qrCodeEl = useRef(null);
 
-  // eslint-disable-next-line no-undef
-  console.log(QRCode);
   useEffect(() => {
-    // eslint-disable-next-line no-undef
     new QRCode(qrCodeEl.current, props.currentUser.uid);
   });
 
