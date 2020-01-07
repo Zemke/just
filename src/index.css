@@ -66,6 +66,7 @@ button.form-control {
 button.form-control {
   padding-left: 1rem;
   padding-right: 1rem;
+  cursor: pointer;
 }
 
 input.form-control:focus,

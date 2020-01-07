@@ -9,6 +9,7 @@ export default function SignInComponent(props) {
   const [isSignInLink, setIsSignInLink] = useState(false);
   const [signedIn, setSignedIn] = useState(null);
   const [emailSent, setEmailSent] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     Auth
@@ -36,12 +37,14 @@ export default function SignInComponent(props) {
   });
 
   const onSubmit = e => {
+    setDisabled(true);
     e.preventDefault();
     Auth
       .sendMail(email)
       .then(() => {
         DataStore.saveSignInEmail(email);
         setEmailSent(true);
+        setDisabled(false);
       });
   };
 
@@ -70,7 +73,7 @@ export default function SignInComponent(props) {
                 className="form-control text-center w-60"
                 onChange={e => setEmail(e.target.value)}/>
             </div>
-            <button type="submit" className="form-control">Sign In</button>
+            <button type="submit" disabled={disabled} className="form-control">Sign In</button>
           </form>
         ) : info}
       </div>
