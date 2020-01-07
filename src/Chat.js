@@ -46,7 +46,7 @@ export default function Chat(props) {
   };
 
   const rename = async newName =>
-    setOtherUser(await DataStore.saveChatName(otherUser, newName));
+    await DataStore.saveChatName(otherUser, newName);
 
   const otherUsers = props.messages
     .reduce((acc, m) => {

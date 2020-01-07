@@ -54,6 +54,7 @@ api.saveChatName = (userUid, newName) => {
   const names = JSON.parse(window.localStorage.getItem('names')) || {};
   names[userUid] = newName;
   window.localStorage.setItem('names', JSON.stringify(names));
+  window.dispatchEvent(new CustomEvent("chatnamechange", {detail: newName}));
   return newName;
 };
 
