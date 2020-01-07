@@ -48,6 +48,9 @@ export default function Chat(props) {
   const rename = async newName =>
     await DataStore.saveChatName(otherUser, newName);
 
+  const deleteChat = async () =>
+    await DataStore.deleteChatWithUser(otherUser);
+
   const otherUsers = props.messages
     .reduce((acc, m) => {
       const otherUser1 = extractOtherUser(props.currentUser.uid, [m]);
@@ -61,7 +64,7 @@ export default function Chat(props) {
       <div className="head">
         <ChatMenu goToShareYourCode={props.goToShareYourCode}
                   goToEnterAnotherCode={props.goToEnterAnotherCode}
-                  rename={rename}/>
+                  rename={rename} deleteChat={deleteChat}/>
         <div className="changeChat">
           <ChatSelect otherUsers={otherUsers} otherUser={otherUser}/>
         </div>

@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import './ChatMenu.css';
-import DataStore from './dataStore.js';
 import Auth from "./auth";
 import Dropdown from "./Dropdown";
 
@@ -15,12 +14,9 @@ export default function ChatMenu(props) {
       .signOut()
       .then(props.signOut);
 
-  const deleteChat = async () => {
-    if (!window.confirm("The chat will be irreversibly deleted. Are you sure?")) {
-      return;
-    }
-    await DataStore.deleteChatWithUser(this.state.otherUser);
-  };
+  const deleteChat = async () =>
+    window.confirm("The chat will be irreversibly deleted. Are you sure?")
+    && props.deleteChat();
 
   return (<>
     <div className="hamburger" role="button" ref={ref => setDropdownTrigger(ref)}>

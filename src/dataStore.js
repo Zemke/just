@@ -38,14 +38,28 @@ api.onMessage = async cb =>
         .docChanges()
         .map(({doc, type}) => ({message: {...mapTimestamp(doc.data()), id: doc.id}, doc, type}))));
 
+const getConversation = (userUidA, userUidB) =>
+  Promise
+    .all([
+      (firebase
+        .firestore()
+        .collection('messages')
+        .where('from', '==', userUidA)
+        .where('to', '==', userUidB)
+        .get()),
+      (firebase
+        .firestore()
+        .collection('messages')
+        .where('from', '==', userUidB)
+        .where('to', '==', userUidA)
+        .get())
+    ])
+    .then(res => res[0].docs.concat(...res[1].docs));
+
 api.deleteChatWithUser = async userUid =>
-  firebase
-    .firestore()
-    .collection('messages')
-    .where('users', 'array-contains', userUid)
-    .where('users', 'array-contains', (await Auth.current()).uid)
-    .get()
-    .then(res => res.docs.forEach(doc => doc.ref.delete()));
+  getConversation(userUid, (await Auth.current()).uid)
+    .then(docs => docs.forEach(doc => doc.ref.delete()));
+
 
 api.setDelivered = message =>
   message.update({delivered: true});
