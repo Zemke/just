@@ -33,7 +33,7 @@ export default class AppComponent extends React.Component {
   };
 
   signIn = async currentUser => {
-    this.setState({currentUser});
+    this.setState({currentUser, loading: true});
     this.onMessageSubscription && (await this.onMessageSubscription)();
     this.onMessageSubscription = DataStore.onMessage(this.onMessage);
   };
