@@ -19,6 +19,11 @@ export default function App() {
   const [initMessages, setInitMessages] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const unsubscribe = async () => {
+    onMessageSubscription.current && (await onMessageSubscription.current)();
+    onMessageSubscription.current = null;
+  };
+
   useEffect(() => {
     Auth
       .current()
@@ -32,24 +37,26 @@ export default function App() {
         setCurrentUser(currentUser);
       });
 
-    return async () =>
-      onMessageSubscription.current && (await onMessageSubscription.current)();
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
-    onMessageSubscription.current = DataStore.onMessage(onMessage);
+    (async () => {
+      await unsubscribe();
+      onMessageSubscription.current = DataStore.onMessage(onMessage);
+    })();
   }, [currentUser]);
 
   const signOut = async () => {
     setCurrentUser(null);
     setMessages([]);
-    onMessageSubscription.current && (await onMessageSubscription.current)();
+    await unsubscribe();
   };
 
   const signIn = async currentUser => {
     setCurrentUser(currentUser);
     setLoading(true);
-    onMessageSubscription.current && (await onMessageSubscription.current)();
+    await unsubscribe();
   };
 
   const onMessage = messages => {
