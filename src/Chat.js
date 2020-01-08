@@ -86,6 +86,7 @@ export default function Chat(props) {
           <input onChange={e => setField(e.target.value)}
                  placeholder="Type here"
                  value={field}
+                 required
                  ref={inputField}/>
         </form>
       </div>

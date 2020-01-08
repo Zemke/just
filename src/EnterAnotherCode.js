@@ -26,9 +26,11 @@ export default function EnterAnotherCode(props) {
         <input value={anotherCode}
                className="form-control text-center"
                placeholder="The other person’s code"
+               required
                onChange={e => setAnotherCode(e.target.value)}/>
         <input value={firstMessage}
                className="form-control text-center"
+               required
                placeholder="Your first message"
                onChange={e => setFirstMessage(e.target.value)}/>
         <button type="submit" className="form-control">
