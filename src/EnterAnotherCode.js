@@ -23,16 +23,20 @@ export default function EnterAnotherCode(props) {
         and introduce yourself in an initial message.
       </p>
       <form onSubmit={onSubmit}>
-        <input value={anotherCode}
-               className="form-control text-center"
-               placeholder="The other person’s code"
-               required
-               onChange={e => setAnotherCode(e.target.value)}/>
-        <input value={firstMessage}
-               className="form-control text-center"
-               required
-               placeholder="Your first message"
-               onChange={e => setFirstMessage(e.target.value)}/>
+        <div className="flex">
+          <input value={anotherCode}
+                 className="form-control text-center"
+                 placeholder="The other person’s code"
+                 required
+                 onChange={e => setAnotherCode(e.target.value)}/>
+        </div>
+        <div className="flex">
+          <input value={firstMessage}
+                 className="form-control text-center"
+                 required
+                 placeholder="Your first message"
+                 onChange={e => setFirstMessage(e.target.value)}/>
+        </div>
         <button type="submit" className="form-control">
           Submit
         </button>
