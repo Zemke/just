@@ -10,10 +10,6 @@ import Chat from "./Chat";
 
 export default function App() {
 
-  // todo this doesn't work
-  //  probably other hooks can help and improve
-  //  https://reactjs.org/docs/hooks-reference.html
-
   const onMessageSubscription = useRef(null);
 
   const [currentUser, setCurrentUser] = useState(null);
