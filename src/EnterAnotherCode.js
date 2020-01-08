@@ -25,7 +25,6 @@ export default class EnterAnotherCode extends React.Component {
                onChange={e => this.setState({firstMessage: e.target.value})}/>
         <button type="submit">Submit</button>
       </form>
-      /* todo scan QR code */
     );
   }
 }
