@@ -1,30 +1,29 @@
-import React from 'react';
+import React, {useState} from 'react';
 import DataStore from './dataStore';
 
-export default class EnterAnotherCode extends React.Component {
+export default function EnterAnotherCode(props) {
 
-  state = {anotherCode: '', firstMessage: ''};
+  const [anotherCode, setAnotherCode] = useState('');
+  const [firstMessage, setFirstMessage] = useState('');
 
-  onSubmit =  async e => {
+  const onSubmit = async e => {
     e.preventDefault();
     await DataStore.sendMessage({
-      to: this.state.anotherCode,
-      from: this.props.currentUser.uid,
-      body: this.state.firstMessage,
+      to: anotherCode,
+      from: props.currentUser.uid,
+      body: firstMessage,
     });
   };
 
-  render() {
-    return (
-      <form onSubmit={e => this.onSubmit(e)}>
-        <input value={this.state.anotherCode}
-               placeholder="The other person’s code"
-               onChange={e => this.setState({anotherCode: e.target.value})}/>
-        <input value={this.state.firstMessage}
-               placeholder="Your first message"
-               onChange={e => this.setState({firstMessage: e.target.value})}/>
-        <button type="submit">Submit</button>
-      </form>
-    );
-  }
+  return (
+    <form onSubmit={onSubmit}>
+      <input value={anotherCode}
+             placeholder="The other person’s code"
+             onChange={e => setAnotherCode(e.target.value)}/>
+      <input value={firstMessage}
+             placeholder="Your first message"
+             onChange={e => setFirstMessage(e.target.value)}/>
+      <button type="submit">Submit</button>
+    </form>
+  );
 }
