@@ -13,8 +13,8 @@ export default function App() {
   const onMessageSubscription = useRef(null);
 
   const [currentUser, setCurrentUser] = useState(null);
-  const [enterAnotherCode, setEnterAnotherCode] = useState(false);
-  const [shareYourCode, setShareYourCode] = useState(false);
+  const [enterAnotherCode, setEnterAnotherCode] = useState(window.location.pathname === '/enter-code');
+  const [shareYourCode, setShareYourCode] = useState(window.location.pathname === '/share-code');
   const [messages, setMessages] = useState([]);
   const [initMessages, setInitMessages] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -39,6 +39,28 @@ export default function App() {
 
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    window.onpopstate = () => {
+      setEnterAnotherCode(window.location.pathname === '/enter-code');
+      setShareYourCode(window.location.pathname === '/share-code');
+    };
+
+    return () => {
+      window.onpopstate = () => undefined;
+    };
+  }, []);
+
+
+  useEffect(() => {
+    if (enterAnotherCode) {
+      window.history.replaceState(null, null, '/enter-code');
+    } else if (shareYourCode) {
+      window.history.replaceState(null, null, '/share-code');
+    } else {
+      window.history.replaceState(null, null, '/');
+    }
+  }, [enterAnotherCode, shareYourCode]);
 
   useEffect(() => {
     (async () => {
