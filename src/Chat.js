@@ -82,7 +82,7 @@ export default function Chat(props) {
           )}
       </div>
       <div className="foot">
-        <form onSubmit={e => onSubmit(e)}>
+        <form onSubmit={onSubmit}>
           <input onChange={e => setField(e.target.value)}
                  placeholder="Type here"
                  value={field}

@@ -32,16 +32,13 @@ export default function App() {
           return;
         }
         Notification.requestPermission();
-        setTimeout(() => setLoading(true), 300);
+        setTimeout(() => setLoading(false), 300);
         setCurrentUser(currentUser);
-
-        // todo should be sync aftet setCurrentUser
-        this.onMessageSubscription = DataStore.onMessage(this.onMessage);
       });
 
     return async () =>
       onMessageSubscription.current && (await onMessageSubscription.current)();
-  });
+  }, []);
 
   useEffect(() => {
     onMessageSubscription.current = DataStore.onMessage(onMessage);
@@ -57,7 +54,6 @@ export default function App() {
     setCurrentUser(currentUser);
     setLoading(true);
     onMessageSubscription.current && (await onMessageSubscription.current)();
-    onMessageSubscription.current = DataStore.onMessage(onMessage);
   };
 
   const onMessage = messages => {
@@ -108,7 +104,7 @@ export default function App() {
   }
 
   return <Start
-    enterAnoth3erCode={() => {
+    enterAnotherCode={() => {
       setShareYourCode(false);
       setEnterAnotherCode(true);
     }}
