@@ -3,7 +3,8 @@ import DataStore from './dataStore';
 
 export default function EnterAnotherCode(props) {
 
-  const [anotherCode, setAnotherCode] = useState('');
+  const [anotherCode, setAnotherCode] = useState(
+    new URLSearchParams(window.location.search).get("code") || '');
   const [firstMessage, setFirstMessage] = useState('');
 
   const onSubmit = async e => {
