@@ -82,10 +82,10 @@ export default function App() {
     await unsubscribe();
   };
 
-  const onMessage = messages => {
+  const onMessage = newMessages => {
     let messageBatch = [...messages];
 
-    messages.forEach(({message, doc, type}) => {
+    newMessages.forEach(({message, doc, type}) => {
       if (type === 'added') {
         if (message.to === currentUser.uid && !message.delivered) {
           DataStore.setDelivered(doc.ref);
