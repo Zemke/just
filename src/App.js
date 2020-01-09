@@ -64,6 +64,7 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
+      if (!currentUser) return;
       await unsubscribe();
       onMessageSubscription.current = DataStore.onMessage(onMessage);
     })();
