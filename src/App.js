@@ -54,11 +54,11 @@ export default function App() {
 
   useEffect(() => {
     if (enterAnotherCode) {
-      window.history.replaceState({}, "", '/enter-code' + window.location.search);
+      window.history.pushState({}, "", '/enter-code' + window.location.search);
     } else if (shareYourCode) {
-      window.history.replaceState({}, "", '/share-code' + window.location.search);
+      window.history.pushState({}, "", '/share-code' + window.location.search);
     } else {
-      window.history.replaceState({}, "", '/' + window.location.search);
+      window.history.pushState({}, "", '/' + window.location.search);
     }
   }, [enterAnotherCode, shareYourCode]);
 
