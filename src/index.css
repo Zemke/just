@@ -98,3 +98,7 @@ p {
 .bold {
   font-weight: bold;
 }
+
+.invisible {
+  opacity: 0;
+}
