@@ -111,6 +111,15 @@ export default function App() {
   if (loading) {
     return <div className="translucent translucent-center"><p>On my way...</p></div>;
   }
+  const goToEnterAnotherCode = () => {
+      setShareYourCode(false);
+      setEnterAnotherCode(true);
+  };
+
+  const goToShareYourCode = () => {
+      setShareYourCode(true);
+      setEnterAnotherCode(false);
+  };
 
   if (!currentUser) {
     return <SignIn signedIn={currentUser => signIn(currentUser)}/>;
@@ -124,18 +133,12 @@ export default function App() {
     return <Chat messages={messages}
                  currentUser={currentUser}
                  signOut={signOut}
-                 goToEnterAnotherCode={enterAnotherCode}
-                 goToShareYourCode={shareYourCode}
+                 goToEnterAnotherCode={goToEnterAnotherCode}
+                 goToShareYourCode={goToShareYourCode}
                  initMessages={initMessages}/>
   }
 
   return <Start
-    enterAnotherCode={() => {
-      setShareYourCode(false);
-      setEnterAnotherCode(true);
-    }}
-    shareYourCode={() => {
-      setShareYourCode(true);
-      setEnterAnotherCode(false);
-    }}/>;
+    enterAnotherCode={goToEnterAnotherCode}
+    shareYourCode={goToShareYourCode}/>;
 }
