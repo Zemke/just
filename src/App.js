@@ -112,13 +112,13 @@ export default function App() {
     return <div className="translucent translucent-center"><p>On my way...</p></div>;
   }
   const goToEnterAnotherCode = () => {
-      setShareYourCode(false);
-      setEnterAnotherCode(true);
+    setShareYourCode(false);
+    setEnterAnotherCode(true);
   };
 
   const goToShareYourCode = () => {
-      setShareYourCode(true);
-      setEnterAnotherCode(false);
+    setShareYourCode(true);
+    setEnterAnotherCode(false);
   };
 
   if (!currentUser) {
