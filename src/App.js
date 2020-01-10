@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import SignIn from "./SignIn";
 import DataStore from "./dataStore";
@@ -10,19 +10,12 @@ import Chat from "./Chat";
 
 export default function App() {
 
-  const onMessageSubscription = useRef(null);
-
   const [currentUser, setCurrentUser] = useState(null);
   const [enterAnotherCode, setEnterAnotherCode] = useState(window.location.pathname === '/enter-code');
   const [shareYourCode, setShareYourCode] = useState(window.location.pathname === '/share-code');
   const [messages, setMessages] = useState([]);
   const [initMessages, setInitMessages] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const unsubscribe = async () => {
-    onMessageSubscription.current && (await onMessageSubscription.current)();
-    onMessageSubscription.current = null;
-  };
 
   useEffect(() => {
     Auth
@@ -36,8 +29,6 @@ export default function App() {
         setTimeout(() => setLoading(false), 300);
         setCurrentUser(currentUser);
       });
-
-    return unsubscribe;
   }, []);
 
   useEffect(() => {
@@ -63,49 +54,42 @@ export default function App() {
   }, [enterAnotherCode, shareYourCode]);
 
   useEffect(() => {
-    (async () => {
-      if (!currentUser) return;
-      await unsubscribe();
-      onMessageSubscription.current = DataStore.onMessage(onMessage);
-    })();
+    if (!currentUser) return;
+
+    const subscription = DataStore.onMessage(messages => {
+      messages.forEach(({message, doc, type}) => {
+        if (type === 'added') {
+          if (message.to === currentUser.uid && !message.delivered) {
+            DataStore.setDelivered(doc.ref);
+            new Notification(message.from, {body: message.body});
+          }
+          setMessages(curr => [...curr, message]);
+        } else if (type === 'removed') {
+          setMessages(curr => [...curr.filter(m => m.id === doc.id)]);
+        } else if (type === 'modified') {
+          setMessages(curr => [...curr.map(m => {
+            if (m.id !== message.id) return m;
+            return message;
+          })]);
+        }
+      });
+
+      setInitMessages(true);
+      setLoading(false);
+    });
+    return async () => {
+      (await subscription)();
+    };
   }, [currentUser]);
 
   const signOut = async () => {
     setCurrentUser(null);
     setMessages([]);
-    await unsubscribe();
   };
 
   const signIn = async currentUser => {
     setCurrentUser(currentUser);
     setLoading(true);
-    await unsubscribe();
-  };
-
-  const onMessage = newMessages => {
-    let messageBatch = [...messages];
-
-    newMessages.forEach(({message, doc, type}) => {
-      if (type === 'added') {
-        if (message.to === currentUser.uid && !message.delivered) {
-          DataStore.setDelivered(doc.ref);
-          new Notification(message.from, {body: message.body});
-        }
-        messageBatch.push(message);
-      } else if (type === 'removed') {
-        messageBatch = messageBatch.filter(m => m.id === doc.id);
-      } else if (type === 'modified') {
-        messageBatch
-          .map(m => {
-            if (m.id !== message.id) return m;
-            return message;
-          });
-      }
-    });
-
-    setMessages(messageBatch);
-    setInitMessages(true);
-    setLoading(false);
   };
 
   if (loading) {
