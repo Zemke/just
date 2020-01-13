@@ -7,6 +7,7 @@ import EnterAnotherCode from "./EnterAnotherCode";
 import ShareYourCode from "./ShareYourCode";
 import Start from './Start';
 import Chat from "./Chat";
+import MessageUtils from "./messageUtils";
 
 export default function App() {
 
@@ -81,6 +82,21 @@ export default function App() {
       (await subscription)();
     };
   }, [currentUser]);
+
+  useEffect(() => {
+    if (!shareYourCode && !enterAnotherCode) return;
+
+    const newestMessage = MessageUtils.getNewestMessage(messages);
+    if (!newestMessage) return;
+
+    const conversation = messages
+      .filter(MessageUtils.containsExactlyUsers(newestMessage.users));
+
+    if (conversation.length === 1) {
+      setEnterAnotherCode(false);
+      setShareYourCode(false);
+    }
+  }, [enterAnotherCode, shareYourCode, messages]);
 
   const signOut = () => {
     setCurrentUser(null);
