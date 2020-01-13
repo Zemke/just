@@ -14,4 +14,8 @@ api.getNewestMessage = messages => {
   return sorted.length ? sorted[0] : null;
 };
 
+api.extractOtherUser = (currentUserUid, messages) =>
+  [messages[0].from, messages[0].to]
+    .filter(userUid => userUid !== currentUserUid)[0];
+
 export default api;

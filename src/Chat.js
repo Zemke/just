@@ -1,9 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import './Chat.css';
 import DataStore from './dataStore';
-import extractOtherUser from "./otherUser";
 import ChatMenu from "./ChatMenu";
 import ChatSelect from "./ChatSelect";
+import MessageUtils from './messageUtils';
 
 export default function Chat(props) {
 
@@ -11,7 +11,7 @@ export default function Chat(props) {
   const inputField = useRef(null);
   const [initMessages, setInitMessages] = useState(false);
   const [field, setField] = useState('');
-  const [otherUser] = useState(extractOtherUser(
+  const [otherUser] = useState(MessageUtils.extractOtherUser(
     props.currentUser.uid, props.messages.sort((c1, c2) => c1 - c2)));
 
   const arbitraryTolerance = 70;
@@ -51,7 +51,7 @@ export default function Chat(props) {
 
   const otherUsers = props.messages
     .reduce((acc, m) => {
-      const otherUser1 = extractOtherUser(props.currentUser.uid, [m]);
+      const otherUser1 = MessageUtils.extractOtherUser(props.currentUser.uid, [m]);
       if (otherUser1 === otherUser) return acc;
       if (acc.indexOf(otherUser1) === -1) acc.push(otherUser1);
       return acc;
@@ -70,7 +70,7 @@ export default function Chat(props) {
       <div className="body">
         {props.messages
           .filter(m =>
-            extractOtherUser(props.currentUser.uid, [m]) === otherUser)
+            MessageUtils.extractOtherUser(props.currentUser.uid, [m]) === otherUser)
           .sort((c1, c2) => c1.when - c2.when)
           .map(message =>
             <div key={message.id} className="message-wrapper">
