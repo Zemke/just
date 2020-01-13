@@ -82,12 +82,12 @@ export default function App() {
     };
   }, [currentUser]);
 
-  const signOut = async () => {
+  const signOut = () => {
     setCurrentUser(null);
     setMessages([]);
   };
 
-  const signIn = async currentUser => {
+  const signIn = currentUser => {
     setCurrentUser(currentUser);
     setLoading(true);
   };
