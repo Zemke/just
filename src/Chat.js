@@ -11,6 +11,7 @@ export default function Chat(props) {
   const inputField = useRef(null);
   const [initMessages, setInitMessages] = useState(false);
   const [field, setField] = useState('');
+
   const [otherUser] = useState(MessageUtils.extractOtherUser(
     props.currentUser.uid, props.messages.sort((c1, c2) => c1 - c2)));
 

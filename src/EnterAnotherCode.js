@@ -9,6 +9,12 @@ export default function EnterAnotherCode(props) {
 
   const onSubmit = async e => {
     e.preventDefault();
+
+    if (anotherCode === props.currentUser.uid) {
+      alert("This is your own code. Please, get a another person’s code.");
+      return;
+    }
+
     await DataStore.sendMessage({
       to: anotherCode,
       from: props.currentUser.uid,
