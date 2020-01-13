@@ -62,7 +62,7 @@ export default function Chat(props) {
       <div className="head">
         <ChatMenu goToShareYourCode={props.goToShareYourCode}
                   goToEnterAnotherCode={props.goToEnterAnotherCode}
-                  rename={rename} deleteChat={deleteChat}/>
+                  rename={rename} deleteChat={deleteChat} signOut={props.signOut}/>
         <div className="changeChat">
           <ChatSelect otherUsers={otherUsers} otherUser={otherUser}/>
         </div>
