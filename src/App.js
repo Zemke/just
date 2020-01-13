@@ -66,7 +66,7 @@ export default function App() {
           }
           setMessages(curr => [...curr, message]);
         } else if (type === 'removed') {
-          setMessages(curr => [...curr.filter(m => m.id === doc.id)]);
+          setMessages(curr => [...curr.filter(m => m.id !== doc.id)]);
         } else if (type === 'modified') {
           setMessages(curr => [...curr.map(m => {
             if (m.id !== message.id) return m;
