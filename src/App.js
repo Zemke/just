@@ -92,9 +92,6 @@ export default function App() {
     setLoading(true);
   };
 
-  if (loading) {
-    return <div className="translucent translucent-center"><p>On my way...</p></div>;
-  }
   const goToEnterAnotherCode = () => {
     setShareYourCode(false);
     setEnterAnotherCode(true);
@@ -105,24 +102,24 @@ export default function App() {
     setEnterAnotherCode(false);
   };
 
-  if (!currentUser) {
+  if (loading) {
+    return <div className="translucent translucent-center"><p>On my way...</p></div>;
+  } else if (!currentUser) {
     return <SignIn signedIn={currentUser => signIn(currentUser)}/>;
   } else if (enterAnotherCode) {
     return <EnterAnotherCode currentUser={currentUser}/>;
   } else if (shareYourCode) {
     return <ShareYourCode currentUser={currentUser}/>;
-  }
-
-  if (messages && messages.length) {
+  } else if (messages && messages.length) {
     return <Chat messages={messages}
                  currentUser={currentUser}
                  signOut={signOut}
                  goToEnterAnotherCode={goToEnterAnotherCode}
                  goToShareYourCode={goToShareYourCode}
                  initMessages={initMessages}/>
+  } else {
+    return <Start
+      enterAnotherCode={goToEnterAnotherCode}
+      shareYourCode={goToShareYourCode}/>;
   }
-
-  return <Start
-    enterAnotherCode={goToEnterAnotherCode}
-    shareYourCode={goToShareYourCode}/>;
 }
