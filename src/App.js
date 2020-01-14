@@ -85,6 +85,7 @@ export default function App() {
   }, [currentUser]);
 
   useEffect(() => {
+    if (!initMessages) return;
     if (!shareYourCode && !enterAnotherCode) return;
 
     const newestMessage = MessageUtils.getNewestMessage(messages);
@@ -97,7 +98,7 @@ export default function App() {
       setEnterAnotherCode(false);
       setShareYourCode(false);
     }
-  }, [enterAnotherCode, shareYourCode, messages]);
+  }, [enterAnotherCode, shareYourCode, messages, initMessages]);
 
   const signOut = () => {
     setCurrentUser(null);
