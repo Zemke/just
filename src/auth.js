@@ -1,7 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
 
-const authUrl = 'http://localhost:3000/completeSignIn?showPromo=1234';
+const authUrl = window.location.origin;
 const actionCodeSettings = {
   url: authUrl,
   handleCodeInApp: true,
