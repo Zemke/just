@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import toName from './toName';
 
 export default function ChatSelect(props) {
@@ -6,9 +6,15 @@ export default function ChatSelect(props) {
   const [expanded, setExpanded] = useState(false);
   const [otherUserName, setOtherUserName] = useState(toName(props.otherUser));
 
-  window.addEventListener(
-    "chatnamechange",
-    ({detail}) => setOtherUserName(detail));
+  useEffect(() => {
+    const chatNameChangeListener = ({detail}) => setOtherUserName(detail);
+    // noinspection JSCheckFunctionSignatures,SpellCheckingInspection // custom event
+    window.addEventListener("chatnamechange", chatNameChangeListener);
+    return () => {
+      // noinspection JSCheckFunctionSignatures,SpellCheckingInspection // custom event
+      window.removeEventListener("chatnamechange", chatNameChangeListener);
+    };
+  });
 
   return (<>
     <div className="otherUser"
