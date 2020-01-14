@@ -7,7 +7,7 @@
 .chat > .body {
   flex: 1 1 0;
   padding-top: 4rem;
-  padding-bottom: 4.5rem;
+  padding-bottom: 5rem;
   overflow: hidden;
 }
 
@@ -98,12 +98,12 @@
   display: flex;
   flex: 1;
   border-radius: 2rem;
-  margin: .3rem .4rem;
+  margin: .4rem;
 }
 
 .chat > .foot input {
   padding: .5rem;
-  font-size: .9rem;
+  font-size: 1rem;
   border: 0;
   display: block;
 }
