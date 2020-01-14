@@ -8,7 +8,6 @@ import ShareYourCode from "./ShareYourCode";
 import Start from './Start';
 import Chat from "./Chat";
 import MessageUtils from "./messageUtils";
-import webNotifications from './webNotification';
 
 export default function App() {
 
@@ -27,7 +26,6 @@ export default function App() {
           setLoading(false);
           return;
         }
-        webNotifications.requestPermission();
         setTimeout(() => setLoading(false), 300);
         setCurrentUser(currentUser);
       });
@@ -63,7 +61,7 @@ export default function App() {
         if (type === 'added') {
           if (message.to === currentUser.uid && !message.delivered) {
             DataStore.setDelivered(doc.ref);
-            webNotifications.notify(message.from, {body: message.body});
+            // todo show notification
           }
           setMessages(curr => [...curr, message]);
         } else if (type === 'removed') {
