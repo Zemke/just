@@ -1,9 +1,10 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {Fragment, useEffect, useRef, useState} from 'react';
 import './Chat.css';
 import DataStore from './dataStore';
 import ChatMenu from "./ChatMenu";
 import ChatSelect from "./ChatSelect";
 import MessageUtils from './messageUtils';
+import toName from './toName.js';
 
 export default function Chat(props) {
 
@@ -14,8 +15,9 @@ export default function Chat(props) {
   const [otherUser, setOtherUser] = useState(MessageUtils.extractOtherUser(
     props.currentUser.uid, props.messages.sort((c1, c2) => c1 - c2)));
   const [otherUsers, setOtherUsers] = useState([]);
+  const [lastOwnMessage, setLastOwnMessage] = useState(null);
 
-  const arbitraryTolerance = 70;
+  const arbitraryTolerance = 150;
 
   useEffect(() => {
     if (!chatEl.current) return;
@@ -44,7 +46,7 @@ export default function Chat(props) {
     try {
       await DataStore.sendMessage(payload);
     } catch (e) {
-      alert('Sending message failed: ' + e)
+      alert(`Sending message “${payload.message}” to ${toName(otherUser)} failed.\n\n${e}`);
     }
   };
 
@@ -68,6 +70,17 @@ export default function Chat(props) {
     setOtherUsers(otherUsers);
   }, [otherUser, props.messages, props.currentUser]);
 
+  useEffect(() => {
+    const ownMessages = props.messages
+      .filter(m => m.from === props.currentUser.uid)
+      .sort((c1, c2) => c1.when - c2.when);
+
+    setLastOwnMessage(
+      ownMessages.length === 0
+        ? setLastOwnMessage(null)
+        : ownMessages[ownMessages.length - 1]);
+  }, [props.messages, otherUser, lastOwnMessage, props.currentUser]);
+
   return (
     <div className="chat" ref={chatEl}>
       <div className="head">
@@ -83,13 +96,22 @@ export default function Chat(props) {
           .filter(m =>
             MessageUtils.extractOtherUser(props.currentUser.uid, [m]) === otherUser)
           .sort((c1, c2) => c1.when - c2.when)
-          .map(message =>
-            <div key={message.id} className="message-wrapper">
-              <div className={"message " + (otherUser === message.from ? "from" : "to")}>
-                <div className="overlay"/>
-                <p>{message.body}</p>
+          .map(message => (
+            <Fragment key={message.id}>
+              <div className="message-wrapper">
+                <div className={"message " + (otherUser === message.from ? "from" : "to")}>
+                  <div className="overlay"/>
+                  <p>{message.body}</p>
+                </div>
               </div>
-            </div>
+              {(lastOwnMessage != null && lastOwnMessage.id === message.id) && (
+                <div className="status">
+                  {message.when == null
+                    ? 'Sending'
+                    : (message.delivered ? 'Delivered' : 'Sent')}
+                </div>
+              )}
+            </Fragment>)
           )}
       </div>
       <div className="foot">
