@@ -50,9 +50,9 @@ export default function SignInComponent(props) {
 
   let info = null;
   if (signedIn) {
-    info = <p>You are signed in with {signedIn.email}.</p>;
+    info = <p>You are signed in with <span className="bold">{signedIn.email}</span>.</p>;
   } else if (isSignInLink) {
-    info = <p>You are being signed in with {DataStore.getSignInEmail()}.</p>;
+    info = <p>You are being signed in with <span className="bold">{DataStore.getSignInEmail()}</span>.</p>;
   } else if (emailSending) {
     info = <p>Hold the line.</p>;
   } else if (emailSent) {
