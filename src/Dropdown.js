@@ -11,12 +11,12 @@ export default function Dropdown(props) {
 
     const outsideClickListener = e =>
       props.dropdownTrigger === e.target
-        ? setCollapsed(!collapsed)
+        ? setCollapsed(curr => !curr)
         : setCollapsed(true);
     document.addEventListener("click", outsideClickListener);
 
     return () => document.removeEventListener("click", outsideClickListener);
-  });
+  }, [props.dropdownTrigger]);
 
   return ReactDOM.createPortal(
     (
