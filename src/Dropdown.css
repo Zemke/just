@@ -43,7 +43,7 @@
   filter: blur(1rem);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
-  transition: filter 500ms, backdrop-filter 200ms, opacity 500ms;
+  transition: filter 400ms, backdrop-filter 100ms, opacity 400ms;
   pointer-events: none;
   opacity: 0;
 }
@@ -53,5 +53,5 @@
   backdrop-filter: blur(.5rem);
   -webkit-backdrop-filter: blur(.5rem);
   opacity: 1;
-  transition: filter 500ms, backdrop-filter 200ms;
+  transition: filter 400ms, backdrop-filter 100ms;
 }
