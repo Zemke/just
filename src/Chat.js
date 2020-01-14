@@ -40,8 +40,12 @@ export default function Chat(props) {
       to: otherUser,
       body: field
     };
-    await DataStore.sendMessage(payload);
     setField('');
+    try {
+      await DataStore.sendMessage(payload);
+    } catch (e) {
+      alert('Sending message failed: ' + e)
+    }
   };
 
   const rename = async newName =>
