@@ -5,7 +5,7 @@ import './ChatSelect.css';
 
 export default function ChatSelect(props) {
 
-  const [otherUserName, setOtherUserName] = useState(toName(props.otherUser));
+  const [otherUserName, setOtherUserName] = useState(null);
   const [dropdownTrigger, setDropdownTrigger] = useState(null);
 
   useEffect(() => {
@@ -17,6 +17,10 @@ export default function ChatSelect(props) {
       window.removeEventListener("chatnamechange", chatNameChangeListener);
     };
   });
+
+  useEffect(() => {
+    setOtherUserName(toName(props.otherUser));
+  }, [props.otherUser]);
 
   return (<>
     {props.otherUsers.length > 0 ? (

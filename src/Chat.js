@@ -11,9 +11,9 @@ export default function Chat(props) {
   const inputField = useRef(null);
   const [initMessages, setInitMessages] = useState(false);
   const [field, setField] = useState('');
-
-  const [otherUser] = useState(MessageUtils.extractOtherUser(
+  const [otherUser, setOtherUser] = useState(MessageUtils.extractOtherUser(
     props.currentUser.uid, props.messages.sort((c1, c2) => c1 - c2)));
+  const [otherUsers, setOtherUsers] = useState([]);
 
   const arbitraryTolerance = 70;
 
@@ -50,13 +50,19 @@ export default function Chat(props) {
   const deleteChat = async () =>
     await DataStore.deleteChatWithUser(otherUser);
 
-  const otherUsers = props.messages
-    .reduce((acc, m) => {
-      const otherUser1 = MessageUtils.extractOtherUser(props.currentUser.uid, [m]);
-      if (otherUser1 === otherUser) return acc;
-      if (acc.indexOf(otherUser1) === -1) acc.push(otherUser1);
-      return acc;
-    }, []);
+  const onSelect = otherUser =>
+    setOtherUser(otherUser);
+
+  useEffect(() => {
+    const otherUsers = props.messages
+      .reduce((acc, m) => {
+        const otherUser1 = MessageUtils.extractOtherUser(props.currentUser.uid, [m]);
+        if (otherUser1 === otherUser) return acc;
+        if (acc.indexOf(otherUser1) === -1) acc.push(otherUser1);
+        return acc;
+      }, []);
+    setOtherUsers(otherUsers);
+  }, [otherUser, props.messages, props.currentUser]);
 
   return (
     <div className="chat" ref={chatEl}>
@@ -65,7 +71,7 @@ export default function Chat(props) {
                   goToEnterAnotherCode={props.goToEnterAnotherCode}
                   rename={rename} deleteChat={deleteChat} signOut={props.signOut}/>
         <div className="changeChat">
-          <ChatSelect otherUsers={otherUsers} otherUser={otherUser}/>
+          <ChatSelect otherUsers={otherUsers} otherUser={otherUser} onSelect={onSelect}/>
         </div>
       </div>
       <div className="body">
