@@ -1,10 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import toName from './toName';
+import Dropdown from "./Dropdown";
+import './ChatSelect.css';
 
 export default function ChatSelect(props) {
 
-  const [expanded, setExpanded] = useState(false);
   const [otherUserName, setOtherUserName] = useState(toName(props.otherUser));
+  const [dropdownTrigger, setDropdownTrigger] = useState(null);
 
   useEffect(() => {
     const chatNameChangeListener = ({detail}) => setOtherUserName(detail);
@@ -17,18 +19,24 @@ export default function ChatSelect(props) {
   });
 
   return (<>
-    <div className="otherUser"
-         onClick={() => props.otherUsers.length && setExpanded(!expanded)}>
-      {otherUserName}
-    </div>
-    {!!props.otherUsers.length && (
-      <div className={'dropdown attach-left' + (expanded ? ' expanded' : '')}>
-        <ul>
-          {props.otherUsers.map(user =>
-            <li key={user} onChange={() => props.onSelect(user)}>
-              {toName(user)}
-            </li>)}
-        </ul>
+    {props.otherUsers.length > 0 ? (
+      <>
+        <button className="otherUser" type="button" ref={setDropdownTrigger}>
+          {otherUserName}
+        </button>
+
+        <Dropdown dropdownTrigger={dropdownTrigger} className="chatSelectMenu attachTopLeft">
+          <ul>
+            {props.otherUsers.map(user =>
+              <li key={user} onClick={() => props.onSelect(user)}>
+                {toName(user)}
+              </li>)}
+          </ul>
+        </Dropdown>
+      </>
+    ) : (
+      <div className="otherUser">
+        {otherUserName}
       </div>
     )}
   </>)
