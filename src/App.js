@@ -122,7 +122,7 @@ export default function App() {
   if (loading) {
     return <div className="translucent translucent-center"><p>On my way...</p></div>;
   } else if (!currentUser) {
-    return <SignIn signedIn={currentUser => signIn(currentUser)}/>;
+    return <SignIn signedIn={signIn}/>;
   } else if (enterAnotherCode) {
     return <EnterAnotherCode currentUser={currentUser}/>;
   } else if (shareYourCode) {
