@@ -72,7 +72,7 @@ export default function Chat(props) {
 
   useEffect(() => {
     const ownMessages = props.messages
-      .filter(m => m.from === props.currentUser.uid)
+      .filter(m => m.from === props.currentUser.uid && m.to === otherUser)
       .sort((c1, c2) => c1.when - c2.when);
 
     setLastOwnMessage(
