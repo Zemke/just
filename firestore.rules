@@ -4,10 +4,11 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if request.auth.uid != null;
     }
-  }
-  match /messages/{message} {
-    allow write: if resource.data.from == request.auth.uid;
-    allow read: if resource.data.from == request.auth.uid
-                || resource.data.to == request.auth.uid;
+    match /messages/{message} {
+      allow write: if resource.data.from == request.auth.uid;
+      allow read: if resource.data.from == request.auth.uid
+                  || resource.data.to == request.auth.uid;
+    }
   }
 }
+
