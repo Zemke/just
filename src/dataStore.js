@@ -76,16 +76,19 @@ api.deleteChatWithUser = async userUid =>
 api.setDelivered = message =>
   message.update({delivered: true});
 
-api.saveChatName = (userUid, newName) => {
-  const names = JSON.parse(window.localStorage.getItem('names')) || {};
-  names[userUid] = newName;
-  window.localStorage.setItem('names', JSON.stringify(names));
-  window.dispatchEvent(new CustomEvent("chatnamechange", {detail: newName}));
-  return newName;
-};
+api.onNames = async cb =>
+  firebase
+    .firestore()
+    .collection('names')
+    .doc((await Auth.current()).uid)
+    .onSnapshot(cb);
 
-api.getChatName = userUid =>
-  (JSON.parse(window.localStorage.getItem('names')) || {})[userUid] || userUid;
+api.putNames = async names =>
+  firebase
+    .firestore()
+    .collection('names')
+    .doc((await Auth.current()).uid)
+    .set(names);
 
 api.saveSignInEmail = emailForSignIn => window.localStorage.setItem('emailForSignIn', emailForSignIn);
 api.getSignInEmail = () => window.localStorage.getItem('emailForSignIn');

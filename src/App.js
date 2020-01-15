@@ -18,6 +18,7 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [initMessages, setInitMessages] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [names, setNames] = useState(null);
 
   useEffect(() => {
     Auth
@@ -58,7 +59,7 @@ export default function App() {
   useEffect(() => {
     if (!currentUser) return;
 
-    const subscription = DataStore.onMessage(messages => {
+    const onMessageSubscription = DataStore.onMessage(messages => {
       messages.forEach(({message, doc, type}) => {
         if (type === 'added') {
           if (message.to === currentUser.uid && !message.delivered) {
@@ -75,12 +76,15 @@ export default function App() {
           })]);
         }
       });
-
       setInitMessages(true);
       setLoading(false);
     });
+
+    const onNamesSubscription = DataStore.onNames(doc => setNames(doc.data()));
+
     return async () => {
-      (await subscription)();
+      (await onMessageSubscription)();
+      (await onNamesSubscription)();
     };
   }, [currentUser]);
 
@@ -133,6 +137,7 @@ export default function App() {
     return <Chat messages={messages}
                  currentUser={currentUser}
                  signOut={signOut}
+                 names={names}
                  goToEnterAnotherCode={goToEnterAnotherCode}
                  goToShareYourCode={goToShareYourCode}
                  initMessages={initMessages}/>

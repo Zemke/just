@@ -46,12 +46,12 @@ export default function Chat(props) {
     try {
       await DataStore.sendMessage(payload);
     } catch (e) {
-      alert(`Sending message “${payload.message}” to ${toName(otherUser)} failed.\n\n${e}`);
+      alert(`Sending message “${payload.message}” to ${toName(otherUser, props.names)} failed.\n\n${e}`);
     }
   };
 
   const rename = async newName =>
-    await DataStore.saveChatName(otherUser, newName);
+    await DataStore.putNames({...props.names, [otherUser]: newName});
 
   const deleteChat = async () =>
     await DataStore.deleteChatWithUser(otherUser);
@@ -88,7 +88,10 @@ export default function Chat(props) {
                   goToEnterAnotherCode={props.goToEnterAnotherCode}
                   rename={rename} deleteChat={deleteChat} signOut={props.signOut}/>
         <div className="changeChat">
-          <ChatSelect otherUsers={otherUsers} otherUser={otherUser} onSelect={onSelect}/>
+          <ChatSelect otherUsers={otherUsers}
+                      otherUser={otherUser}
+                      names={props.names}
+                      onSelect={onSelect}/>
         </div>
       </div>
       <div className="body">
