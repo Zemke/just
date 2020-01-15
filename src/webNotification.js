@@ -13,6 +13,7 @@ api.requestPermission = () => {
 };
 
 api.notify = (title, body) => {
+  if (document.hasFocus && document.hasFocus()) return;
   if (!window.Notification) return;
   if (Notification.permission !== 'granted') return;
 
