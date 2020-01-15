@@ -9,6 +9,9 @@ service cloud.firestore {
       allow read: if resource.data.from == request.auth.uid
                   || resource.data.to == request.auth.uid;
     }
+    match /names/{name} {
+      allow read, write: if name == request.auth.uid;
+    }
   }
 }
 
