@@ -9,6 +9,7 @@ import Start from './Start';
 import Chat from "./Chat";
 import MessageUtils from "./messageUtils";
 import webNotifications from './webNotification';
+import toName from "./toName";
 
 export default function App() {
 
@@ -64,7 +65,7 @@ export default function App() {
         if (type === 'added') {
           if (message.to === currentUser.uid && !message.delivered) {
             DataStore.setDelivered(doc.ref);
-            webNotifications.notify(message.from, message.body);
+            webNotifications.notify(toName(message.from, names), message.body);
           }
           setMessages(curr => [...curr, message]);
         } else if (type === 'removed') {
@@ -86,7 +87,7 @@ export default function App() {
       (await onMessageSubscription)();
       (await onNamesSubscription)();
     };
-  }, [currentUser]);
+  }, [currentUser, names]);
 
   useEffect(() => {
     if (!initMessages) return;
