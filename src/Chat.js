@@ -12,8 +12,16 @@ export default function Chat(props) {
   const inputField = useRef(null);
   const [initMessages, setInitMessages] = useState(false);
   const [field, setField] = useState('');
-  const [otherUser, setOtherUser] = useState(MessageUtils.extractOtherUser(
-    props.currentUser.uid, props.messages.sort((c1, c2) => c1 - c2)));
+  const [otherUser, setOtherUser] = useState(() => {
+    const otherUserFromPathname = window.location.pathname.substr(1);
+    if (!!otherUserFromPathname) {
+      const otherUserFromPathnameExists = props.messages.find(
+        m => m.from === otherUserFromPathname || m.to === otherUserFromPathname);
+      if (otherUserFromPathnameExists) return otherUserFromPathname;
+    }
+    return MessageUtils.extractOtherUser(
+      props.currentUser.uid, props.messages.sort((c1, c2) => c1 - c2));
+  });
   const [otherUsers, setOtherUsers] = useState([]);
   const [lastOwnMessage, setLastOwnMessage] = useState(null);
 
@@ -23,17 +31,37 @@ export default function Chat(props) {
     if (!chatEl.current) return;
     const maxScrollTop = chatEl.current.scrollHeight - chatEl.current.offsetHeight;
     if (chatEl.current.scrollTop >= maxScrollTop - arbitraryTolerance
-          || (props.initMessages && !initMessages)) {
+      || (props.initMessages && !initMessages)) {
       chatEl.current.scrollTo(0, maxScrollTop);
       setInitMessages(true);
     }
-  }, [props.initMessages, initMessages, props.messages]);
+  }, [props.initMessages, initMessages, props.messages, otherUser]);
+
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+
+    const onNotificationClickListener = e => {
+      if (!('newMessage' in e.data)) return;
+      setOtherUser(e.data.newMessage);
+
+    };
+
+    navigator.serviceWorker.addEventListener('message', onNotificationClickListener);
+
+    return () => {
+      navigator.serviceWorker.removeEventListener('message', onNotificationClickListener)
+    }
+  }, []);
 
   useEffect(() => {
     const documentKeydownHandler = () => inputField.current.focus();
     document.addEventListener('keydown', documentKeydownHandler);
     return () => document.removeEventListener('keydown', documentKeydownHandler);
   });
+
+  useEffect(() => {
+    window.history.pushState({}, "", '/' + otherUser);
+  }, [otherUser]);
 
   const onSubmit = async e => {
     e.preventDefault();

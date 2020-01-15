@@ -14,7 +14,7 @@ import toName from "./toName";
 export default function App() {
 
   const [currentUser, setCurrentUser] = useState(null);
-  const [enterAnotherCode, setEnterAnotherCode] = useState(window.location.pathname === '/enter-code');
+const [enterAnotherCode, setEnterAnotherCode] = useState(window.location.pathname === '/enter-code');
   const [shareYourCode, setShareYourCode] = useState(window.location.pathname === '/share-code');
   const [messages, setMessages] = useState([]);
   const [initMessages, setInitMessages] = useState(false);
@@ -52,8 +52,6 @@ export default function App() {
       window.history.pushState({}, "", '/enter-code' + window.location.search);
     } else if (shareYourCode) {
       window.history.pushState({}, "", '/share-code' + window.location.search);
-    } else {
-      window.history.pushState({}, "", '/' + window.location.search);
     }
   }, [enterAnotherCode, shareYourCode]);
 
@@ -66,7 +64,10 @@ export default function App() {
           if (type === 'added') {
             if (message.to === currentUser.uid && !message.delivered) {
               DataStore.setDelivered(doc.ref);
-              webNotifications.notify(toName(message.from, names), message.body);
+              if (!document.hasFocus() || window.location.pathname.substr(1) !== message.from) {
+                webNotifications.notify(
+                  toName(message.from, names), message.body, {fromUserUid: message.from});
+              }
             }
             const existsAtIdx = acc.findIndex(m => m.id === doc.id);
             existsAtIdx === -1
