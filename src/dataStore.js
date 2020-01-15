@@ -13,6 +13,18 @@ firebase.initializeApp({
   measurementId: "G-8FFPRPW39V"
 });
 
+firebase.firestore().enablePersistence()
+  .then(() => console.log('Firestore persistence has been enabled.'))
+  .catch(err => {
+    if (err.code === 'failed-precondition') {
+      console.warn('Multiple tabs open, persistence can only be enabled in one tab at a a time.');
+    } else if (err.code === 'unimplemented') {
+      console.warn('The current browser does not support all of the features required to enable persistence');
+    } else {
+      console.warn('Unexpected error when trying to enable Firestore persistence', err);
+    }
+  });
+
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
 const api = {};
