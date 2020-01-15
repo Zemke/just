@@ -61,33 +61,45 @@ export default function App() {
     if (!currentUser) return;
 
     const onMessageSubscription = DataStore.onMessage(messages => {
-      messages.forEach(({message, doc, type}) => {
-        if (type === 'added') {
-          if (message.to === currentUser.uid && !message.delivered) {
-            DataStore.setDelivered(doc.ref);
-            webNotifications.notify(toName(message.from, names), message.body);
+      setMessages(curr => {
+        const accumulation = messages.reduce((acc, {message, doc, type}) => {
+          if (type === 'added') {
+            if (message.to === currentUser.uid && !message.delivered) {
+              DataStore.setDelivered(doc.ref);
+              webNotifications.notify(toName(message.from, names), message.body);
+            }
+            const existsAtIdx = acc.findIndex(m => m.id === doc.id);
+            existsAtIdx === -1
+              ? acc.push(message)
+              : (acc[existsAtIdx] = message);
+          } else if (type === 'removed') {
+            acc = acc.filter(m => m.id !== doc.id);
+          } else if (type === 'modified') {
+            acc = acc.map(m => m.id === doc.id ? message : m);
           }
-          setMessages(curr => [...curr, message]);
-        } else if (type === 'removed') {
-          setMessages(curr => [...curr.filter(m => m.id !== doc.id)]);
-        } else if (type === 'modified') {
-          setMessages(curr => [...curr.map(m => {
-            if (m.id !== message.id) return m;
-            return message;
-          })]);
-        }
-      });
-      setInitMessages(true);
-      setLoading(false);
-    });
+          return acc;
+        }, curr);
 
-    const onNamesSubscription = DataStore.onNames(doc => setNames(doc.data()));
+        setInitMessages(true);
+        setLoading(false);
+
+        return accumulation;
+      });
+    });
 
     return async () => {
       (await onMessageSubscription)();
-      (await onNamesSubscription)();
     };
   }, [currentUser, names]);
+
+  useEffect(() => {
+    const onNamesSubscription = DataStore.onNames(
+      doc => setNames(() => doc.data()));
+
+    return async () => {
+      (await onNamesSubscription)();
+    };
+  }, []);
 
   useEffect(() => {
     if (!initMessages) return;
