@@ -54,7 +54,10 @@ export default function Chat(props) {
   }, []);
 
   useEffect(() => {
-    const documentKeydownHandler = () => inputField.current.focus();
+    const documentKeydownHandler = e => {
+      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+      return inputField.current.focus();
+    };
     document.addEventListener('keydown', documentKeydownHandler);
     return () => document.removeEventListener('keydown', documentKeydownHandler);
   });
