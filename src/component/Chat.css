@@ -38,6 +38,10 @@
   float: right;
 }
 
+.chat > .body .message p {
+  word-break: break-word;
+}
+
 .chat > .body .message > .overlay {
   filter: blur(.1rem);
   background: snow;
