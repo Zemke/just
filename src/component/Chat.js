@@ -1,10 +1,10 @@
 import React, {Fragment, useEffect, useRef, useState} from 'react';
 import './Chat.css';
-import DataStore from './dataStore';
+import DataStore from '../util/dataStore';
 import ChatMenu from "./ChatMenu";
 import ChatSelect from "./ChatSelect";
-import MessageUtils from './messageUtils';
-import toName from './toName.js';
+import MessageUtils from '../util/messageUtils';
+import toName from '../util/toName.js';
 
 export default function Chat(props) {
 

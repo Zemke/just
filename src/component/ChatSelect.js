@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import toName from './toName';
+import toName from '../util/toName';
 import Dropdown from "./Dropdown";
 import './ChatSelect.css';
 

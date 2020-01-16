@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import DataStore from './dataStore';
+import DataStore from '../util/dataStore';
 
 export default function EnterAnotherCode(props) {
 

@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import SignIn from "./SignIn";
-import DataStore from "./dataStore";
-import Auth from "./auth";
+import DataStore from "../util/dataStore";
+import Auth from "../util/auth";
 import EnterAnotherCode from "./EnterAnotherCode";
 import ShareYourCode from "./ShareYourCode";
 import Start from './Start';
 import Chat from "./Chat";
-import MessageUtils from "./messageUtils";
-import webNotifications from './webNotification';
-import toName from "./toName";
+import MessageUtils from "../util/messageUtils";
+import webNotifications from '../util/webNotification';
+import toName from "../util/toName";
 
 export default function App() {
 

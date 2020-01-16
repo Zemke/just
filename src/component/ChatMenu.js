@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './ChatMenu.css';
-import Auth from "./auth";
+import Auth from "../util/auth";
 import Dropdown from "./Dropdown";
 
 export default function ChatMenu(props) {

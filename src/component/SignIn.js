@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import Auth from './auth';
-import DataStore from "./dataStore";
-import './translucent.css';
+import Auth from '../util/auth';
+import DataStore from "../util/dataStore";
+import '../util/translucent.css';
 
 export default function SignInComponent(props) {
 
