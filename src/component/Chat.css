@@ -42,6 +42,16 @@
   word-break: break-word;
 }
 
+.chat > .body .message p a {
+  color: #0000FF;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.chat > .body .message p a:active {
+  color: #000078;
+}
+
 .chat > .body .message > .overlay {
   filter: blur(.1rem);
   background: snow;

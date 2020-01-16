@@ -5,6 +5,7 @@ import ChatMenu from "./ChatMenu";
 import ChatSelect from "./ChatSelect";
 import MessageUtils from '../util/messageUtils';
 import toName from '../util/toName.js';
+import Linkify from 'react-linkify';
 
 export default function Chat(props) {
 
@@ -135,7 +136,7 @@ export default function Chat(props) {
               <div className="message-wrapper">
                 <div className={"message " + (otherUser === message.from ? "from" : "to")}>
                   <div className="overlay"/>
-                  <p>{message.body}</p>
+                  <p><Linkify>{message.body}</Linkify></p>
                 </div>
               </div>
               {(lastOwnMessage != null && lastOwnMessage.id === message.id) && (
