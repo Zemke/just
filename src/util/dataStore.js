@@ -14,7 +14,7 @@ firebase.initializeApp({
 });
 
 firebase.firestore().enablePersistence()
-  .then(() => console.log('Firestore persistence has been enabled.'))
+  .then(() => console.log('Firestore offline persistence has been enabled.'))
   .catch(err => {
     if (err.code === 'failed-precondition') {
       console.warn('Multiple tabs open, persistence can only be enabled in one tab at a a time.');
