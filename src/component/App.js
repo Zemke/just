@@ -38,9 +38,9 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
-      console.log('thatUseEffect');
-      console.log(messaging);
-      console.log(await messaging());
+      (await messaging).getToken(console.log);
+      (await messaging).onTokenRefresh(console.log);
+      (await messaging).onMessage(console.log);
     })();
   }, []);
 
