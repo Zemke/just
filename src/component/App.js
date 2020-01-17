@@ -10,6 +10,7 @@ import Chat from "./Chat";
 import MessageUtils from "../util/messageUtils";
 import webNotifications from '../util/webNotification';
 import toName from "../util/toName";
+import messaging from "../util/messaging";
 
 export default function App() {
 
@@ -33,6 +34,14 @@ export default function App() {
         setTimeout(() => setLoading(false), 300);
         setCurrentUser(currentUser);
       });
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      console.log('thatUseEffect');
+      console.log(messaging);
+      console.log(await messaging());
+    })();
   }, []);
 
   useEffect(() => {
