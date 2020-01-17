@@ -14,7 +14,7 @@ import toName from "../util/toName";
 export default function App() {
 
   const [currentUser, setCurrentUser] = useState(null);
-const [enterAnotherCode, setEnterAnotherCode] = useState(window.location.pathname === '/enter-code');
+  const [enterAnotherCode, setEnterAnotherCode] = useState(window.location.pathname === '/enter-code');
   const [shareYourCode, setShareYourCode] = useState(window.location.pathname === '/share-code');
   const [messages, setMessages] = useState([]);
   const [initMessages, setInitMessages] = useState(false);
