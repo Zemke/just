@@ -22,10 +22,10 @@ api.notify = async (title, body, data) => {
   const registrations = await navigator.serviceWorker.getRegistrations();
 
   if (registrations && registrations.length) {
-    const serviceWorkerRegistration = await navigator.serviceWorker.ready;
+    const registration = await navigator.serviceWorker.ready;
 
-    if (serviceWorkerRegistration.showNotification) {
-      await serviceWorkerRegistration.showNotification(title, createOptions(body, data));
+    if (registration.showNotification) {
+      await registration.showNotification(title, createOptions(body, data));
     } else { // This is mostly for Desktop Safari.
       new Notification(title, createOptions(body, data));
     }
