@@ -9,7 +9,6 @@ import Start from './Start';
 import Chat from "./Chat";
 import MessageUtils from "../util/messageUtils";
 import webNotifications from '../util/webNotification';
-import toName from "../util/toName";
 import messaging from "../util/messaging";
 
 export default function App() {
@@ -77,10 +76,6 @@ export default function App() {
           if (type === 'added') {
             if (message.to === currentUser.uid && !message.delivered) {
               DataStore.setDelivered(doc.ref);
-              if (!document.hasFocus() || window.location.pathname.substr(1) !== message.from) {
-                webNotifications.notify(
-                  toName(message.from, names), message.body, {fromUserUid: message.from});
-              }
             }
             const existsAtIdx = acc.findIndex(m => m.id === doc.id);
             existsAtIdx === -1
