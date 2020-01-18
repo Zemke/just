@@ -26,4 +26,4 @@ const messaging = firebase.messaging();
 
 messaging.setBackgroundMessageHandler(({data}) =>
   self.registration.showNotification(
-    data.fromName, {body: data.body, icon: '/logo192.png'}));
+    data.fromName, {body: data.body, badge: '/logo72.png', icon: '/logo192.png'}));
