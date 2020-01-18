@@ -87,7 +87,7 @@ api.saveToken = async token =>
     .firestore()
     .collection('users')
     .doc((await Auth.current()).uid)
-    .set({tokens: firebase.firestore.FieldValue.arrayUnion(token)});
+    .set({tokens: firebase.firestore.FieldValue.arrayUnion(token)}, {merge: true});
 
 api.saveSignInEmail = emailForSignIn => window.localStorage.setItem('emailForSignIn', emailForSignIn);
 api.getSignInEmail = () => window.localStorage.getItem('emailForSignIn');
