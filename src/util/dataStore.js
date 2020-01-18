@@ -90,6 +90,13 @@ api.putNames = async names =>
     .doc((await Auth.current()).uid)
     .set(names);
 
+api.saveToken = async token =>
+  firebase
+    .firestore()
+    .collection('users')
+    .doc((await Auth.current()).uid)
+    .set({tokens: firebase.firestore.FieldValue.arrayUnion(token)});
+
 api.saveSignInEmail = emailForSignIn => window.localStorage.setItem('emailForSignIn', emailForSignIn);
 api.getSignInEmail = () => window.localStorage.getItem('emailForSignIn');
 api.removeSignInEmail = () => window.localStorage.removeItem('emailForSignIn');

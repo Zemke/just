@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
-import SignIn from "./SignIn";
 import DataStore from "../util/dataStore";
+import SignIn from "./SignIn";
 import Auth from "../util/auth";
 import EnterAnotherCode from "./EnterAnotherCode";
 import ShareYourCode from "./ShareYourCode";
@@ -38,11 +38,12 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
-      (await messaging).getToken(console.log);
-      (await messaging).onTokenRefresh(console.log);
-      (await messaging).onMessage(console.log);
+      const resolvedMessaging = await messaging;
+      if (!resolvedMessaging) return;
+      resolvedMessaging.onTokenRefresh(DataStore.saveToken);
+      await resolvedMessaging.getToken().then(DataStore.saveToken);
     })();
-  }, []);
+  }, []); // TODO What happens after signing off?
 
   useEffect(() => {
     window.onpopstate = () => {
