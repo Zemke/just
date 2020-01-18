@@ -14,7 +14,7 @@ const message = {
   body: 'Hello, this is a test message',
 };
 
-const snap = test.firestore.makeDocumentSnapshot(message, 'message/2938jsu');
+const snap = test.firestore.makeDocumentSnapshot(message, 'messages/2938jsu');
 
 return test.wrap(myFunctions.sendMessageNotification)(snap)
   .then(res => {

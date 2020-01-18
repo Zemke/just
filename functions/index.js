@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 admin.initializeApp();
 
 exports.sendMessageNotification = functions.firestore
-  .document('message/{messageId}')
+  .document('messages/{messageId}')
   .onCreate(async (snap, _context) => {
     const message = snap.data();
 
