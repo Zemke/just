@@ -16,26 +16,35 @@ exports.sendMessageNotification = functions.firestore
 
     if (!userDoc.exists) {
       console.info('User not found in names collection');
-      return Promise.resolve([]);
+      return Promise.resolve(null);
     }
 
     const tokens = userDoc.data().tokens;
 
     if (!tokens || !tokens.length) {
       console.info('User has no tokens');
-      return Promise.resolve([]);
+      return Promise.resolve(null);
     }
 
+    const otherUserName = await admin.firestore()
+      .collection('names')
+      .doc(message.to)
+      .get()
+      .then(nameDoc =>
+        nameDoc.exists
+          ? nameDoc.data()[message.from] || message.from
+          : message.from);
+
     const notification = {
-      title: `${message.from} replied`, // todo toName
-      body: message.body
+      fromName: otherUserName,
+      fromUid: message.from,
+      body: message.body,
     };
 
     console.log(`Sending to ${tokens.length} tokens:`, notification);
 
-    // actual sending
     const response = await admin.messaging()
-      .sendToDevice(tokens, {notification});
+      .sendToDevice(tokens, {data: notification});
 
     const tokensToRemove = response.results
       .filter(({error}) =>
@@ -47,13 +56,13 @@ exports.sendMessageNotification = functions.firestore
 
     if (!tokensToRemove.length) {
       console.log('There are no invalid tokens to remove');
-      return Promise.resolve([]);
+      return Promise.resolve(notification);
     }
 
     console.log(`There are ${tokensToRemove.length} invalid tokens to remove.`);
 
-    console.log(tokensToRemove);
-
-    return userDoc.ref
+    await userDoc.ref
       .update({tokens: admin.firestore.FieldValue.arrayRemove(...tokensToRemove)});
+
+    return Promise.resolve(notification);
   });
