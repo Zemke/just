@@ -39,6 +39,8 @@ export default function App() {
   useEffect(() => {
     (async () => {
       if (!currentUser) return;
+      if (!('Notification' in window)) return;
+      if (Notification.permission !== 'granted') return;
       const resolvedMessaging = await messaging;
       if (!resolvedMessaging) return;
       resolvedMessaging.onTokenRefresh(DataStore.saveToken);
