@@ -38,12 +38,13 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
+      if (!currentUser) return;
       const resolvedMessaging = await messaging;
       if (!resolvedMessaging) return;
       resolvedMessaging.onTokenRefresh(DataStore.saveToken);
       await resolvedMessaging.getToken().then(DataStore.saveToken);
     })();
-  }, []); // TODO What happens after signing off?
+  }, [currentUser]);
 
   useEffect(() => {
     window.onpopstate = () => {
