@@ -44,6 +44,9 @@ export default function App() {
       if (!resolvedMessaging) return;
       resolvedMessaging.onTokenRefresh(DataStore.saveToken);
       await resolvedMessaging.getToken().then(DataStore.saveToken);
+      resolvedMessaging.onMessage(({data}) =>
+        webNotifications.notify(
+          data.fromName, data.body, {fromUserUid: data.fromUid}));
     })();
   }, [currentUser]);
 

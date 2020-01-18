@@ -5,10 +5,9 @@ const messaging = firebase.messaging();
 
 messaging.usePublicVapidKey("BAoM6C4OkVC0TASZfRYD_I_es2VHdg8E_5owQWlza2sS79FFhfu5SN2bcueGyvZ9WBzyS4AiTeFLXutCLKyskeQ");
 
-
 const getToken = () => messaging.getToken();
 const onTokenRefresh = cb => messaging.onTokenRefresh(() => messaging.getToken().then(cb));
-const onMessage = () => messaging.onMessage;
+const onMessage = cb => messaging.onMessage(cb);
 
 export default (async () => {
   if (!('serviceWorker' in navigator)) return null;
