@@ -15,8 +15,8 @@
     "react-scripts": "3.3.0"
   },
   "scripts": {
-    "start": "react-scripts start && cra-append-sw ./append-sw.js --skip-compile",
-    "build": "react-scripts build && cra-append-sw ./append-sw.js --skip-compile",
+    "start": "react-scripts start && cra-append-sw ./public/append-sw.js --skip-compile",
+    "build": "react-scripts build && cra-append-sw ./public/append-sw.js --skip-compile",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
