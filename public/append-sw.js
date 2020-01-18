@@ -11,7 +11,6 @@ self.addEventListener('notificationclick', e => {
 importScripts('https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/7.6.2/firebase-messaging.js');
 
-// todo provide an importScript
 firebase.initializeApp({
   apiKey: "AIzaSyCpeA-4i6sZalkiqjB3ks6u1__hO4E2o8U",
   authDomain: "just-pwa.firebaseapp.com",
