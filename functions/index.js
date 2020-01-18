@@ -2,13 +2,6 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-// Create and Deploy Your First Cloud Functions
-// https://firebase.google.com/docs/functions/write-firebase-functions
-
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  response.send("Hello from Firebase!");
-});
-
 exports.sendMessageNotification = functions.firestore
   .document('message/{messageId}')
   .onCreate(async (snap, _context) => {
@@ -22,13 +15,15 @@ exports.sendMessageNotification = functions.firestore
       .get();
 
     if (!userDoc.exists) {
-      return console.warn('User not found in names collection');
+      console.info('User not found in names collection');
+      return Promise.resolve([]);
     }
 
     const tokens = userDoc.data().tokens;
 
     if (!tokens || !tokens.length) {
-      return console.warn('User has no tokens');
+      console.info('User has no tokens');
+      return Promise.resolve([]);
     }
 
     const notification = {
@@ -42,10 +37,22 @@ exports.sendMessageNotification = functions.firestore
     const response = await admin.messaging()
       .sendToDevice(tokens, {notification});
 
-    const tokensToRemove = response.results.filter(({error}) =>
-      !!error
-        && (error.code === 'messaging/invalid-registration-token'
-        || error.code === 'messaging/registration-token-not-registered'));
+    const tokensToRemove = response.results
+      .filter(({error}) =>
+        !!error
+          && (error.code === 'messaging/invalid-registration-token'
+          || error.code === 'messaging/registration-token-not-registered'))
+      .map((res, idx) => tokens[idx]);
+
+
+    if (!tokensToRemove.length) {
+      console.log('There are no invalid tokens to remove');
+      return Promise.resolve([]);
+    }
+
+    console.log(`There are ${tokensToRemove.length} invalid tokens to remove.`);
+
+    console.log(tokensToRemove);
 
     return userDoc.ref
       .update({tokens: admin.firestore.FieldValue.arrayRemove(...tokensToRemove)});
