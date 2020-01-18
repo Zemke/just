@@ -44,7 +44,6 @@ export default function Chat(props) {
     const onNotificationClickListener = e => {
       if (!('newMessage' in e.data)) return;
       setOtherUser(e.data.newMessage);
-
     };
 
     navigator.serviceWorker.addEventListener('message', onNotificationClickListener);
