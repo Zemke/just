@@ -104,13 +104,13 @@ export default function App() {
   }, [currentUser, names]);
 
   useEffect(() => {
+    if (!currentUser) return;
     const onNamesSubscription = DataStore.onNames(
       doc => setNames(() => doc.data()));
-
     return async () => {
       (await onNamesSubscription)();
     };
-  }, []);
+  }, [currentUser]);
 
   useEffect(() => {
     if (!initMessages) return;
