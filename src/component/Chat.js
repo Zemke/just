@@ -55,20 +55,14 @@ export default function Chat(props) {
     }
   }, []);
 
-  useEffect(() => {
-    (async () => {
-      if (!props.currentUser) return;
-      if (!('Notification' in window)) return;
-      if (Notification.permission !== 'granted') return;
-      const resolvedMessaging = await messaging;
-      if (!resolvedMessaging) return;
-      resolvedMessaging.onTokenRefresh(DataStore.saveToken);
-      await resolvedMessaging.getToken().then(DataStore.saveToken);
-      resolvedMessaging.onMessage(({data}) =>
+  useEffect(() =>
+    props.currentUser && messaging(api => {
+      api.getToken(DataStore.saveToken);
+      api.onTokenRefresh(DataStore.saveToken);
+      api.onMessage(({data}) =>
         data.fromUid !== otherUser && webNotifications.notify(
-            data.fromName, data.body, {fromUserUid: data.fromUid}));
-    })();
-  }, [otherUser, props.currentUser]);
+           data.fromName, data.body, {fromUserUid: data.fromUid}));
+    }), [otherUser, props.currentUser]);
 
   useEffect(() => {
     const documentKeydownHandler = e => {
