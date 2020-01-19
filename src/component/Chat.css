@@ -25,6 +25,10 @@
   overflow: hidden;
 }
 
+.chat > .body .message p.onlyEmoji {
+  font-size: 4rem;
+}
+
 .chat > .body .message-wrapper {
   overflow: auto;
 }
