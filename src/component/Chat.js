@@ -60,7 +60,7 @@ export default function Chat(props) {
       api.getToken(DataStore.saveToken);
       api.onTokenRefresh(DataStore.saveToken);
       api.onMessage(({data}) =>
-        data.fromUid !== otherUser && webNotifications.notify(
+        (!document.hasFocus() || data.fromUid !== otherUser) && webNotifications.notify(
            data.fromName, data.body, {fromUserUid: data.fromUid}));
     }), [otherUser, props.currentUser]);
 
