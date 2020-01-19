@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useRef, useState} from 'react';
+import React, {Fragment, useCallback, useEffect, useRef, useState} from 'react';
 import './Chat.css';
 import DataStore from '../util/dataStore';
 import ChatMenu from "./ChatMenu";
@@ -29,20 +29,34 @@ export default function Chat(props) {
   const [messageGaps, setMessageGaps] = useState({});
 
   const arbitraryTolerance = 150;
+  const maxScrollTop = chatEl => chatEl.scrollHeight - chatEl.offsetHeight;
+  const scrollToBottom = useCallback(() => {
+    chatEl.current.scrollTo(0, maxScrollTop(chatEl.current));
+    setInitMessages(true);
+    setTimeout(() => {
+      chatEl.current.scrollTo(0, maxScrollTop(chatEl.current));
+      chatEl.current.classList.add('scrollSmooth');
+    }, 300);
+  }, []);
 
   useEffect(() => {
     if (!chatEl.current) return;
-    const maxScrollTop = () => chatEl.current.scrollHeight - chatEl.current.offsetHeight;
-    if (chatEl.current.scrollTop >= maxScrollTop() - arbitraryTolerance
-      || (props.initMessages && !initMessages)) {
-      chatEl.current.scrollTo(0, maxScrollTop());
-      setInitMessages(true);
-      setTimeout(() => {
-        chatEl.current.scrollTo(0, maxScrollTop());
-        chatEl.current.classList.add('scrollSmooth');
-      }, 300);
+    if (chatEl.current.scrollTop >= maxScrollTop(chatEl.current) - arbitraryTolerance
+          || (props.initMessages && !initMessages)) {
+      scrollToBottom();
     }
-  }, [props.initMessages, initMessages, props.messages, otherUser]);
+  }, [scrollToBottom, props.initMessages, initMessages, props.messages, otherUser]);
+
+  useEffect(() => {
+    const resizeListener = () => {
+      if (chatEl.current.scrollTop >= maxScrollTop(chatEl.current) - arbitraryTolerance) {
+        chatEl.current.classList.remove('scrollSmooth');
+        scrollToBottom();
+      }
+    };
+    window.addEventListener('resize', resizeListener);
+    return () => window.removeEventListener('resize', resizeListener);
+  }, [scrollToBottom]);
 
   useEffect(() => {
     const messageWithGap = props.messages.reduce((acc, curr, idx, arr) => {
