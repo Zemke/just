@@ -22,8 +22,7 @@ export default function Chat(props) {
         m => m.from === otherUserFromPathname || m.to === otherUserFromPathname);
       if (otherUserFromPathnameExists) return otherUserFromPathname;
     }
-    return MessageUtils.extractOtherUser(
-      props.currentUser.uid, props.messages.sort((c1, c2) => c1 - c2));
+    return MessageUtils.extractOtherUser(props.currentUser.uid, props.messages);
   });
   const [otherUsers, setOtherUsers] = useState([]);
   const [lastOwnMessage, setLastOwnMessage] = useState(null);
@@ -114,8 +113,7 @@ export default function Chat(props) {
 
   useEffect(() => {
     const ownMessages = props.messages
-      .filter(m => m.from === props.currentUser.uid && m.to === otherUser)
-      .sort((c1, c2) => c1.when - c2.when);
+      .filter(m => m.from === props.currentUser.uid && m.to === otherUser);
 
     setLastOwnMessage(
       ownMessages.length === 0
