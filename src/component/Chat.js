@@ -144,7 +144,6 @@ export default function Chat(props) {
         {props.messages
           .filter(m =>
             MessageUtils.extractOtherUser(props.currentUser.uid, [m]) === otherUser)
-          .sort((c1, c2) => c1.when - c2.when)
           .map(message => (
             <Fragment key={message.id}>
               <div className="message-wrapper">

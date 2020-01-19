@@ -74,7 +74,7 @@ export default function App() {
             acc = acc.map(m => m.id === doc.id ? message : m);
           }
           return acc;
-        }, curr);
+        }, curr).sort((c1, c2) => c1.when - c2.when);
 
         setInitMessages(true);
         setLoading(false);
