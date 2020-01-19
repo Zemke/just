@@ -3,7 +3,6 @@ import "firebase/messaging";
 
 export default (async () => {
   if (!firebase.messaging.isSupported()) return null;
-  if (!('serviceWorker' in navigator)) return null;
   const reg = await navigator.serviceWorker.getRegistration();
   if (!reg) return null;
 
