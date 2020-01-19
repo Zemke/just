@@ -9,7 +9,6 @@ import Start from './Start';
 import Chat from "./Chat";
 import MessageUtils from "../util/messageUtils";
 import webNotifications from '../util/webNotification';
-import messaging from "../util/messaging";
 
 export default function App() {
 
@@ -34,21 +33,6 @@ export default function App() {
         setCurrentUser(currentUser);
       });
   }, []);
-
-  useEffect(() => {
-    (async () => {
-      if (!currentUser) return;
-      if (!('Notification' in window)) return;
-      if (Notification.permission !== 'granted') return;
-      const resolvedMessaging = await messaging;
-      if (!resolvedMessaging) return;
-      resolvedMessaging.onTokenRefresh(DataStore.saveToken);
-      await resolvedMessaging.getToken().then(DataStore.saveToken);
-      resolvedMessaging.onMessage(({data}) =>
-        webNotifications.notify(
-          data.fromName, data.body, {fromUserUid: data.fromUid}));
-    })();
-  }, [currentUser]);
 
   useEffect(() => {
     window.onpopstate = () => {

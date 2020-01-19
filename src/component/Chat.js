@@ -6,6 +6,8 @@ import ChatSelect from "./ChatSelect";
 import MessageUtils from '../util/messageUtils';
 import toName from '../util/toName.js';
 import Linkify from 'react-linkify';
+import messaging from "../util/messaging";
+import webNotifications from "../util/webNotification";
 
 export default function Chat(props) {
 
@@ -52,6 +54,21 @@ export default function Chat(props) {
       navigator.serviceWorker.removeEventListener('message', onNotificationClickListener)
     }
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      if (!props.currentUser) return;
+      if (!('Notification' in window)) return;
+      if (Notification.permission !== 'granted') return;
+      const resolvedMessaging = await messaging;
+      if (!resolvedMessaging) return;
+      resolvedMessaging.onTokenRefresh(DataStore.saveToken);
+      await resolvedMessaging.getToken().then(DataStore.saveToken);
+      resolvedMessaging.onMessage(({data}) =>
+        data.fromUid !== otherUser && webNotifications.notify(
+            data.fromName, data.body, {fromUserUid: data.fromUid}));
+    })();
+  }, [otherUser, props.currentUser]);
 
   useEffect(() => {
     const documentKeydownHandler = e => {
