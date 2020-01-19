@@ -32,11 +32,15 @@ export default function Chat(props) {
 
   useEffect(() => {
     if (!chatEl.current) return;
-    const maxScrollTop = chatEl.current.scrollHeight - chatEl.current.offsetHeight;
-    if (chatEl.current.scrollTop >= maxScrollTop - arbitraryTolerance
+    const maxScrollTop = () => chatEl.current.scrollHeight - chatEl.current.offsetHeight;
+    if (chatEl.current.scrollTop >= maxScrollTop() - arbitraryTolerance
       || (props.initMessages && !initMessages)) {
-      chatEl.current.scrollTo(0, maxScrollTop);
+      chatEl.current.scrollTo(0, maxScrollTop());
       setInitMessages(true);
+      setTimeout(() => {
+        chatEl.current.scrollTo(0, maxScrollTop());
+        chatEl.current.classList.add('scrollSmooth');
+      }, 300);
     }
   }, [props.initMessages, initMessages, props.messages, otherUser]);
 

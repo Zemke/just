@@ -1,6 +1,9 @@
 .chat {
   height: 100%;
   overflow-y: scroll;
+}
+
+.chat.scrollSmooth {
   scroll-behavior: smooth;
 }
 
