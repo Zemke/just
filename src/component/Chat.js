@@ -26,6 +26,7 @@ export default function Chat(props) {
   });
   const [otherUsers, setOtherUsers] = useState([]);
   const [lastOwnMessage, setLastOwnMessage] = useState(null);
+  const [messageGaps, setMessageGaps] = useState({});
 
   const arbitraryTolerance = 150;
 
@@ -38,6 +39,18 @@ export default function Chat(props) {
       setInitMessages(true);
     }
   }, [props.initMessages, initMessages, props.messages, otherUser]);
+
+  useEffect(() => {
+    const messageWithGap = props.messages.reduce((acc, curr, idx, arr) => {
+      if (idx === 0) {
+        acc[curr.id] = new Date(curr.when).toLocaleString();
+      } else if (curr.when - arr[idx - 1].when >= 5000 * 60) {
+        acc[curr.id] = new Date(curr.when).toLocaleString();
+      }
+      return acc;
+    }, {});
+    setMessageGaps(messageWithGap);
+  }, [props.messages]);
 
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
@@ -146,6 +159,8 @@ export default function Chat(props) {
             MessageUtils.extractOtherUser(props.currentUser.uid, [m]) === otherUser)
           .map(message => (
             <Fragment key={message.id}>
+              {messageGaps[message.id] && (<div className="timestamp">{messageGaps[message.id]}</div>)}
+
               <div className="message-wrapper">
                 <div className={"message " + (otherUser === message.from ? "from" : "to")}>
                   <div className="overlay"/>
