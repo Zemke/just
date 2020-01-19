@@ -1,9 +1,13 @@
-import React, {useEffect, useRef} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
 import './ContentEditable.css';
 
-export default function ContentEditable(props) {
+function ContentEditable(props, ref) {
 
   /** @type {{current: HTMLDivElement}} */ const elem = useRef(null);
+
+  useImperativeHandle(ref, () => ({
+    focus: () => elem.current.focus()
+  }));
 
   useEffect(() => {
     if (!elem.current) return;
@@ -95,3 +99,5 @@ export default function ContentEditable(props) {
 
   return <div contentEditable ref={elem}/>;
 }
+
+export default forwardRef(ContentEditable);

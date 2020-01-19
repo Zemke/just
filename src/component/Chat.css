@@ -126,24 +126,21 @@
 }
 
 .chat > .foot form,
-.chat > .foot input,
 .chat > .foot [contenteditable] {
   display: flex;
   flex: 1;
   margin: .4rem;
 }
 
-.chat > .foot input,
 .chat > .foot [contenteditable] {
   padding: .5rem;
   font-size: .9rem;
   border-radius: 1rem;
-  overflow: scroll;
+  overflow-y: scroll;
   border: 0;
   display: block;
 }
 
-.chat > .foot input:focus,
 .chat > .foot [contenteditable]:focus {
   outline: none;
 }
@@ -151,5 +148,4 @@
 .chat > .foot [contenteditable] {
   background-color: white;
   display: inline-block;
-
 }

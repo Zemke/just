@@ -98,7 +98,7 @@ export default function Chat(props) {
   useEffect(() => {
     const documentKeydownHandler = e => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
-      // return inputField.current.focus(); todo
+      return inputField.current.focus();
     };
     document.addEventListener('keydown', documentKeydownHandler);
     return () => document.removeEventListener('keydown', documentKeydownHandler);
@@ -208,7 +208,7 @@ export default function Chat(props) {
             onChange={e => setField(e.target.value)}
             placeholder="Type here"
             value={field}
-            // ref={inputField} todo
+            ref={inputField}
             required/>
         </form>
       </div>
