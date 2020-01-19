@@ -122,23 +122,34 @@
   right: 0;
   backdrop-filter: blur(.5rem);
   -webkit-backdrop-filter: blur(.5rem);
+  max-height: 50%;
 }
 
 .chat > .foot form,
-.chat > .foot input {
+.chat > .foot input,
+.chat > .foot [contenteditable] {
   display: flex;
   flex: 1;
-  border-radius: 2rem;
   margin: .4rem;
 }
 
-.chat > .foot input {
+.chat > .foot input,
+.chat > .foot [contenteditable] {
   padding: .5rem;
   font-size: .9rem;
+  border-radius: 1rem;
+  overflow: scroll;
   border: 0;
   display: block;
 }
 
-.chat > .foot input:focus {
+.chat > .foot input:focus,
+.chat > .foot [contenteditable]:focus {
   outline: none;
+}
+
+.chat > .foot [contenteditable] {
+  background-color: white;
+  display: inline-block;
+
 }

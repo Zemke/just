@@ -8,6 +8,7 @@ import toName from '../util/toName.js';
 import Linkify from 'react-linkify';
 import messaging from "../util/messaging";
 import webNotifications from "../util/webNotification";
+import ContentEditable from "./ContentEditable";
 
 export default function Chat(props) {
 
@@ -97,7 +98,7 @@ export default function Chat(props) {
   useEffect(() => {
     const documentKeydownHandler = e => {
       if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
-      return inputField.current.focus();
+      // return inputField.current.focus(); todo
     };
     document.addEventListener('keydown', documentKeydownHandler);
     return () => document.removeEventListener('keydown', documentKeydownHandler);
@@ -109,10 +110,11 @@ export default function Chat(props) {
 
   const onSubmit = async e => {
     e.preventDefault();
+    if (!field.trim()) return;
     const payload = {
       from: props.currentUser.uid,
       to: otherUser,
-      body: field
+      body: field.trim()
     };
     setField('');
     try {
@@ -183,7 +185,10 @@ export default function Chat(props) {
                 <div className={"message " + (otherUser === message.from ? "from" : "to")}>
                   <div className="overlay"/>
                   <p className={isOnlyEmoji(message.body.trim()) ? 'onlyEmoji' : ''}>
-                    <Linkify>{message.body}</Linkify>
+                    <Linkify>
+                      {message.body.split('\n')
+                        .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
+                    </Linkify>
                   </p>
                 </div>
               </div>
@@ -199,11 +204,12 @@ export default function Chat(props) {
       </div>
       <div className="foot">
         <form onSubmit={onSubmit}>
-          <input onChange={e => setField(e.target.value)}
-                 placeholder="Type here"
-                 value={field}
-                 required
-                 ref={inputField}/>
+          <ContentEditable
+            onChange={e => setField(e.target.value)}
+            placeholder="Type here"
+            value={field}
+            // ref={inputField} todo
+            required/>
         </form>
       </div>
     </div>
