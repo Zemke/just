@@ -13,6 +13,7 @@ import ContentEditable from "./ContentEditable";
 export default function Chat(props) {
 
   const chatEl = useRef(null);
+  const chatBodyEl = useRef(null);
   const inputField = useRef(null);
   const [initMessages, setInitMessages] = useState(false);
   const [field, setField] = useState('');
@@ -133,6 +134,12 @@ export default function Chat(props) {
   const onSelect = otherUser =>
     setOtherUser(otherUser);
 
+  const onInputFieldResize = height => {
+    if (!chatBodyEl.current) return;
+    chatBodyEl.current.style.marginBottom = height + 'px';
+    scrollToBottom();
+  };
+
   useEffect(() => {
     const otherUsers = props.messages
       .reduce((acc, m) => {
@@ -173,7 +180,7 @@ export default function Chat(props) {
                       onSelect={onSelect}/>
         </div>
       </div>
-      <div className="body">
+      <div className="body" ref={chatBodyEl}>
         {props.messages
           .filter(m =>
             MessageUtils.extractOtherUser(props.currentUser.uid, [m]) === otherUser)
@@ -206,6 +213,7 @@ export default function Chat(props) {
         <form onSubmit={onSubmit}>
           <ContentEditable
             onChange={e => setField(e.target.value)}
+            onResize={onInputFieldResize}
             placeholder="Type here"
             value={field}
             ref={inputField}

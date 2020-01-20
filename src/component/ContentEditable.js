@@ -9,6 +9,8 @@ function ContentEditable(props, ref) {
     focus: () => elem.current.focus()
   }));
 
+  const initialElemHeight = useRef(null);
+
   useEffect(() => {
     if (!elem.current) return;
     const elemRef = elem.current;
@@ -75,6 +77,19 @@ function ContentEditable(props, ref) {
     elemRef.addEventListener('paste', pasteListener, false);
     return () => elemRef.removeEventListener('paste', pasteListener, false);
   });
+
+  useEffect(() => {
+    if (!elem.current || !props.onResize) return;
+    const resizeObserver = new ResizeObserver(entries => {
+      if (!initialElemHeight.current) {
+        initialElemHeight.current = entries[0].contentRect.height;
+        return;
+      }
+      props.onResize(entries[0].contentRect.height - initialElemHeight.current);
+    });
+    resizeObserver.observe(elem.current);
+    return () => resizeObserver.disconnect();
+  }, [props, props.onResize]);
 
   useEffect(() => {
     if (!elem.current) return;
