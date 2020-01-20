@@ -84,6 +84,7 @@ function ContentEditable(props, ref) {
   });
 
   useEffect(() => {
+    if (!('ResizeObserver' in window)) return;
     if (!elem.current || !props.onResize) return;
     const resizeObserver = new ResizeObserver(entries => {
       if (!initialElemHeight.current) {
