@@ -27,5 +27,5 @@ if (firebase.messaging.isSupported()) {
 
   messaging.setBackgroundMessageHandler(({data}) =>
     self.registration.showNotification(
-      data.fromName, {body: data.body, badge: '/logo72.png', icon: '/logo192.png'}));
+      data.fromName, {body: data.body, badge: 'https://just.zemke.io/logo96.png', icon: '/logo192.png'}));
 }
