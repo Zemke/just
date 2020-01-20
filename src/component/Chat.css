@@ -1,6 +1,19 @@
 .chat {
   height: 100%;
   overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(21, 21, 21, .5) transparent;
+}
+
+.chat::-webkit-scrollbar-thumb {
+  background-color: rgba(21, 21, 21, .5);
+  border: .1rem solid transparent;
+  border-radius: 3rem;
+  background-clip: padding-box;
+}
+
+.chat::-webkit-scrollbar {
+  width: .5rem;
 }
 
 .chat.scrollSmooth {
@@ -20,7 +33,7 @@
   color: #151515;
   z-index: 1;
   max-width: 60%;
-  margin: .1rem 1rem;
+  margin: .1rem .4rem .1rem 1rem;
   padding: .4rem;
   background: transparent;
   font-size: .9rem;
@@ -139,6 +152,22 @@
   overflow-y: scroll;
   border: 0;
   display: block;
+}
+
+.chat > .foot [contenteditable] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(21, 21, 21, .5) transparent;
+}
+
+.chat > .foot [contenteditable]::-webkit-scrollbar-thumb {
+  background-color: rgba(21, 21, 21, .2);
+  border: .3rem solid transparent;
+  border-radius: 3rem;
+  background-clip: padding-box;
+}
+
+.chat > .foot [contenteditable]::-webkit-scrollbar {
+  width: 1rem;
 }
 
 .chat > .foot [contenteditable]:focus {
