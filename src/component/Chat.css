@@ -86,7 +86,7 @@
 .chat > .body .status {
   font-variant-caps: all-petite-caps;
   text-align: right;
-  margin: 0 1rem;
+  margin-right: .4rem;
   font-size: .8rem;
   font-weight: bold;
   color: snow;
