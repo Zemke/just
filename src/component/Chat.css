@@ -146,7 +146,7 @@
 }
 
 .chat > .foot [contenteditable] {
-  padding: .5rem;
+  padding: .5rem .7rem;
   font-size: .9rem;
   border-radius: 1rem;
   overflow-y: scroll;
@@ -175,6 +175,31 @@
 }
 
 .chat > .foot [contenteditable] {
-  background-color: white;
+  background-color: snow;
   display: inline-block;
+  word-break: break-word;
+}
+
+.chat > .foot .submit {
+  position: absolute;
+  right: 1rem;
+  background-color: #151515;
+  border: .05rem solid #151515;
+  color: snow;
+  font-weight: bold;
+  top: 1.1rem;
+  padding: .2rem;
+  border-radius: 100%;
+  height: 1.5rem;
+  width: 1.5rem;
+  font-size: 1rem;
+}
+
+.chat > .foot .submit:hover {
+  cursor: pointer;
+}
+
+.chat > .foot .submit:focus {
+  outline: none;
+  box-shadow: 0 0 0.5rem #151515;
 }

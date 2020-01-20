@@ -14,10 +14,15 @@ function ContentEditable(props, ref) {
   useEffect(() => {
     if (!elem.current) return;
     const elemRef = elem.current;
-    const enterKeyDownListener = e => {
-      if (e.key !== 'Enter' || e.shiftKey) return;
-      e.preventDefault();
-      e.target.closest('form').dispatchEvent(new Event('submit'));
+    const enterKeyDownListener = async e => {
+      if (e.key === 'Enter' && (await window.isMobileJustDevice)) {
+        document.execCommand('insertHTML', false, '<br><br>');
+        e.preventDefault();
+        return false;
+      } else if (e.key === 'Enter' && !e.shiftKey && !(await window.isMobileJustDevice)) {
+        e.preventDefault();
+        e.target.closest('form').dispatchEvent(new Event('submit'));
+      }
     };
     elemRef.addEventListener('keydown', enterKeyDownListener);
     return () => elemRef.removeEventListener('keydown', enterKeyDownListener);
@@ -112,7 +117,7 @@ function ContentEditable(props, ref) {
     };
   }, [props.placeholder]);
 
-  return <div contentEditable ref={elem}/>;
+  return <div contentEditable tabIndex="0" ref={elem}/>;
 }
 
 export default forwardRef(ContentEditable);

@@ -118,6 +118,7 @@ export default function Chat(props) {
       body: field.trim()
     };
     setField('');
+    inputField.current.focus();
     try {
       await DataStore.sendMessage(payload);
     } catch (e) {
@@ -218,6 +219,11 @@ export default function Chat(props) {
             value={field}
             ref={inputField}
             required/>
+            <button type="submit"
+                    className="submit"
+                    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onSubmit(e)}>
+              &#10003;
+            </button>
         </form>
       </div>
     </div>
