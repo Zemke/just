@@ -5,9 +5,7 @@ function ContentEditable(props, ref) {
 
   /** @type {{current: HTMLDivElement}} */ const elem = useRef(null);
 
-  useImperativeHandle(ref, () => ({
-    focus: () => elem.current.focus()
-  }));
+  useImperativeHandle(ref, () => elem.current);
 
   const initialElemHeight = useRef(null);
 
