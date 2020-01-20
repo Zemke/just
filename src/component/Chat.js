@@ -138,6 +138,7 @@ export default function Chat(props) {
   const onInputFieldResize = height => {
     if (!chatBodyEl.current) return;
     chatBodyEl.current.style.marginBottom = height + 'px';
+    chatEl.current.classList.remove('scrollSmooth');
     scrollToBottom();
   };
 
