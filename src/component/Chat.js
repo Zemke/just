@@ -143,6 +143,28 @@ export default function Chat(props) {
   };
 
   useEffect(() => {
+    if ('ResizeObserver' in window) {
+      const resizeObserver = new ResizeObserver(() => {
+        chatEl.current.classList.remove('scrollSmooth');
+        scrollToBottom();
+      });
+      resizeObserver.observe(chatBodyEl.current);
+      return () => resizeObserver.disconnect();
+    } else {
+      const onFocusListener = () => {
+        window.isMobileJustDevice().then(isMobile => {
+          if (!isMobile) return;
+          chatEl.current.classList.remove('scrollSmooth');
+          scrollToBottom();
+        });
+      };
+      const inputFieldRef = inputField.current;
+      inputFieldRef.addEventListener('focus', onFocusListener);
+      return () => inputFieldRef.removeEventListener('focus', onFocusListener);
+    }
+  }, [scrollToBottom]);
+
+  useEffect(() => {
     const otherUsers = props.messages
       .reduce((acc, m) => {
         const otherUser1 = MessageUtils.extractOtherUser(props.currentUser.uid, [m]);
