@@ -6,6 +6,8 @@ let messaging;
 
 export default apiCallback => {
   if (!firebase.messaging.isSupported()) return;
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
   const subscriptions = [];
 
   (async () => {

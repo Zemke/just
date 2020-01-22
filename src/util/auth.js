@@ -24,6 +24,11 @@ api.signIn = email =>
     .auth()
     .signInWithEmailLink(email, window.location.href);
 
+api.safariSignIn = (email, safariLink) =>
+  firebase
+    .auth()
+    .signInWithEmailLink(email, safariLink);
+
 api.current = () =>
   new Promise(resolve =>
     api.onAuthStateChanged(

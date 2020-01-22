@@ -11,6 +11,14 @@ export default function SignInComponent(props) {
   const [emailSent, setEmailSent] = useState(false);
   const [emailSending, setEmailSending] = useState(false);
 
+  const [safariSignInLink, setSafariSignInLink] = useState('');
+  const [safariEmail, setSafariEmail] = useState('');
+  const [isMobileSafariStandalone] = useState(() => {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isStandalone = (window.matchMedia('(display-mode: standalone)').matches);
+    return isSafari && isStandalone;
+  });
+
   useEffect(() => {
     Auth
       .current()
@@ -48,6 +56,19 @@ export default function SignInComponent(props) {
       });
   };
 
+  const onSafariSubmit = e => {
+    e.preventDefault();
+    debugger;
+    Auth
+      .safariSignIn(safariEmail, safariSignInLink)
+      .then(result => {
+        window.history.pushState(null, null, '/');
+        setSignedIn(result.user);
+        setIsSignInLink(false);
+        props.signedIn(result.user);
+      });
+  };
+
   let info = null;
   if (signedIn) {
     info = <p>You are signed in with <span className="bold">{signedIn.email}</span>.</p>;
@@ -66,17 +87,44 @@ export default function SignInComponent(props) {
         <h1>Just</h1>
 
         {info === null ? (
-          <form onSubmit={onSubmit}>
-            <label>Sign in with only your email address</label>
-            <div className="flex">
-              <input
-                type="email"
-                value={email}
-                className="form-control text-center"
-                onChange={e => setEmail(e.target.value)}/>
-            </div>
-            <button type="submit" disabled={emailSending} className="form-control">Sign In</button>
-          </form>
+          <>
+            <form onSubmit={onSubmit}>
+              <label>Sign in with only your email address</label>
+              <div className="flex">
+                <input
+                  type="email"
+                  value={email}
+                  className="form-control text-center"
+                  onChange={e => setEmail(e.target.value)}/>
+              </div>
+              <button type="submit" disabled={emailSending} className="form-control">Sign In</button>
+            </form>
+            {isMobileSafariStandalone && (
+              <form onSubmit={onSafariSubmit} className="margin-top">
+                <div>
+                  <label>Paste the link you were sent here</label>
+                  <div className="flex">
+                    <input
+                      type="text"
+                      value={safariSignInLink}
+                      className="form-control text-center"
+                      onChange={e => setSafariSignInLink(e.target.value)}/>
+                  </div>
+                </div>
+                <div>
+                  <label>Your email address</label>
+                  <div className="flex">
+                    <input
+                      type="email"
+                      value={safariEmail}
+                      className="form-control text-center"
+                      onChange={e => setSafariEmail(e.target.value)}/>
+                  </div>
+                </div>
+                <button type="submit" disabled={emailSending} className="form-control">Sign In</button>
+              </form>
+            )}
+          </>
         ) : info}
       </div>
     </div>
