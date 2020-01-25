@@ -9,7 +9,7 @@ import Linkify from 'react-linkify';
 import messaging from "../util/messaging";
 import webNotifications from "../util/webNotification";
 import ContentEditable from "./ContentEditable";
-import PictureUpload from "./PictureUpload";
+import Share from "./Share";
 
 export default function Chat(props) {
 
@@ -236,7 +236,7 @@ export default function Chat(props) {
       </div>
       <div className="foot">
         <form onSubmit={onSubmit}>
-          <PictureUpload/>
+          <Share/>
           <ContentEditable
             onChange={e => setField(e.target.value)}
             onResize={onInputFieldResize}

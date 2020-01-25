@@ -146,18 +146,18 @@
   height: 2.5rem;
 }
 
-.pictureUpload {
+.share {
   width: 2.5rem;
   margin-right: .25rem;
 }
 
-.pictureUpload input[type=file] {
+.share input[type=file] {
   z-index: -1;
   position: absolute;
   opacity: 0;
 }
 
-.pictureUpload button {
+.share button {
   font-family: monospace;
   font-size: 2rem;
   background: snow;
@@ -169,12 +169,12 @@
   padding: 0;
 }
 
-.pictureUpload button:focus {
+.share button:focus {
   outline: none;
   box-shadow: 0 0 1rem #151515;
 }
 
-.pictureUpload button:hover {
+.share button:hover {
   cursor: pointer;
 }
 
