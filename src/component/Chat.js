@@ -9,6 +9,7 @@ import Linkify from 'react-linkify';
 import messaging from "../util/messaging";
 import webNotifications from "../util/webNotification";
 import ContentEditable from "./ContentEditable";
+import PictureUpload from "./PictureUpload";
 
 export default function Chat(props) {
 
@@ -235,6 +236,7 @@ export default function Chat(props) {
       </div>
       <div className="foot">
         <form onSubmit={onSubmit}>
+          <PictureUpload/>
           <ContentEditable
             onChange={e => setField(e.target.value)}
             onResize={onInputFieldResize}
@@ -242,13 +244,14 @@ export default function Chat(props) {
             value={field}
             ref={inputField}
             required/>
-            <button type="submit"
-                    className="submit"
-                    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onSubmit(e)}>
-              &#10003;
-            </button>
+          <button type="submit"
+                  className="submit"
+                  onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onSubmit(e)}>
+            &#10003;
+          </button>
         </form>
       </div>
     </div>
   );
+
 };

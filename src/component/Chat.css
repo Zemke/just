@@ -127,7 +127,6 @@
 }
 
 .chat > .foot {
-  display: flex;
   z-index: 999;
   position: fixed;
   bottom: 0;
@@ -136,25 +135,59 @@
   backdrop-filter: blur(.5rem);
   -webkit-backdrop-filter: blur(.5rem);
   max-height: 50%;
+  padding: 1rem;
 }
 
-.chat > .foot form,
-.chat > .foot [contenteditable] {
+.chat > .foot form {
   display: flex;
-  flex: 1;
-  margin: .4rem;
+}
+
+.chat > .foot form > * {
+  height: 2.5rem;
+}
+
+.pictureUpload {
+  width: 2.5rem;
+  margin-right: .25rem;
+}
+
+.pictureUpload input[type=file] {
+  z-index: -1;
+  position: absolute;
+  opacity: 0;
+}
+
+.pictureUpload button {
+  font-family: monospace;
+  font-size: 2rem;
+  background: snow;
+  border: none;
+  border-radius: 100%;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.pictureUpload button:focus {
+  outline: none;
+  box-shadow: 0 0 1rem #151515;
+}
+
+.pictureUpload button:hover {
+  cursor: pointer;
 }
 
 .chat > .foot [contenteditable] {
-  padding: .6rem 1.1rem .5rem .7rem;
-  font-size: .9rem;
-  border-radius: 1rem;
+  border-radius: 1.3rem;
   overflow-y: scroll;
-  border: 0;
-  display: block;
-}
-
-.chat > .foot [contenteditable] {
+  background-color: snow;
+  word-break: break-word;
+  flex: 1;
+  font-size: .9rem;
+  max-height: 50%;
+  height: auto;
+  padding: .7rem 2.5rem .7rem .7rem;
   scrollbar-width: thin;
   scrollbar-color: rgba(21, 21, 21, .5) transparent;
 }
@@ -174,23 +207,16 @@
   outline: none;
 }
 
-.chat > .foot [contenteditable] {
-  background-color: snow;
-  display: inline-block;
-  word-break: break-word;
-}
-
 .chat > .foot .submit {
-  position: absolute;
-  right: .9rem;
   background-color: #151515;
   border: .05rem solid #151515;
   color: snow;
   font-weight: bold;
-  top: .9rem;
   border-radius: 100%;
-  height: 2rem;
-  width: 2rem;
+  width: 2.4rem;
+  height: 2.4rem;
+  margin-left: -2.45rem;
+  margin-top: .05rem;
   font-size: 1rem;
 }
 
