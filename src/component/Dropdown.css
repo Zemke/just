@@ -24,7 +24,9 @@
 }
 
 .dropdown.attachBottomLeft {
-  border-top-left-radius: .2rem;
+  border-bottom-left-radius: .2rem;
+  left: .7rem;
+  bottom: 5rem;
 }
 
 .dropdown ul {
@@ -57,4 +59,9 @@
   -webkit-backdrop-filter: blur(.5rem);
   opacity: 1;
   transition: opacity 300ms;
+}
+
+
+.dropdown.text-left li {
+  text-align: left;
 }
