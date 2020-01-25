@@ -17,15 +17,15 @@ export default function Share() {
     <>
       <div className="share">
         <button ref={ref => setDropdownTrigger(ref)}>&#43;</button>
-        <input type="file" accept="image/x-png,image/jpeg,image/gif" className="share"/>
+        <input type="file" accept="image/x-png,image/jpeg,image/gif"/>
       </div>
       <Dropdown dropdownTrigger={dropdownTrigger} className="attachBottomLeft text-left">
         <ul>
           <li onClick={takePhoto}>
-            📷 Take photo
+            <span className="icon">📷</span> Take photo
           </li>
           <li onClick={imageGallery}>
-            🌉 Image gallery
+            <span className="icon">🌉</span> Image gallery
           </li>
         </ul>
       </Dropdown>

@@ -90,3 +90,7 @@
 .dropdown.text-left li {
   text-align: left;
 }
+
+.dropdown li > span.icon {
+  margin-right: .5rem;
+}
