@@ -1,9 +1,6 @@
-import * as firebase from "firebase/app";
+import firebase from './firebase.js';
 import "firebase/firestore";
 import Auth from "./auth";
-import firebaseConfig from "./firebaseConfig";
-
-firebase.initializeApp(firebaseConfig);
 
 firebase.firestore().enablePersistence()
   .then(() => console.log('Firestore offline persistence has been enabled.'))
