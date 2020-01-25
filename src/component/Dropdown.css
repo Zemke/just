@@ -25,7 +25,7 @@
 
 .dropdown.attachBottomRight {
   right: .7rem;
-  bottom: 5rem;
+  bottom: 4.6rem;
 }
 
 .dropdown.attachBottomRight ul > li:first-child  {
@@ -34,7 +34,7 @@
 
 .dropdown.attachBottomLeft {
   left: .7rem;
-  bottom: 5rem;
+  bottom: 4.6rem;
 }
 
 .dropdown.attachBottomLeft ul > li:last-child {
