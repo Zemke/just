@@ -30,14 +30,6 @@ code {
   height: 100%;
 }
 
-#appendToBodyContainer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  top: 0;
-}
-
 h1 {
   font-size: 2.5rem;
 }
@@ -48,10 +40,6 @@ h1, h2 {
 
 .text-center {
   text-align: center;
-}
-
-.text-left {
-  text-align: left;
 }
 
 input.form-control,
