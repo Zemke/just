@@ -4,20 +4,16 @@ import DataStore from '../util/dataStore';
 import ChatMenu from "./ChatMenu";
 import ChatSelect from "./ChatSelect";
 import MessageUtils from '../util/messageUtils';
-import toName from '../util/toName.js';
 import Linkify from 'react-linkify';
 import messaging from "../util/messaging";
 import webNotifications from "../util/webNotification";
-import ContentEditable from "./ContentEditable";
-import Share from "./Share";
+import Foot from "./Foot";
 
 export default function Chat(props) {
 
   const chatEl = useRef(null);
   const chatBodyEl = useRef(null);
-  const inputField = useRef(null);
   const [initMessages, setInitMessages] = useState(false);
-  const [field, setField] = useState('');
   const [otherUser, setOtherUser] = useState(() => {
     const otherUserFromPathname = window.location.pathname.substr(1);
     if (!!otherUserFromPathname) {
@@ -94,38 +90,12 @@ export default function Chat(props) {
       api.onTokenRefresh(DataStore.saveToken);
       api.onMessage(({data}) =>
         (!document.hasFocus() || data.fromUid !== otherUser) && webNotifications.notify(
-           data.fromName, data.body, {fromUserUid: data.fromUid}));
+        data.fromName, data.body, {fromUserUid: data.fromUid}));
     }), [otherUser, props.currentUser]);
-
-  useEffect(() => {
-    const documentKeydownHandler = e => {
-      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
-      return inputField.current.focus();
-    };
-    document.addEventListener('keydown', documentKeydownHandler);
-    return () => document.removeEventListener('keydown', documentKeydownHandler);
-  });
 
   useEffect(() => {
     window.history.pushState({}, "", '/' + otherUser);
   }, [otherUser]);
-
-  const onSubmit = async e => {
-    e.preventDefault();
-    if (!field.trim()) return;
-    const payload = {
-      from: props.currentUser.uid,
-      to: otherUser,
-      body: field.trim()
-    };
-    setField('');
-    inputField.current.focus();
-    try {
-      await DataStore.sendMessage(payload);
-    } catch (e) {
-      alert(`Sending message “${payload.message}” to ${toName(otherUser, props.names)} failed.\n\n${e}`);
-    }
-  };
 
   const rename = async newName =>
     await DataStore.putNames({...props.names, [otherUser]: newName});
@@ -135,35 +105,6 @@ export default function Chat(props) {
 
   const onSelect = otherUser =>
     setOtherUser(otherUser);
-
-  const onInputFieldResize = height => {
-    if (!chatBodyEl.current) return;
-    chatBodyEl.current.style.marginBottom = height + 'px';
-    chatEl.current.classList.remove('scrollSmooth');
-    scrollToBottom();
-  };
-
-  useEffect(() => {
-    if ('ResizeObserver' in window) {
-      const resizeObserver = new ResizeObserver(() => {
-        chatEl.current.classList.remove('scrollSmooth');
-        scrollToBottom();
-      });
-      resizeObserver.observe(chatBodyEl.current);
-      return () => resizeObserver.disconnect();
-    } else {
-      const onFocusListener = () => {
-        window.isMobileJustDevice().then(isMobile => {
-          if (!isMobile) return;
-          chatEl.current.classList.remove('scrollSmooth');
-          scrollToBottom();
-        });
-      };
-      const inputFieldRef = inputField.current;
-      inputFieldRef.addEventListener('focus', onFocusListener);
-      return () => inputFieldRef.removeEventListener('focus', onFocusListener);
-    }
-  }, [scrollToBottom]);
 
   useEffect(() => {
     const otherUsers = props.messages
@@ -235,23 +176,12 @@ export default function Chat(props) {
           )}
       </div>
       <div className="foot">
-        <form onSubmit={onSubmit}>
-          <Share/>
-          <ContentEditable
-            onChange={e => setField(e.target.value)}
-            onResize={onInputFieldResize}
-            placeholder="Type here"
-            value={field}
-            ref={inputField}
-            required/>
-          <button type="submit"
-                  className="submit"
-                  onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && onSubmit(e)}>
-            &#10003;
-          </button>
-        </form>
+        <Foot chatEl={chatEl}
+              scrollToBottom={scrollToBottom}
+              chatBodyEl={chatBodyEl}
+              otherUser={otherUser}
+              currentUser={props.currentUser}/>
       </div>
     </div>
   );
-
 };
