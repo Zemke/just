@@ -3,6 +3,7 @@ import Share from "./Share";
 import ContentEditable from "./ContentEditable";
 import DataStore from "../util/dataStore";
 import toName from "../util/toName";
+import './Foot.css';
 
 export default function Foot(props) {
 
