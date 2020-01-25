@@ -9,7 +9,7 @@ api.upload = async file => {
     .storage()
     .ref()
     .child(`images/${now.toString()}`)
-    .put(file, {customMetadata: {when: now}});
+    .put(file);
 };
 
 export default api;
