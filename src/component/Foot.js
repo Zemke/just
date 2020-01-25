@@ -47,7 +47,7 @@ export default function Foot(props) {
 
   const onSubmit = async e => {
     e.preventDefault();
-    if (files.length) Array.from(files).forEach(Storage.upload);
+    if (files.length) Array.from(files).forEach(f => Storage.upload(f, props.otherUser));
     if (!field.trim()) return;
     const payload = {
       from: props.currentUser.uid,
