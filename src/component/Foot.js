@@ -3,6 +3,7 @@ import Share from "./Share";
 import ContentEditable from "./ContentEditable";
 import DataStore from "../util/dataStore";
 import Storage from "../util/storage.js";
+import Auth from "../util/auth.js";
 import toName from "../util/toName";
 import './Foot.css';
 
@@ -47,7 +48,18 @@ export default function Foot(props) {
 
   const onSubmit = async e => {
     e.preventDefault();
-    if (files.length) Array.from(files).forEach(f => Storage.upload(f, props.otherUser));
+    if (files.length) {
+      Array.from(files).forEach(f =>
+        (async () => {
+          DataStore.sendMessage({
+            from: (await Auth.current()).uid,
+            to: props.otherUser,
+            body: null,
+            image: (await Storage.upload(f, props.otherUser)).ref.name
+          })
+        })());
+
+    }
     if (!field.trim()) return;
     const payload = {
       from: props.currentUser.uid,

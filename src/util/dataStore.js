@@ -18,11 +18,11 @@ const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp;
 
 const api = {};
 
-api.sendMessage = ({from, to, body}) =>
+api.sendMessage = ({from, to, body, image}) =>
   firebase
     .firestore()
     .collection('messages')
-    .add({from, to, body, users: [from, to], when: serverTimestamp()});
+    .add({from, to, body, users: [from, to], when: serverTimestamp(), image});
 
 const mapTimestamp = message => {
   message.when = message.when?.toMillis();

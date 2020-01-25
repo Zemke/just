@@ -8,6 +8,7 @@ import Linkify from 'react-linkify';
 import messaging from "../util/messaging";
 import webNotifications from "../util/webNotification";
 import Foot from "./Foot";
+import ImageMessage from "./ImageMessage";
 
 export default function Chat(props) {
 
@@ -157,12 +158,16 @@ export default function Chat(props) {
               <div className="message-wrapper">
                 <div className={"message " + (otherUser === message.from ? "from" : "to")}>
                   <div className="overlay"/>
-                  <p className={isOnlyEmoji(message.body.trim()) ? 'onlyEmoji' : ''}>
-                    <Linkify>
-                      {message.body.split('\n')
-                        .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
-                    </Linkify>
-                  </p>
+                  {message.image
+                    ? (<ImageMessage message={message}/>)
+                    : (
+                      <p className={isOnlyEmoji(message.body.trim()) ? 'onlyEmoji' : ''}>
+                        <Linkify>
+                          {message.body.split('\n')
+                            .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
+                        </Linkify>
+                      </p>
+                    )}
                 </div>
               </div>
               {(lastOwnMessage != null && lastOwnMessage.id === message.id) && (
