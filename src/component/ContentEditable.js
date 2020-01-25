@@ -95,28 +95,21 @@ function ContentEditable(props, ref) {
     return () => resizeObserver.disconnect();
   }, [props, props.onResize]);
 
-  useEffect(() => {
+  const onFocus = e => {
     if (!elem.current) return;
-    const elemRef = elem.current;
-    const focusListener = e => {
-      if (e.target.value) return;
-      elem.current.classList.remove('placeholder');
-      e.target.textContent = '';
-    };
-    const blurListener = e => {
-      if (e.target.value) return;
-      elem.current.classList.add('placeholder');
-      e.target.textContent = props.placeholder;
-    };
-    elemRef.addEventListener('focus', focusListener);
-    elemRef.addEventListener('blur', blurListener);
-    return () => {
-      elemRef.removeEventListener('focus', focusListener);
-      elemRef.removeEventListener('blur', blurListener);
-    };
-  }, [props.placeholder]);
+    if (e.target.value) return;
+    elem.current.classList.remove('placeholder');
+    e.target.textContent = '';
+  };
 
-  return <div contentEditable tabIndex="0" ref={elem}/>;
+  const onBlur = e => {
+    if (!elem.current) return;
+    if (e.target.value) return;
+    elem.current.classList.add('placeholder');
+    e.target.textContent = props.placeholder;
+  };
+  
+  return <div contentEditable tabIndex="0" ref={elem} onFocus={onFocus} onBlur={onBlur}/>;
 }
 
 export default forwardRef(ContentEditable);
