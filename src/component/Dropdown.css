@@ -1,25 +1,44 @@
 .dropdown {
   position: absolute;
   z-index: 999;
-  border-radius: 1rem;
   padding: .1rem 0;
   font-size: 1rem;
 }
 
 .dropdown.attachTopLeft {
+  top: 3.3rem;
+  left: .7rem;
+}
+
+.dropdown.attachTopLeft ul > li:first-child {
   border-top-left-radius: .2rem;
 }
 
 .dropdown.attachTopRight {
+  top: 3.3rem;
+  right: .7rem;
+}
+
+.dropdown.attachTopRight ul > li:first-child {
   border-top-right-radius: .2rem;
 }
 
-.dropdown.attachBotOm-right {
-  border-top-right-radius: .2rem;
+.dropdown.attachBottomRight {
+  right: .7rem;
+  bottom: 5rem;
 }
 
-.dropdown.attachBotOm-left {
-  border-top-left-radius: .2rem;
+.dropdown.attachBottomRight ul > li:first-child  {
+  border-bottom-right-radius: .2rem;
+}
+
+.dropdown.attachBottomLeft {
+  left: .7rem;
+  bottom: 5rem;
+}
+
+.dropdown.attachBottomLeft ul > li:last-child {
+  border-bottom-left-radius: .2rem;
 }
 
 .dropdown ul {
@@ -29,29 +48,40 @@
 .dropdown ul > li {
   text-shadow: 0 0 0.2rem #151515;
   color: snow;
-  text-align:center;
-  padding: .4rem .7rem;
+  text-align: center;
+  padding: .7rem 1.5rem;
   white-space: nowrap;
   cursor: pointer;
+  backdrop-filter: blur(.5rem);
+  -webkit-backdrop-filter: blur(.5rem);
+  border-top: .05rem solid rgba(255, 255, 255, .1);
+  border-left: .05rem solid rgba(255, 255, 255, .1);
+  border-right: .05rem solid rgba(255, 255, 255, .1);
 }
 
-.dropdown ul > li:not(:last-child) {
-  border-bottom: .05rem solid rgba(255, 255, 255, .2);
+.dropdown ul > li:hover {
+  backdrop-filter: blur(3rem);
+  -webkit-backdrop-filter: blur(3rem);
+}
+
+.dropdown ul > li:first-child {
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+.dropdown ul > li:last-child {
+  border-bottom: .05rem solid rgba(255, 255, 255, .1);
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
 }
 
 .dropdown.collapsed {
-  filter: blur(1rem);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
-  transition: filter 400ms, backdrop-filter 100ms, opacity 400ms;
   pointer-events: none;
   opacity: 0;
+  transition: opacity 300ms;
 }
 
 .dropdown:not(.collapsed) {
-  filter: none;
-  backdrop-filter: blur(.5rem);
-  -webkit-backdrop-filter: blur(.5rem);
   opacity: 1;
-  transition: filter 400ms, backdrop-filter 100ms;
+  transition: opacity 300ms;
 }

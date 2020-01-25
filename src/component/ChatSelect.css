@@ -1,4 +1,7 @@
-.dropdown.chatSelectMenu {
-  top: 3.3rem;
-  left: .7rem;
+.otherUser:focus {
+  outline: none;
+}
+
+.otherUser:hover {
+  cursor: pointer;
 }
