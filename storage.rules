@@ -4,10 +4,12 @@ service firebase.storage {
       allow read, write: if false;
     }
     match /images/{imageId} {
-      allow read, write: if request.auth != null && request.resource.size < 5 * 1024 * 1024 // 5MB
-                         && (request.resource.customMetadata.from == request.auth.uid
-                         || request.resource.customMetadata.to == request.auth.uid);
-      allow write: if request.resource.customMetadata.from == request.auth.uid;
+      allow read: if request.resource.customMetadata.from == request.auth.uid
+                  || request.resource.customMetadata.to == request.auth.uid;
+      allow write: if request.auth != null
+                   && request.resource.metadata.from == request.auth.uid
+                   && request.resource.metadata.to != null
+                   && request.resource.size < 5 * 1024 * 1024; // 5MB
     }
   }
 }
