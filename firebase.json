@@ -5,13 +5,16 @@
   },
   "hosting": {
     "public": "build",
-    "rewrites": [{
-      "source": "**",
-      "destination": "/index.html"
-    }, {
-    "source": "!/@(js|css)/**",
-    "destination": "/index.html"
-  }]
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      },
+      {
+        "source": "!/@(js|css)/**",
+        "destination": "/index.html"
+      }
+    ]
   },
   "emulators": {
     "firestore": {
@@ -20,5 +23,8 @@
     "hosting": {
       "port": 5000
     }
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }
