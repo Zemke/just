@@ -30,7 +30,7 @@ export default function ChatMenu(props) {
       <div className="dot3"/>
     </div>
 
-    <Dropdown dropdownTrigger={dropdownTrigger} className="chatHeadMenu attachTopRight">
+    <Dropdown dropdownTrigger={dropdownTrigger} className="attachTopRight">
       <ul>
         <li onClick={signOut}>
           Sign out
