@@ -10,26 +10,12 @@ export default function Share(props) {
     alert('todo');
   };
 
-  const imageGallery = () => {
+  const imageGallery = () =>
     uploadButton.current.click();
-  };
 
   const onUploadChange = () => {
     if (!uploadButton.current.files.length) return;
-
-    const loadedFiles = [];
-    Array
-      .from(uploadButton.current.files)
-      .forEach(file => {
-        const fileReader = new FileReader();
-        fileReader.onload = e => {
-          loadedFiles.push(e.target.result);
-          if (loadedFiles.length === uploadButton.current.files.length) {
-            props.onFiles(loadedFiles);
-          }
-        };
-        fileReader.readAsDataURL(file);
-      });
+    props.onFiles(uploadButton.current.files);
   };
 
   return (

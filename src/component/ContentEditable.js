@@ -96,15 +96,21 @@ function ContentEditable(props, ref) {
   }, [props, props.onResize]);
 
   useEffect(() => {
-    props.files && props.files.forEach(f => {
-      elem.current.classList.remove('placeholder');
-      if (elem.current.textContent === props.placeholder) {
-        elem.current.textContent = '';
-      }
-      const imgEl = document.createElement('img');
-      imgEl.src = f;
-      elem.current.appendChild(imgEl);
-    });
+    Array
+      .from(props.files)
+      .forEach(file => {
+        const fileReader = new FileReader();
+        fileReader.onload = e => {
+          elem.current.classList.remove('placeholder');
+          if (elem.current.textContent === props.placeholder) {
+            elem.current.textContent = '';
+          }
+          const imgEl = document.createElement('img');
+          imgEl.src = e.target.result;
+          elem.current.appendChild(imgEl);
+        };
+        fileReader.readAsDataURL(file);
+      });
   }, [props.placeholder, props.files]);
 
   const onFocus = e => {

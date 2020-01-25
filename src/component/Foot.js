@@ -2,6 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import Share from "./Share";
 import ContentEditable from "./ContentEditable";
 import DataStore from "../util/dataStore";
+import Storage from "../util/storage.js";
 import toName from "../util/toName";
 import './Foot.css';
 
@@ -46,6 +47,7 @@ export default function Foot(props) {
 
   const onSubmit = async e => {
     e.preventDefault();
+    if (files.length) Array.from(files).forEach(Storage.upload);
     if (!field.trim()) return;
     const payload = {
       from: props.currentUser.uid,
