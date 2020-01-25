@@ -10,6 +10,7 @@ export default function Foot(props) {
   /** @type {{current: ElementContentEditable}} */ const inputField = useRef(null);
 
   const [field, setField] = useState('');
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     const documentKeydownHandler = e => {
@@ -69,13 +70,14 @@ export default function Foot(props) {
 
   return (
     <form onSubmit={onSubmit}>
-      <Share/>
+      <Share onFiles={setFiles}/>
       <ContentEditable
         onChange={e => setField(e.target.value)}
         onResize={onInputFieldResize}
         placeholder="Type here"
         value={field}
         ref={inputField}
+        files={files}
         required/>
       <button type="submit"
               className="submit"

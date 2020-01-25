@@ -95,20 +95,32 @@ function ContentEditable(props, ref) {
     return () => resizeObserver.disconnect();
   }, [props, props.onResize]);
 
+  useEffect(() => {
+    props.files && props.files.forEach(f => {
+      elem.current.classList.remove('placeholder');
+      if (elem.current.textContent === props.placeholder) {
+        elem.current.textContent = '';
+      }
+      const imgEl = document.createElement('img');
+      imgEl.src = f;
+      elem.current.appendChild(imgEl);
+    });
+  }, [props.placeholder, props.files]);
+
   const onFocus = e => {
     if (!elem.current) return;
-    if (e.target.value) return;
+    if (e.target.value || props.files.length) return;
     elem.current.classList.remove('placeholder');
     e.target.textContent = '';
   };
 
   const onBlur = e => {
     if (!elem.current) return;
-    if (e.target.value) return;
+    if (e.target.value || props.files.length) return;
     elem.current.classList.add('placeholder');
     e.target.textContent = props.placeholder;
   };
-  
+
   return <div contentEditable tabIndex="0" ref={elem} onFocus={onFocus} onBlur={onBlur}/>;
 }
 

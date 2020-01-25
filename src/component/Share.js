@@ -1,7 +1,7 @@
 import React, {useRef, useState} from "react";
 import Dropdown from "./Dropdown";
 
-export default function Share() {
+export default function Share(props) {
 
   const [dropdownTrigger, setDropdownTrigger] = useState(null);
   /** @type {{current: HTMLInputElement}} */ const uploadButton = useRef(null);
@@ -12,14 +12,35 @@ export default function Share() {
 
   const imageGallery = () => {
     uploadButton.current.click();
-    console.log(uploadButton.current.files);
+  };
+
+  const onUploadChange = () => {
+    if (!uploadButton.current.files.length) return;
+
+    const loadedFiles = [];
+    Array
+      .from(uploadButton.current.files)
+      .forEach(file => {
+        const fileReader = new FileReader();
+        fileReader.onload = e => {
+          loadedFiles.push(e.target.result);
+          if (loadedFiles.length === uploadButton.current.files.length) {
+            props.onFiles(loadedFiles);
+          }
+        };
+        fileReader.readAsDataURL(file);
+      });
   };
 
   return (
     <>
       <div className="share">
         <button ref={ref => setDropdownTrigger(ref)}>&#43;</button>
-        <input type="file" accept="image/x-png,image/jpeg,image/gif" ref={uploadButton}/>
+        <input type="file"
+               accept="image/x-png,image/jpeg,image/gif"
+               multiple
+               ref={uploadButton}
+               onChange={onUploadChange}/>
       </div>
       <Dropdown dropdownTrigger={dropdownTrigger} className="attachBottomLeft text-left">
         <ul>
