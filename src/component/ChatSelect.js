@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import toName from '../util/toName';
 import Dropdown from "./Dropdown";
-import './ChatSelect.css';
+import "./ChatSelect.css";
 
 export default function ChatSelect(props) {
 
@@ -19,7 +19,7 @@ export default function ChatSelect(props) {
           {otherUserName}
         </button>
 
-        <Dropdown dropdownTrigger={dropdownTrigger} className="chatSelectMenu attachTopLeft">
+        <Dropdown dropdownTrigger={dropdownTrigger} className="attachTopLeft">
           <ul>
             {props.otherUsers.map(user =>
               <li key={user} onClick={() => props.onSelect(user)}>
