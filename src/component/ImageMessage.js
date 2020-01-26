@@ -1,5 +1,6 @@
 import React, {useEffect, useRef} from 'react';
 import Storage from '../util/storage.js';
+import './ImageMessage.css';
 
 export default function ImageMessage(props) {
 
@@ -13,5 +14,11 @@ export default function ImageMessage(props) {
     })();
   }, [props.message]);
 
-  return (<img alt="Image message" ref={imageRef}/>)
+  return (
+    <>
+      {(imageRef?.current?.src)
+        ? (<img alt="Image message" ref={imageRef}/>)
+        : (<div className="loadingImage">Loading</div>)}
+    </>
+  )
 };
