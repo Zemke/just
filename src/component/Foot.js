@@ -15,7 +15,7 @@ export default function Foot(props) {
 
   useEffect(() => {
     const documentKeydownHandler = e => {
-      if (e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+      if (e.ctrlKey || e.altKey || e.metaKey) return;
       return inputField.current.focus();
     };
     document.addEventListener('keydown', documentKeydownHandler);
