@@ -55,21 +55,19 @@ function ContentEditable(props, ref) {
       return;
     }
 
-    Array
-      .from(props.files)
-      .forEach(file => {
-        const fileReader = new FileReader();
-        fileReader.onload = e => {
-          elem.current.classList.remove('placeholder');
-          if (elem.current.textContent === props.placeholder) {
-            elem.current.textContent = '';
-          }
-          const imgEl = document.createElement('img');
-          imgEl.src = e.target.result;
-          elem.current.appendChild(imgEl);
-        };
-        fileReader.readAsDataURL(file);
-      });
+    props.files.forEach(file => {
+      const fileReader = new FileReader();
+      fileReader.onload = e => {
+        elem.current.classList.remove('placeholder');
+        if (elem.current.textContent === props.placeholder) {
+          elem.current.textContent = '';
+        }
+        const imgEl = document.createElement('img');
+        imgEl.src = e.target.result;
+        elem.current.appendChild(imgEl);
+      };
+      fileReader.readAsDataURL(file[1]);
+    });
   }, [props.placeholder, props.files]);
 
   const onInput = e => {

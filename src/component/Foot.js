@@ -49,19 +49,26 @@ export default function Foot(props) {
     e.preventDefault();
 
     if (files.length) {
-      Array.from(files).forEach(f =>
-        (async () => {
-          DataStore.sendMessage({
-            from: (await Auth.current()).uid,
-            to: props.otherUser,
-            body: null,
-            image: (await Storage.upload(f, props.otherUser)).ref.name
-          })
-        })());
-      setFiles([]);
-    }
+      // split lines of messages and images
+      // batch write in order
+      // transactional batch write maybe?
 
-    if (field.trim()) {
+
+      console.log(field);
+      console.log(files);
+
+
+      // Array.from(files).forEach(f =>
+      //   (async () => {
+      //     DataStore.sendMessage({
+      //       from: (await Auth.current()).uid,
+      //       to: props.otherUser,
+      //       body: null,
+      //       image: (await Storage.upload(f, props.otherUser)).ref.name
+      //     })
+      //   })());
+      // setFiles([]);
+    } else if (field[0].trim()) {
       DataStore.sendMessage({
         from: props.currentUser.uid,
         to: props.otherUser,

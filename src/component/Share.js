@@ -1,5 +1,6 @@
 import React, {useRef, useState} from "react";
 import Dropdown from "./Dropdown";
+import randomString from "../util/randomString";
 
 export default function Share(props) {
 
@@ -15,7 +16,10 @@ export default function Share(props) {
 
   const onUploadChange = () => {
     if (!uploadButton.current.files.length) return;
-    props.onFiles(uploadButton.current.files);
+    props.onFiles(
+      Array
+        .from(uploadButton.current.files)
+        .map(f => [randomString(), f]));
   };
 
   return (
