@@ -68,6 +68,10 @@
   word-break: break-all;
 }
 
+.chat > .body .message img {
+  max-width: 100%;
+}
+
 .chat > .body .message p a:active {
   color: #000078;
 }

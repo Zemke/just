@@ -11,6 +11,11 @@ api.upload = async (file, to) =>
     .ref()
     .child(`images/${randomString()}`)
     .put(file, {customMetadata: {from: (await Auth.current()).uid, to}});
-};
+
+api.download = async image =>
+  await firebase
+    .storage()
+    .ref(`images/${image}`)
+    .getDownloadURL();
 
 export default api;

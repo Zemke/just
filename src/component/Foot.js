@@ -58,7 +58,6 @@ export default function Foot(props) {
             image: (await Storage.upload(f, props.otherUser)).ref.name
           })
         })());
-
     }
     if (!field.trim()) return;
     const payload = {
