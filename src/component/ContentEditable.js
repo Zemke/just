@@ -7,7 +7,13 @@ function ContentEditable(props, ref) {
 
   useImperativeHandle(ref, () => elem.current);
 
+  const isMobileJustDevice = useRef(null);
+
   const initialElemHeight = useRef(null);
+
+  useEffect(() => {
+    (async () => isMobileJustDevice.current = await window.isMobileJustDevice)();
+  }, []);
 
   useEffect(() => {
     if (elem.current && props.value !== elem.current.value) {
@@ -82,12 +88,12 @@ function ContentEditable(props, ref) {
     props.onChange(e);
   };
 
-  const onKeydown = async e => {
-    if (e.key === 'Enter' && (await window.isMobileJustDevice)) {
+  const onKeydown = e => {
+    if (e.key === 'Enter' && (isMobileJustDevice.current)) {
       document.execCommand('insertHTML', false, '<br><br>');
       e.preventDefault();
       return false;
-    } else if (e.key === 'Enter' && !e.shiftKey && !(await window.isMobileJustDevice)) {
+    } else if (e.key === 'Enter' && !e.shiftKey && !(isMobileJustDevice.current)) {
       e.preventDefault();
       e.target.closest('form').dispatchEvent(new Event('submit'));
     }

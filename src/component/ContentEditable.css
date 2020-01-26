@@ -1,3 +1,7 @@
+div[contenteditable] {
+  cursor: text;
+}
+
 div[contenteditable].placeholder {
   color: gray;
 }
