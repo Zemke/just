@@ -8,7 +8,6 @@ div[contenteditable].placeholder {
 
 div[contenteditable] img {
   max-width: 30%;
-  margin: .1rem;
-  border-radius: .2rem;
-  overflow: visible;
+  padding: .3rem;
+  display: block;
 }
