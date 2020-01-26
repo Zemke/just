@@ -58,7 +58,6 @@ export default function SignInComponent(props) {
 
   const onSafariSubmit = e => {
     e.preventDefault();
-    debugger;
     Auth
       .safariSignIn(safariEmail, safariSignInLink)
       .then(result => {
