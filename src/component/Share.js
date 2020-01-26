@@ -21,7 +21,7 @@ export default function Share(props) {
   return (
     <>
       <div className="share">
-        <button ref={ref => setDropdownTrigger(ref)}>&#43;</button>
+        <button ref={ref => setDropdownTrigger(ref)} type="button">&#43;</button>
         <input type="file"
                accept="image/x-png,image/jpeg,image/gif"
                multiple
