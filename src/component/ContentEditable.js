@@ -64,6 +64,7 @@ function ContentEditable(props, ref) {
         }
         const imgEl = document.createElement('img');
         imgEl.src = e.target.result;
+        imgEl.dataset['file'] = file[0];
         elem.current.appendChild(imgEl);
       };
       fileReader.readAsDataURL(file[1]);
@@ -71,19 +72,48 @@ function ContentEditable(props, ref) {
   }, [props.placeholder, props.files]);
 
   const onInput = e => {
-    e.target.value = Array.from(e.target.childNodes)
-      .map(n => {
-        if (n.nodeType === Node.TEXT_NODE) {
-          return n.textContent;
-        } else if (n.tagName === 'BR') {
-          return '\n';
-        } else {
-          return null;
-        }
-      })
-      .filter(n => n != null)
-      .join('');
-    props.onChange(e);
+    if (!props.files.length) {
+      e.target.value = Array.from(e.target.childNodes)
+        .map(n => {
+          if (n.nodeType === Node.TEXT_NODE) {
+            return n.textContent;
+          } else if (n.tagName === 'BR') {
+            return '\n';
+          } else {
+            return null;
+          }
+        })
+        .filter(n => n != null)
+        .join('');
+      props.onChange([e.target.value]);
+    } else {
+      e.target.value = Array.from(e.target.childNodes)
+        .map(n => {
+          if (n.nodeType === Node.TEXT_NODE) {
+            return n.textContent;
+          } else if (n.tagName === 'BR') {
+            return '\n';
+          } else if (n.tagName === 'IMG') {
+            return props.files.find(f => f[0] === n.dataset['file']);
+          } else {
+            return null;
+          }
+        })
+        .filter(n => n != null)
+        .reduce((acc, curr, idx) => {
+          if (!acc.length) acc.push(curr);
+
+          if (typeof acc[acc.length - 1] === 'string'
+              && typeof curr === 'string') {
+            acc[acc.length - 1] = acc[acc.length - 1] + curr;
+          } else {
+            acc.push(curr);
+          }
+
+          return acc;
+        }, []);
+      props.onChange([e.target.value]);
+    }
   };
 
   const onKeydown = e => {
