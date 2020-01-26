@@ -41,6 +41,17 @@
   overflow: hidden;
 }
 
+.chat > .body .message.image {
+  padding: 0;
+  max-width: calc(60% + .8rem);
+}
+
+.chat > .body .message.image .overlay {
+  padding: 0;
+  max-width: calc(60% + .8rem);
+  background: transparent;
+}
+
 .chat > .body .message p.onlyEmoji {
   font-size: 4rem;
 }

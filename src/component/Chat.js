@@ -156,7 +156,7 @@ export default function Chat(props) {
               {messageGaps[message.id] && (<div className="timestamp">{messageGaps[message.id]}</div>)}
 
               <div className="message-wrapper">
-                <div className={"message " + (otherUser === message.from ? "from" : "to")}>
+                <div className={"message " + (otherUser === message.from ? "from" : "to") + (message.image ? " image" : "")}>
                   <div className="overlay"/>
                   {message.image
                     ? (<ImageMessage message={message}/>)

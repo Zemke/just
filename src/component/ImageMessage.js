@@ -13,5 +13,5 @@ export default function ImageMessage(props) {
     })();
   }, [props.message]);
 
-  return (<img className={`image-${props.message.image}`} ref={imageRef}/>)
+  return (<img alt="Image message" ref={imageRef}/>)
 };
