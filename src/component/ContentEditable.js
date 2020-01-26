@@ -47,28 +47,6 @@ function ContentEditable(props, ref) {
   useEffect(() => {
     if (!elem.current) return;
     const elemRef = elem.current;
-    const inputListener = e => {
-      e.target.value = Array.from(e.target.childNodes)
-        .map(n => {
-          if (n.nodeType === Node.TEXT_NODE) {
-            return n.textContent;
-          } else if (n.tagName === 'BR') {
-            return '\n';
-          } else {
-            return null;
-          }
-        })
-        .filter(n => n != null)
-        .join('');
-      props.onChange(e);
-    };
-    elemRef.addEventListener('input', inputListener);
-    return () => elemRef.removeEventListener('input', inputListener);
-  }, [props, props.onChange]);
-
-  useEffect(() => {
-    if (!elem.current) return;
-    const elemRef = elem.current;
     const pasteListener = e => {
       e.preventDefault();
       const data = e.clipboardData.getData('text/plain')
@@ -120,6 +98,22 @@ function ContentEditable(props, ref) {
       });
   }, [props.placeholder, props.files]);
 
+  const onInput = e => {
+    e.target.value = Array.from(e.target.childNodes)
+      .map(n => {
+        if (n.nodeType === Node.TEXT_NODE) {
+          return n.textContent;
+        } else if (n.tagName === 'BR') {
+          return '\n';
+        } else {
+          return null;
+        }
+      })
+      .filter(n => n != null)
+      .join('');
+    props.onChange(e);
+  };
+
   const onFocus = e => {
     if (!elem.current) return;
     if (e.target.value || props.files.length) return;
@@ -134,7 +128,8 @@ function ContentEditable(props, ref) {
     e.target.textContent = props.placeholder;
   };
 
-  return <div contentEditable tabIndex="0" ref={elem} onFocus={onFocus} onBlur={onBlur}/>;
+  return <div contentEditable tabIndex="0" ref={elem}
+              onFocus={onFocus} onBlur={onBlur} onInput={onInput}/>;
 }
 
 export default forwardRef(ContentEditable);
