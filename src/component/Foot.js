@@ -10,7 +10,7 @@ export default function Foot(props) {
 
   /** @type {{current: ElementContentEditable}} */ const inputField = useRef(null);
 
-  const [field, setField] = useState('');
+  const [field, setField] = useState(['']);
   const [files, setFiles] = useState([]);
 
   useEffect(() => {
@@ -65,11 +65,11 @@ export default function Foot(props) {
       DataStore.sendMessage({
         from: props.currentUser.uid,
         to: props.otherUser,
-        body: field.trim()
+        body: field[0].trim()
       });
     }
 
-    setField('');
+    setField(['']);
     inputField.current.focus();
   };
 
@@ -84,7 +84,7 @@ export default function Foot(props) {
     <form onSubmit={onSubmit}>
       <Share onFiles={setFiles}/>
       <ContentEditable
-        onChange={e => setField(e.target.value)}
+        onChange={setField}
         onResize={onInputFieldResize}
         placeholder="Type here"
         value={field}

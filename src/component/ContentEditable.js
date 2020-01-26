@@ -16,10 +16,10 @@ function ContentEditable(props, ref) {
   }, []);
 
   useEffect(() => {
-    if (elem.current && props.value !== elem.current.value) {
-      if (props.value) {
-        elem.current.textContent = props.value;
-        elem.current.value = props.value;
+    if (elem.current && props.value[0] !== elem.current.value) {
+      if (props.value[0]) {
+        elem.current.textContent = props.value[0];
+        elem.current.value = props.value[0];
         elem.current.classList.remove('placeholder');
       } else {
         elem.current.value = '';
