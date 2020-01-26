@@ -4,8 +4,8 @@ service firebase.storage {
       allow read, write: if false;
     }
     match /images/{imageId} {
-      allow read: if request.resource.customMetadata.from == request.auth.uid
-                  || request.resource.customMetadata.to == request.auth.uid;
+      allow read: if resource.metadata.from == request.auth.uid
+                  || resource.metadata.to == request.auth.uid;
       allow write: if request.auth != null
                    && request.resource.metadata.from == request.auth.uid
                    && request.resource.metadata.to != null
