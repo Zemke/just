@@ -47,6 +47,7 @@ export default function Foot(props) {
 
   const onSubmit = e => {
     e.preventDefault();
+
     if (files.length) {
       Array.from(files).forEach(f =>
         (async () => {
@@ -57,16 +58,19 @@ export default function Foot(props) {
             image: (await Storage.upload(f, props.otherUser)).ref.name
           })
         })());
+      setFiles([]);
     }
-    if (!field.trim()) return;
-    const payload = {
-      from: props.currentUser.uid,
-      to: props.otherUser,
-      body: field.trim()
-    };
+
+    if (field.trim()) {
+      DataStore.sendMessage({
+        from: props.currentUser.uid,
+        to: props.otherUser,
+        body: field.trim()
+      });
+    }
+
     setField('');
     inputField.current.focus();
-    DataStore.sendMessage(payload);
   };
 
   const onInputFieldResize = height => {

@@ -22,7 +22,7 @@ api.sendMessage = ({from, to, body, image}) =>
   firebase
     .firestore()
     .collection('messages')
-    .add({from, to, body, users: [from, to], when: serverTimestamp(), image});
+    .add({from, to, body, users: [from, to], when: serverTimestamp(), image: image || null});
 
 const mapTimestamp = message => {
   message.when = message.when?.toMillis();

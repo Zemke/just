@@ -96,6 +96,13 @@ function ContentEditable(props, ref) {
   }, [props, props.onResize]);
 
   useEffect(() => {
+    if (!elem.current) return;
+
+    if (!props.files.length) {
+      elem.current.querySelectorAll('img').forEach(img => img.remove());
+      return;
+    }
+
     Array
       .from(props.files)
       .forEach(file => {
