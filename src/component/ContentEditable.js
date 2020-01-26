@@ -10,23 +10,6 @@ function ContentEditable(props, ref) {
   const initialElemHeight = useRef(null);
 
   useEffect(() => {
-    if (!elem.current) return;
-    const elemRef = elem.current;
-    const enterKeyDownListener = async e => {
-      if (e.key === 'Enter' && (await window.isMobileJustDevice)) {
-        document.execCommand('insertHTML', false, '<br><br>');
-        e.preventDefault();
-        return false;
-      } else if (e.key === 'Enter' && !e.shiftKey && !(await window.isMobileJustDevice)) {
-        e.preventDefault();
-        e.target.closest('form').dispatchEvent(new Event('submit'));
-      }
-    };
-    elemRef.addEventListener('keydown', enterKeyDownListener);
-    return () => elemRef.removeEventListener('keydown', enterKeyDownListener);
-  }, []);
-
-  useEffect(() => {
     if (elem.current && props.value !== elem.current.value) {
       if (props.value) {
         elem.current.textContent = props.value;
@@ -43,21 +26,6 @@ function ContentEditable(props, ref) {
       }
     }
   }, [props.value, props.placeholder]);
-
-  useEffect(() => {
-    if (!elem.current) return;
-    const elemRef = elem.current;
-    const pasteListener = e => {
-      e.preventDefault();
-      const data = e.clipboardData.getData('text/plain')
-        .replace(/\n/g, '<br/>')
-        .replace(/ /g, '&nbsp;');
-      document.execCommand(
-        "insertHTML", false, data);
-    };
-    elemRef.addEventListener('paste', pasteListener, false);
-    return () => elemRef.removeEventListener('paste', pasteListener, false);
-  });
 
   useEffect(() => {
     if (!('ResizeObserver' in window)) return;
@@ -114,6 +82,26 @@ function ContentEditable(props, ref) {
     props.onChange(e);
   };
 
+  const onKeydown = async e => {
+    if (e.key === 'Enter' && (await window.isMobileJustDevice)) {
+      document.execCommand('insertHTML', false, '<br><br>');
+      e.preventDefault();
+      return false;
+    } else if (e.key === 'Enter' && !e.shiftKey && !(await window.isMobileJustDevice)) {
+      e.preventDefault();
+      e.target.closest('form').dispatchEvent(new Event('submit'));
+    }
+  };
+
+  const onPaste = e => {
+    e.preventDefault();
+    const data = e.clipboardData.getData('text/plain')
+      .replace(/\n/g, '<br/>')
+      .replace(/ /g, '&nbsp;');
+    document.execCommand(
+      "insertHTML", false, data);
+  };
+
   const onFocus = e => {
     if (!elem.current) return;
     if (e.target.value || props.files.length) return;
@@ -129,7 +117,8 @@ function ContentEditable(props, ref) {
   };
 
   return <div contentEditable tabIndex="0" ref={elem}
-              onFocus={onFocus} onBlur={onBlur} onInput={onInput}/>;
+              onFocus={onFocus} onBlur={onBlur} onInput={onInput}
+              onKeyDown={onKeydown} onPaste={onPaste}/>;
 }
 
 export default forwardRef(ContentEditable);
