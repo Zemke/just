@@ -4,7 +4,6 @@ import ContentEditable from "./ContentEditable";
 import DataStore from "../util/dataStore";
 import Storage from "../util/storage.js";
 import Auth from "../util/auth.js";
-import toName from "../util/toName";
 import './Foot.css';
 
 export default function Foot(props) {
@@ -46,7 +45,7 @@ export default function Foot(props) {
   }, [props, props.scrollToBottom]);
 
 
-  const onSubmit = async e => {
+  const onSubmit = e => {
     e.preventDefault();
     if (files.length) {
       Array.from(files).forEach(f =>
@@ -67,11 +66,7 @@ export default function Foot(props) {
     };
     setField('');
     inputField.current.focus();
-    try {
-      await DataStore.sendMessage(payload);
-    } catch (e) {
-      alert(`Sending message “${payload.message}” to ${toName(props.otherUser, props.names)} failed.\n\n${e}`);
-    }
+    DataStore.sendMessage(payload);
   };
 
   const onInputFieldResize = height => {
