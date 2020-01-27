@@ -48,23 +48,20 @@ export default function Foot(props) {
   const onSubmit = e => {
     e.preventDefault();
 
-    if (files.length) {
-      files.forEach(f =>
-        (async () => {
-          DataStore.sendMessage({
-            from: (await Auth.current()).uid,
-            to: props.otherUser,
-            body: null,
-            image: (await Storage.upload(f[1], f[0], props.otherUser)).ref.name
-          })
-        })());
-    } else if (field[0].trim()) {
-      DataStore.sendMessage({
-        from: props.currentUser.uid,
-        to: props.otherUser,
-        body: field[0].trim()
-      });
-    }
+    console.log(files);
+    console.log(field);
+
+    field[0].forEach(input => {
+      if (typeof input === 'string') {
+        DataStore.sendMessage({
+          from: props.currentUser.uid,
+          to: props.otherUser,
+          body: input
+        });
+      } else {
+        Storage.upload(input[1], input[0], props.otherUser)
+      }
+    });
 
     setField(['']);
     setFiles([]);
