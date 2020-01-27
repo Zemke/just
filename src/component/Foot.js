@@ -49,25 +49,15 @@ export default function Foot(props) {
     e.preventDefault();
 
     if (files.length) {
-      // split lines of messages and images
-      // batch write in order
-      // transactional batch write maybe?
-
-
-      console.log(field);
-      console.log(files);
-
-
-      // Array.from(files).forEach(f =>
-      //   (async () => {
-      //     DataStore.sendMessage({
-      //       from: (await Auth.current()).uid,
-      //       to: props.otherUser,
-      //       body: null,
-      //       image: (await Storage.upload(f, props.otherUser)).ref.name
-      //     })
-      //   })());
-      // setFiles([]);
+      Array.from(files).forEach(f =>
+        (async () => {
+          DataStore.sendMessage({
+            from: (await Auth.current()).uid,
+            to: props.otherUser,
+            body: null,
+            image: (await Storage.upload(f[1], f[0], props.otherUser)).ref.name
+          })
+        })());
     } else if (field[0].trim()) {
       DataStore.sendMessage({
         from: props.currentUser.uid,
@@ -77,6 +67,7 @@ export default function Foot(props) {
     }
 
     setField(['']);
+    setFiles([]);
     inputField.current.focus();
   };
 
