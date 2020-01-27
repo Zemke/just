@@ -49,7 +49,7 @@ export default function Foot(props) {
     e.preventDefault();
 
     if (files.length) {
-      Array.from(files).forEach(f =>
+      files.forEach(f =>
         (async () => {
           DataStore.sendMessage({
             from: (await Auth.current()).uid,
