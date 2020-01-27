@@ -66,3 +66,22 @@ exports.sendMessageNotification = functions.firestore
 
     return Promise.resolve(notification);
   });
+
+
+exports.createMessageForFile = functions.storage.object().onFinalize(async object => {
+  console.log(object);
+
+  const message = {
+    from: object.metadata.from,
+    to: object.metadata.to,
+    body: null,
+    when: admin.firestore.FieldValue.serverTimestamp(),
+    image: true
+  };
+
+  console.log('Creating message', message);
+
+  return admin.firestore()
+    .collection('messages')
+    .add(message);
+});

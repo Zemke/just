@@ -28,3 +28,38 @@ const myFunctions = require('../index.js');
       return test.cleanup();
     });
 })();
+
+// createMessageForFile
+(async () => {
+  const snap = test.storage.makeObjectMetadata({
+    metadata: {
+      from: testData.users.flzemke,
+      to: testData.users.zemke,
+    }
+  });
+
+  const result = await test.wrap(myFunctions.createMessageForFile)(snap);
+  const savedMessage = (await result.get()).data();
+
+  const tolerance = 10000;
+  const now = Date.now();
+  const savedWhen = savedMessage.when.toMillis();
+  console.assert(
+    now - tolerance < savedWhen && now > savedWhen,
+    `Message wasn't created within the last ${tolerance} millis.`);
+
+  console.assert(
+    savedMessage.body === null,
+    `body actually is ${savedMessage.body}`);
+  console.assert(
+    savedMessage.to === testData.users.zemke,
+    `to actually is ${savedMessage.to}`);
+  console.assert(
+    savedMessage.from === testData.users.flzemke,
+    `from actually is ${savedMessage.from}`);
+  console.assert(
+    savedMessage.image === true,
+    `image actually is ${savedMessage.image}`);
+
+  return test.cleanup();
+})();
