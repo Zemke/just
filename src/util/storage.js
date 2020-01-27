@@ -1,15 +1,14 @@
 import "firebase/storage";
 import firebase from './firebase';
 import Auth from './auth';
-import randomString from './randomString.js';
 
 const api = {};
 
-api.upload = async (file, to) =>
+api.upload = async (file, name, to) =>
   firebase
     .storage()
     .ref()
-    .child(`images/${randomString()}`)
+    .child(`images/${name}`)
     .put(file, {customMetadata: {from: (await Auth.current()).uid, to}});
 
 api.download = async image =>
