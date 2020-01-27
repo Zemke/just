@@ -100,8 +100,11 @@ function ContentEditable(props, ref) {
           }
         })
         .filter(n => n != null)
-        .reduce((acc, curr, idx) => {
-          if (!acc.length) acc.push(curr);
+        .reduce((acc, curr) => {
+          if (!acc.length) {
+            acc.push(curr);
+            return acc;
+          }
 
           if (typeof acc[acc.length - 1] === 'string'
               && typeof curr === 'string') {
