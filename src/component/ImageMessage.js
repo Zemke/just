@@ -9,8 +9,7 @@ export default function ImageMessage(props) {
   useEffect(() => {
     (async () => {
       if (imageRef.current == null) return;
-      const image = await Storage.download(props.message.image);
-      imageRef.current.src = image;
+      imageRef.current.src = await Storage.download(props.message.image);
     })();
   }, [props.message]);
 
