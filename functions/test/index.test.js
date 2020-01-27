@@ -31,7 +31,10 @@ const myFunctions = require('../index.js');
 
 // createMessageForFile
 (async () => {
+  const name = 'images/bfez33wzpiat9n6e3d3k';
+
   const snap = test.storage.makeObjectMetadata({
+    name,
     metadata: {
       from: testData.users.flzemke,
       to: testData.users.zemke,
@@ -58,7 +61,7 @@ const myFunctions = require('../index.js');
     savedMessage.from === testData.users.flzemke,
     `from actually is ${savedMessage.from}`);
   console.assert(
-    savedMessage.image === true,
+    savedMessage.image === name,
     `image actually is ${savedMessage.image}`);
 
   return test.cleanup();

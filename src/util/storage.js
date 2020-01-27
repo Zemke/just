@@ -14,7 +14,7 @@ api.upload = async (file, name, to) =>
 api.download = async image =>
   await firebase
     .storage()
-    .ref(`images/${image}`)
+    .ref(image)
     .getDownloadURL();
 
 export default api;
