@@ -3,7 +3,6 @@ import Share from "./Share";
 import ContentEditable from "./ContentEditable";
 import DataStore from "../util/dataStore";
 import Storage from "../util/storage.js";
-import Auth from "../util/auth.js";
 import './Foot.css';
 
 export default function Foot(props) {
@@ -52,9 +51,9 @@ export default function Foot(props) {
     console.log(files);
     console.log(field);
 
-    field[0].forEach(input => {
+    field.forEach(input => {
       if (typeof input === 'string') {
-        DataStore.sendMessage({
+        input.trim() && DataStore.sendMessage({
           from: props.currentUser.uid,
           to: props.otherUser,
           body: input
@@ -63,7 +62,6 @@ export default function Foot(props) {
         Storage.upload(input[1], input[0], props.otherUser)
       }
     });
-
     setField(['']);
     setFiles([]);
     inputField.current.focus();

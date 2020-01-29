@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
+import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useRef} from 'react';
 import './ContentEditable.css';
 
 function ContentEditable(props, ref) {
@@ -11,15 +11,52 @@ function ContentEditable(props, ref) {
 
   const initialElemHeight = useRef(null);
 
+  const {onChange: propsOnChange} = props;
+  const {files: propsFiles} = props;
+
+  const onInput = useCallback(() => {
+    elem.current.value = Array.from(elem.current.childNodes)
+      .map(n => {
+        if (n.nodeType === Node.TEXT_NODE) {
+          return n.textContent;
+        } else if (n.tagName === 'BR') {
+          return '\n';
+        } else if (n.tagName === 'IMG') {
+          return propsFiles.find(f => f[0] === n.dataset['file']);
+        } else {
+          return null;
+        }
+      })
+      .filter(n => n != null)
+      .reduce((acc, curr) => {
+        if (!acc.length) {
+          acc.push(curr);
+          return acc;
+        }
+
+        if (typeof acc[acc.length - 1] === 'string'
+          && typeof curr === 'string') {
+          acc[acc.length - 1] = acc[acc.length - 1] + curr;
+        } else {
+          acc.push(curr);
+        }
+
+        return acc;
+      }, []);
+    console.log(elem.current.value);
+    propsOnChange(elem.current.value);
+  }, [propsOnChange, propsFiles]);
+
+
   useEffect(() => {
     (async () => isMobileJustDevice.current = await window.isMobileJustDevice)();
   }, []);
 
   useEffect(() => {
-    if (elem.current && props.value[0] !== elem.current.value) {
+    if (elem.current && props.value !== elem.current.value) {
       if (props.value[0]) {
-        elem.current.textContent = props.value[0];
-        elem.current.value = props.value[0];
+        elem.current.textContent = props.value;
+        elem.current.value = props.value;
         elem.current.classList.remove('placeholder');
       } else {
         elem.current.value = '';
@@ -49,75 +86,31 @@ function ContentEditable(props, ref) {
 
   useEffect(() => {
     if (!elem.current) return;
+    const elemRef = elem.current;
 
     if (!props.files.length) {
-      elem.current.querySelectorAll('img').forEach(img => img.remove());
+      elemRef.querySelectorAll('img').forEach(img => img.remove());
       return;
     }
 
+    let count = 0;
     props.files.forEach(file => {
       const fileReader = new FileReader();
       fileReader.onload = e => {
-        elem.current.classList.remove('placeholder');
-        if (elem.current.textContent === props.placeholder) {
-          elem.current.textContent = '';
+        elemRef.classList.remove('placeholder');
+        if (elemRef.textContent === props.placeholder) {
+          elemRef.textContent = '';
         }
         const imgEl = document.createElement('img');
         imgEl.src = e.target.result;
         imgEl.dataset['file'] = file[0];
-        elem.current.appendChild(imgEl);
+        elemRef.appendChild(imgEl);
+        count++;
+        props.files.length === count && onInput();
       };
       fileReader.readAsDataURL(file[1]);
     });
-  }, [props.placeholder, props.files]);
-
-  const onInput = e => {
-    if (!props.files.length) {
-      e.target.value = Array.from(e.target.childNodes)
-        .map(n => {
-          if (n.nodeType === Node.TEXT_NODE) {
-            return n.textContent;
-          } else if (n.tagName === 'BR') {
-            return '\n';
-          } else {
-            return null;
-          }
-        })
-        .filter(n => n != null)
-        .join('');
-      props.onChange([e.target.value]);
-    } else {
-      e.target.value = Array.from(e.target.childNodes)
-        .map(n => {
-          if (n.nodeType === Node.TEXT_NODE) {
-            return n.textContent;
-          } else if (n.tagName === 'BR') {
-            return '\n';
-          } else if (n.tagName === 'IMG') {
-            return props.files.find(f => f[0] === n.dataset['file']);
-          } else {
-            return null;
-          }
-        })
-        .filter(n => n != null)
-        .reduce((acc, curr) => {
-          if (!acc.length) {
-            acc.push(curr);
-            return acc;
-          }
-
-          if (typeof acc[acc.length - 1] === 'string'
-              && typeof curr === 'string') {
-            acc[acc.length - 1] = acc[acc.length - 1] + curr;
-          } else {
-            acc.push(curr);
-          }
-
-          return acc;
-        }, []);
-      props.onChange([e.target.value]);
-    }
-  };
+  }, [props.placeholder, props.files, onInput]);
 
   const onKeydown = e => {
     if (e.key === 'Enter' && (isMobileJustDevice.current)) {

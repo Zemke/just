@@ -76,7 +76,8 @@ exports.createMessageForFile = functions.storage.object().onFinalize(async objec
     to: object.metadata.to,
     body: null,
     when: admin.firestore.FieldValue.serverTimestamp(),
-    image: true
+    image: object.name,
+    users: [object.metadata.from, object.metadata.to]
   };
 
   console.log('Creating message', message);

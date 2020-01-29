@@ -63,6 +63,11 @@ const myFunctions = require('../index.js');
   console.assert(
     savedMessage.image === name,
     `image actually is ${savedMessage.image}`);
-
+  console.assert(
+    savedMessage.users.length === 2
+        && savedMessage.users.indexOf(testData.users.zemke) !== -1
+        && savedMessage.users.indexOf(testData.users.flzemke) !== -1,
+    `image actually is ${savedMessage.image}`);
+  console.log('\x1b[32m%s\x1b[0m', 'Success');
   return test.cleanup();
 })();
