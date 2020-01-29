@@ -20,6 +20,7 @@ export default function Share(props) {
       Array
         .from(uploadButton.current.files)
         .map(f => [randomString(), f]));
+    uploadButton.current.value = '';
   };
 
   return (

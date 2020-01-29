@@ -9,6 +9,7 @@ import './Foot.css';
 export default function Foot(props) {
 
   /** @type {{current: ElementContentEditable}} */ const inputField = useRef(null);
+  /** @type {{current: HTMLFormElement}} */ const formEl = useRef(null);
 
   const [field, setField] = useState(['']);
   const [files, setFiles] = useState([]);
@@ -66,6 +67,7 @@ export default function Foot(props) {
     setField(['']);
     setFiles([]);
     inputField.current.focus();
+    formEl.current.reset();
   };
 
   const onInputFieldResize = height => {
@@ -76,7 +78,7 @@ export default function Foot(props) {
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} ref={formEl}>
       <Share onFiles={setFiles}/>
       <ContentEditable
         onChange={setField}
