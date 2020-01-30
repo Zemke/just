@@ -79,7 +79,7 @@ export default function App() {
         setInitMessages(true);
         setLoading(false);
 
-        return accumulation;
+        return [...accumulation];
       });
     });
 
