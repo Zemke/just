@@ -4,12 +4,12 @@ import Auth from './auth';
 
 const api = {};
 
-api.upload = async (file, name, to) =>
+api.upload = async (file, name, to, when) =>
   firebase
     .storage()
     .ref()
     .child(`images/${name}`)
-    .put(file, {customMetadata: {from: (await Auth.current()).uid, to}});
+    .put(file, {customMetadata: {from: (await Auth.current()).uid, to, when: when.toString()}});
 
 api.download = async image =>
   await firebase

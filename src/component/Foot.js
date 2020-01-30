@@ -48,20 +48,24 @@ export default function Foot(props) {
   const onSubmit = e => {
     e.preventDefault();
 
-    field.forEach(input => {
+    const now = Date.now();
+    field.forEach((input, idx) => {
+      const when = DataStore.timestampFromMillis(now + idx);
       if (typeof input === 'string') {
         input.trim() && DataStore.sendMessage({
           from: props.currentUser.uid,
           to: props.otherUser,
-          body: input
+          body: input,
+          when
         });
       } else {
-        Storage.upload(input[1], input[0], props.otherUser)
+        Storage.upload(input[1], input[0], props.otherUser, when.toMillis());
       }
     });
 
     setField(['']);
     setFiles([]);
+
     inputField.current.focus();
     formEl.current.reset();
   };

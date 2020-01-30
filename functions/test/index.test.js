@@ -1,5 +1,6 @@
 const testData = require('../private/testData');
 
+const firebaseFn = require('firebase-admin');
 const test = require('firebase-functions-test')({
   storageBucket: "just-pwa.appspot.com",
   projectId: "just-pwa",
@@ -38,18 +39,14 @@ const myFunctions = require('../index.js');
     metadata: {
       from: testData.users.flzemke,
       to: testData.users.zemke,
+      when: new firebaseFn.firestore.Timestamp(1180112111, 326)
+        .toMillis()
+        .toString(), // 1180112111000 on millis
     }
   });
 
   const result = await test.wrap(myFunctions.createMessageForFile)(snap);
   const savedMessage = (await result.get()).data();
-
-  const tolerance = 10000;
-  const now = Date.now();
-  const savedWhen = savedMessage.when.toMillis();
-  console.assert(
-    now - tolerance < savedWhen && now > savedWhen,
-    `Message wasn't created within the last ${tolerance} millis.`);
 
   console.assert(
     savedMessage.body === null,
@@ -68,6 +65,9 @@ const myFunctions = require('../index.js');
         && savedMessage.users.indexOf(testData.users.zemke) !== -1
         && savedMessage.users.indexOf(testData.users.flzemke) !== -1,
     `image actually is ${savedMessage.image}`);
+  console.assert(
+    savedMessage.when.toMillis() === 1180112111000,
+    `savedMessage.when.toMillis() is actually ${savedMessage.when.toMillis()}`);
   console.log('\x1b[32m%s\x1b[0m', 'Success');
   return test.cleanup();
 })();
