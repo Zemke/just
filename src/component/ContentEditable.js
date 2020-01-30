@@ -43,7 +43,7 @@ function ContentEditable(props, ref) {
 
         return acc;
       }, []);
-    console.log(elem.current.value);
+
     propsOnChange(elem.current.value);
   }, [propsOnChange, propsFiles]);
 

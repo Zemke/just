@@ -48,9 +48,6 @@ export default function Foot(props) {
   const onSubmit = e => {
     e.preventDefault();
 
-    console.log(files);
-    console.log(field);
-
     field.forEach(input => {
       if (typeof input === 'string') {
         input.trim() && DataStore.sendMessage({
@@ -62,6 +59,7 @@ export default function Foot(props) {
         Storage.upload(input[1], input[0], props.otherUser)
       }
     });
+
     setField(['']);
     setFiles([]);
     inputField.current.focus();
