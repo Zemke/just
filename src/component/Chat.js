@@ -217,7 +217,7 @@ export default function Chat(props) {
                   <div className="overlay"/>
                   <p className={isOnlyEmoji(message.body?.trim()) ? 'onlyEmoji' : ''}>
                     <Linkify>
-                      {message.body.split('\n')
+                      {message.body?.split('\n')
                         .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
                     </Linkify>
                   </p>
