@@ -111,11 +111,11 @@ export default function Chat(props) {
 
   const onSubmit = async e => {
     e.preventDefault();
-    if (!field.trim()) return;
+    if (!field?.trim()) return;
     const payload = {
       from: props.currentUser.uid,
       to: otherUser,
-      body: field.trim()
+      body: field?.trim()
     };
     setField('');
     inputField.current.focus();
@@ -215,7 +215,7 @@ export default function Chat(props) {
               <div className="message-wrapper">
                 <div className={"message " + (otherUser === message.from ? "from" : "to")}>
                   <div className="overlay"/>
-                  <p className={isOnlyEmoji(message.body.trim()) ? 'onlyEmoji' : ''}>
+                  <p className={isOnlyEmoji(message.body?.trim()) ? 'onlyEmoji' : ''}>
                     <Linkify>
                       {message.body.split('\n')
                         .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
