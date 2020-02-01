@@ -9,7 +9,14 @@ api.upload = async (file, name, to, when) =>
     .storage()
     .ref()
     .child(`images/${name}`)
-    .put(file, {customMetadata: {from: (await Auth.current()).uid, to, when: when.toString()}});
+    .put(file, {
+      cacheControl: 'public, max-age=31536000',
+      customMetadata: {
+        from: (await Auth.current()).uid,
+        when: when.toString(),
+        to
+      }
+    });
 
 api.download = async image =>
   await firebase
