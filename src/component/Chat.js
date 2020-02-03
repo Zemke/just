@@ -133,12 +133,10 @@ export default function Chat(props) {
 
   useEffect(() =>
       setImagePlaceholders(curr => {
-        debugger;
         return !curr.length ? curr : [...curr
           .filter(iP => propsMessages
             .map(m => m.image)
             .filter(Boolean)
-            .map(i => i.split('/').pop())
             .indexOf(iP.image) === -1)];
       }),
     [propsMessages]);
@@ -151,7 +149,7 @@ export default function Chat(props) {
         to: u.otherUser,
         body: null,
         when: u.when,
-        image: u.file
+        image: Storage.PREFIX + u.file
       }))
     ]);
   };

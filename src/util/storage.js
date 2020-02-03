@@ -4,11 +4,13 @@ import Auth from './auth';
 
 const api = {};
 
+api.PREFIX = `images/`;
+
 api.upload = async (file, name, to, when) =>
   firebase
     .storage()
     .ref()
-    .child(`images/${name}`)
+    .child(`${api.PREFIX}${name}`)
     .put(file, {
       cacheControl: 'public, max-age=31536000',
       customMetadata: {
