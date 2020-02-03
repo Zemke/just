@@ -48,6 +48,7 @@ export default function Foot(props) {
   const onSubmit = e => {
     e.preventDefault();
 
+    const uploads = [];
     const now = Date.now();
     field.forEach((input, idx) => {
       const when = DataStore.timestampFromMillis(now + idx);
@@ -60,8 +61,11 @@ export default function Foot(props) {
         });
       } else {
         Storage.upload(input[1], input[0], props.otherUser, when.toMillis());
+        uploads.push({when: when.toMillis(), file: input[0], otherUser: props.otherUser});
       }
     });
+
+    props.uploads(uploads);
 
     setField(['']);
     setFiles([]);

@@ -27,6 +27,9 @@ export default function Chat(props) {
   const [otherUsers, setOtherUsers] = useState([]);
   const [lastOwnMessage, setLastOwnMessage] = useState(null);
   const [messageGaps, setMessageGaps] = useState({});
+  const [imagePlaceholders, setImagePlaceholders] = useState([]);
+
+  const {messages: propsMessages} = props;
 
   const arbitraryTolerance = 150;
   const maxScrollTop = chatEl => chatEl.scrollHeight - chatEl.offsetHeight;
@@ -128,11 +131,43 @@ export default function Chat(props) {
         : ownMessages[ownMessages.length - 1]);
   }, [props.messages, otherUser, lastOwnMessage, props.currentUser]);
 
+  useEffect(() =>
+      setImagePlaceholders(curr => {
+        debugger;
+        return !curr.length ? curr : [...curr
+          .filter(iP => propsMessages
+            .map(m => m.image)
+            .filter(Boolean)
+            .map(i => i.split('/').pop())
+            .indexOf(iP.image) === -1)];
+      }),
+    [propsMessages]);
+
+  const onUploads = uploads => {
+    setImagePlaceholders(curr => [
+      ...curr,
+      ...uploads.map(u => ({
+        from: props.currentUser.uid,
+        to: u.otherUser,
+        body: null,
+        when: u.when,
+        image: u.file
+      }))
+    ]);
+  };
+
   const isOnlyEmoji = message =>
     !!message && !message
       .replace(/(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g, '')
       .replace(/[^\x00-\x7F]/g, "")
       .length;
+
+  const messagesToRender = () =>
+    (imagePlaceholders.length
+      ? props.messages
+        .concat(imagePlaceholders)
+        .sort((c1, c2) => c1.when - c2.when)
+      : props.messages);
 
   return (
     <div className="chat" ref={chatEl}>
@@ -148,15 +183,16 @@ export default function Chat(props) {
         </div>
       </div>
       <div className="body" ref={chatBodyEl}>
-        {props.messages
+        {messagesToRender()
           .filter(m =>
             MessageUtils.extractOtherUser(props.currentUser.uid, [m]) === otherUser)
           .map(message => (
-            <Fragment key={message.id}>
+            <Fragment key={message.id || message.image}>
               {messageGaps[message.id] && (<div className="timestamp">{messageGaps[message.id]}</div>)}
 
               <div className="message-wrapper">
-                <div className={"message " + (otherUser === message.from ? "from" : "to") + (message.image ? " image" : "")}>
+                <div
+                  className={"message " + (otherUser === message.from ? "from" : "to") + (message.image ? " image" : "")}>
                   <div className="overlay"/>
                   {message.image
                     ? (<ImageMessage message={message}/>)
@@ -185,7 +221,8 @@ export default function Chat(props) {
               scrollToBottom={scrollToBottom}
               chatBodyEl={chatBodyEl}
               otherUser={otherUser}
-              currentUser={props.currentUser}/>
+              currentUser={props.currentUser}
+              uploads={onUploads}/>
       </div>
     </div>
   );
