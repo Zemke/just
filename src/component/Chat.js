@@ -12,8 +12,10 @@ import ImageMessage from "./ImageMessage";
 
 export default function Chat(props) {
 
-  const chatEl = useRef(null);
-  const chatBodyEl = useRef(null);
+  /** @type {{current: HTMLDivElement}} */ const chatEl = useRef(null);
+  /** @type {{current: HTMLDivElement}} */ const chatBodyEl = useRef(null);
+
+  const inputField = useRef(null);
   const [initMessages, setInitMessages] = useState(false);
   const [otherUser, setOtherUser] = useState(() => {
     const otherUserFromPathname = window.location.pathname.substr(1);
@@ -34,17 +36,20 @@ export default function Chat(props) {
   const arbitraryTolerance = 150;
   const maxScrollTop = chatEl => chatEl.scrollHeight - chatEl.offsetHeight;
   const scrollToBottom = useCallback(() => {
-    chatEl.current.scrollTo(0, maxScrollTop(chatEl.current));
+    const currChatEl = chatEl.current;
+    if (!currChatEl) return;
+    currChatEl.scrollTo(0, maxScrollTop(currChatEl));
     setInitMessages(true);
     setTimeout(() => {
-      chatEl.current.scrollTo(0, maxScrollTop(chatEl.current));
-      chatEl.current.classList.add('scrollSmooth');
+      currChatEl.scrollTo(0, maxScrollTop(currChatEl));
+      currChatEl.classList.add('scrollSmooth');
     }, 300);
   }, []);
 
   useEffect(() => {
-    if (!chatEl.current) return;
-    if (chatEl.current.scrollTop >= maxScrollTop(chatEl.current) - arbitraryTolerance
+    const currChatEl = chatEl.current;
+    if (!currChatEl) return;
+    if (currChatEl.scrollTop >= maxScrollTop(currChatEl) - arbitraryTolerance
           || (props.initMessages && !initMessages)) {
       scrollToBottom();
     }
@@ -52,8 +57,10 @@ export default function Chat(props) {
 
   useEffect(() => {
     const resizeListener = () => {
-      if (chatEl.current.scrollTop >= maxScrollTop(chatEl.current) - arbitraryTolerance) {
-        chatEl.current.classList.remove('scrollSmooth');
+      const currChatEl = chatEl.current;
+      if (!currChatEl) return;
+      if (currChatEl.scrollTop >= maxScrollTop(currChatEl) - arbitraryTolerance) {
+        currChatEl.classList.remove('scrollSmooth');
         scrollToBottom();
       }
     };
