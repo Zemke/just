@@ -222,7 +222,9 @@ export default function Chat(props) {
           )}
       </div>
       <div className="foot">
-        <Foot scrollToBottom={scrollToBottom}
+        <Foot chatBodyEl={chatBodyEl}
+              chatEl={chatEl}
+              scrollToBottom={scrollToBottom}
               otherUser={otherUser}
               currentUser={props.currentUser}
               uploads={onUploads}/>
