@@ -15,7 +15,6 @@ export default function Chat(props) {
   /** @type {{current: HTMLDivElement}} */ const chatEl = useRef(null);
   /** @type {{current: HTMLDivElement}} */ const chatBodyEl = useRef(null);
 
-  const inputField = useRef(null);
   const [initMessages, setInitMessages] = useState(false);
   const [otherUser, setOtherUser] = useState(() => {
     const otherUserFromPathname = window.location.pathname.substr(1);
