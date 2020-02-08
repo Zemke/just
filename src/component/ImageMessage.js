@@ -4,25 +4,45 @@ import './ImageMessage.css';
 
 export default function ImageMessage(props) {
 
-  const imageRef = useRef(null);
-  const [loading, setLoading] = useState(true);
+  /** @type {{current: HTMLDivElement}} */ const elemRef = useRef(null);
+
+  const [loading, setLoading] = useState(null);
+
+  // todo loading indication on receiving
+  //  (between message received and image downloaded)
+  // todo image delivery takes longer than raw messages
+  //  check on how the delivery process works and maybe have extra
+  //  delivery status just for the image.
+  // todo cache-control header is not enough as token in query param keeps changing.
+  //  perhaps gotta use JavaScript Service Worker Cache instead.
+  //  https://developer.mozilla.org/en-US/docs/Web/API/Cache
 
   useEffect(() => {
     (async () => {
-      if (imageRef.current == null) return;
-      imageRef.current.src = await Storage.download(props.message.image);
-      setLoading(false);
+      const currElemRef = elemRef.current;
+      if (!currElemRef) return;
+
+      let imageSrc;
+      if (props.message.placeholder) {
+        imageSrc = URL.createObjectURL(props.message.placeholder);
+        setLoading(false);
+      } else {
+        setTimeout(() => setLoading(curr => curr === null ? true : curr), 1000);
+        imageSrc = await Storage.download(props.message.image);
+        setLoading(false);
+      }
+      const imgEl = document.createElement('img');
+      imgEl.src = imageSrc;
+      currElemRef.innerHTML = '';
+      currElemRef.appendChild(imgEl);
     })();
   }, [props.message]);
 
   return (
-    <>
-      <img alt="Image message"
-           ref={imageRef}
-           className={loading ? 'display-none' : ''}/>
-      <div className={'loadingImage' + (loading ? '' : ' display-none')}>
-        Loading
-      </div>
-    </>
+    <div className="image">
+      <div ref={elemRef}/>
+      {loading === true && (<div className="loadingImage">Loading</div>)}
+      {props.message.placeholder && (<div className="status">Sending</div>)}
+    </div>
   )
 };
