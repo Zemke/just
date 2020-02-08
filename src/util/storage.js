@@ -6,11 +6,15 @@ const api = {};
 
 api.PREFIX = `images/`;
 
-api.upload = async (file, name, to, when) =>
-  firebase
+api.upload = async (file, name, to, when) => {
+  const image = `${api.PREFIX}${name}`;
+  const cache = await caches.open('just-storage-image');
+  await cache.put(image, new Response(file));
+
+  return firebase
     .storage()
     .ref()
-    .child(`${api.PREFIX}${name}`)
+    .child(image)
     .put(file, {
       cacheControl: 'public, max-age=31536000',
       customMetadata: {
@@ -19,6 +23,7 @@ api.upload = async (file, name, to, when) =>
         to
       }
     });
+};
 
 api.download = async image => {
   const cache = await caches.open('just-storage-image');

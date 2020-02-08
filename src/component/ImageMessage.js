@@ -10,9 +10,6 @@ export default function ImageMessage(props) {
 
   // todo loading indication on receiving
   //  (between message received and image downloaded)
-  // todo image delivery takes longer than raw messages
-  //  check on how the delivery process works and maybe have extra
-  //  delivery status just for the image.
 
   useEffect(() => {
     (async () => {
