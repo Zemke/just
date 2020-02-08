@@ -61,7 +61,7 @@ export default function Foot(props) {
         });
       } else {
         Storage.upload(input[1], input[0], props.otherUser, when.toMillis());
-        uploads.push({when: when.toMillis(), file: input[0], otherUser: props.otherUser});
+        uploads.push({when: when.toMillis(), file: input, otherUser: props.otherUser});
       }
     });
 

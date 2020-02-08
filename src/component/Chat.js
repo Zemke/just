@@ -156,7 +156,8 @@ export default function Chat(props) {
         to: u.otherUser,
         body: null,
         when: u.when,
-        image: Storage.PREFIX + u.file
+        image: Storage.PREFIX + u.file[0],
+        placeholder: u.file[1]
       }))
     ]);
   };
