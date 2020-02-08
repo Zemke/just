@@ -25,11 +25,9 @@ api.download = async image => {
   const fromCache = await cache.match(image);
 
   if (fromCache) {
-    console.log('fromCache');
     const object = await fromCache.blob();
     return URL.createObjectURL(object);
   } else {
-    console.log('fromNet');
     const downloadUrl = await firebase
       .storage()
       .ref(image)
@@ -37,7 +35,6 @@ api.download = async image => {
     const fromNetwork = await fetch(downloadUrl);
     await cache.put(image, fromNetwork.clone());
     const blob = await fromNetwork.blob();
-    console.log(blob);
     return URL.createObjectURL(blob);
   }
 };
