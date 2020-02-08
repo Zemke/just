@@ -36,7 +36,7 @@ export default function ImageMessage(props) {
   }, [props.message]);
 
   return (
-    <div className="image">
+    <div className={'image' + (props.message.placeholder ? ' sending' : '')}>
       <div ref={elemRef}/>
       {loading === true && (<div className="loadingImage">Loading</div>)}
       {props.message.placeholder && (<div className="status">Sending</div>)}

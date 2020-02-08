@@ -4,6 +4,16 @@
   padding: 1.5rem;
 }
 
+.chat > .body .message .image.sending {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+
+.chat > .body .message .image .status {
+  margin-right: 0;
+}
+
 .chat > .body .message .image img {
   border-radius: .7rem;
 }
