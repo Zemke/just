@@ -13,9 +13,6 @@ export default function ImageMessage(props) {
   // todo image delivery takes longer than raw messages
   //  check on how the delivery process works and maybe have extra
   //  delivery status just for the image.
-  // todo cache-control header is not enough as token in query param keeps changing.
-  //  perhaps gotta use JavaScript Service Worker Cache instead.
-  //  https://developer.mozilla.org/en-US/docs/Web/API/Cache
 
   useEffect(() => {
     (async () => {
