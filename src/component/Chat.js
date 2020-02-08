@@ -9,6 +9,7 @@ import messaging from "../util/messaging";
 import webNotifications from "../util/webNotification";
 import Foot from "./Foot";
 import ImageMessage from "./ImageMessage";
+import Storage from '../util/storage.js';
 
 export default function Chat(props) {
 
