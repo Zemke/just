@@ -42,14 +42,9 @@
 }
 
 .chat > .body .message.image {
+  border-radius: 0;
   padding: 0;
   max-width: calc(60% + .8rem);
-}
-
-.chat > .body .message.image .overlay {
-  padding: 0;
-  max-width: calc(60% + .8rem);
-  background: transparent;
 }
 
 .chat > .body .message p.onlyEmoji {

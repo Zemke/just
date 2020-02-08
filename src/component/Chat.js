@@ -198,16 +198,18 @@ export default function Chat(props) {
               <div className="message-wrapper">
                 <div
                   className={"message " + (otherUser === message.from ? "from" : "to") + (message.image ? " image" : "")}>
-                  <div className="overlay"/>
                   {message.image
                     ? (<ImageMessage message={message}/>)
                     : (
-                      <p className={isOnlyEmoji(message.body.trim()) ? 'onlyEmoji' : ''}>
-                        <Linkify>
-                          {message.body.split('\n')
-                            .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
-                        </Linkify>
-                      </p>
+                      <>
+                        <div className="overlay"/>
+                        <p className={isOnlyEmoji(message.body.trim()) ? 'onlyEmoji' : ''}>
+                          <Linkify>
+                            {message.body.split('\n')
+                              .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
+                          </Linkify>
+                        </p>
+                      </>
                     )}
                 </div>
               </div>
