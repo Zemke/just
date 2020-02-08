@@ -36,10 +36,12 @@ export default function Share(props) {
       <Dropdown dropdownTrigger={dropdownTrigger} className="attachBottomLeft text-left">
         <ul>
           <li onClick={imageGallery}>
-            <span className="icon">🌉</span> Gallery
+            <span className="icon" role="img" aria-label="Gallery">🌉</span>
+            Gallery
           </li>
           <li onClick={takePhoto}>
-            <span className="icon">📷</span> Camera
+            <span className="icon" role="img" aria-label="Camera">📷</span>
+            Camera
           </li>
         </ul>
       </Dropdown>
