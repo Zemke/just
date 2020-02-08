@@ -1,11 +1,13 @@
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Dropdown from "./Dropdown";
 import randomString from "../util/randomString";
 
 export default function Share(props) {
 
   const [dropdownTrigger, setDropdownTrigger] = useState(null);
+
   /** @type {{current: HTMLInputElement}} */ const uploadButton = useRef(null);
+  /** @type {{current: HTMLDivElement}} */ const dropdownRef = useRef(null);
 
   const takePhoto = () => {
     alert('todo');
@@ -23,6 +25,12 @@ export default function Share(props) {
     uploadButton.current.value = '';
   };
 
+  useEffect(() => {
+    const currDropdownRef = dropdownRef.current;
+    if (!currDropdownRef) return;
+    currDropdownRef.style.marginBottom = props.inputFieldHeight + 'px';
+  }, [props.inputFieldHeight]);
+
   return (
     <>
       <div className="share">
@@ -33,7 +41,9 @@ export default function Share(props) {
                ref={uploadButton}
                onChange={onUploadChange}/>
       </div>
-      <Dropdown dropdownTrigger={dropdownTrigger} className="attachBottomLeft text-left">
+      <Dropdown ref={dropdownRef}
+                dropdownTrigger={dropdownTrigger}
+                className="attachBottomLeft text-left">
         <ul>
           <li onClick={imageGallery}>
             <span className="icon" role="img" aria-label="Gallery">🌉</span>

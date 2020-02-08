@@ -1,10 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useRef, useState} from 'react';
 import ReactDOM from 'react-dom';
 import './Dropdown.css';
 
-export default function Dropdown(props) {
+function Dropdown(props, ref) {
 
+  const elem = useRef(null);
   const [collapsed, setCollapsed] = useState(true);
+
+  useImperativeHandle(ref, () => elem.current);
 
   useEffect(() => {
     if (!props.dropdownTrigger) return;
@@ -20,9 +23,12 @@ export default function Dropdown(props) {
 
   return ReactDOM.createPortal(
     (
-      <div className={'dropdown' + (collapsed ? ' collapsed' : '') + (props.className ? ' ' + props.className : '')}>
+      <div ref={elem}
+           className={'dropdown' + (collapsed ? ' collapsed' : '') + (props.className ? ' ' + props.className : '')}>
         {props.children}
       </div>
     ),
     document.getElementById('appendToBodyContainer'));
 };
+
+export default forwardRef(Dropdown);

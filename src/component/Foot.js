@@ -12,6 +12,7 @@ export default function Foot(props) {
 
   const [field, setField] = useState(['']);
   const [files, setFiles] = useState([]);
+  const [inputFieldHeight, setInputFieldHeight] = useState(null);
 
   useEffect(() => {
     const documentKeydownHandler = e => {
@@ -74,19 +75,21 @@ export default function Foot(props) {
     formEl.current.reset();
   };
 
-  const onInputFieldResize = height => {
-    if (!props.chatBodyEl.current) return;
-    props.chatBodyEl.current.style.marginBottom = height + 'px';
-    props.chatEl.current.classList.remove('scrollSmooth');
+  useEffect(() => {
+    const currChatEl = props.chatEl.current;
+    const currChatBodyEl = props.chatBodyEl.current;
+    if (!currChatEl || !currChatBodyEl) return;
+    currChatBodyEl.style.marginBottom = inputFieldHeight + 'px';
+    currChatEl.classList.remove('scrollSmooth');
     props.scrollToBottom();
-  };
+  }, [inputFieldHeight, props]);
 
   return (
     <form onSubmit={onSubmit} ref={formEl}>
-      <Share onFiles={setFiles}/>
+      <Share onFiles={setFiles} inputFieldHeight={inputFieldHeight}/>
       <ContentEditable
         onChange={setField}
-        onResize={onInputFieldResize}
+        onResize={setInputFieldHeight}
         placeholder="Type here"
         value={field}
         ref={inputField}
