@@ -61,6 +61,7 @@ export default function App() {
       setMessages(curr => {
         const accumulation = messages.reduce((acc, {message, doc, type}) => {
           if (type === 'added') {
+            message._hasPendingWrites = doc.metadata.hasPendingWrites;
             if (message.to === currentUser.uid && !message.delivered) {
               DataStore.setDelivered(doc.ref);
             }

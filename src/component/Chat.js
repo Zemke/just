@@ -215,7 +215,7 @@ export default function Chat(props) {
               </div>
               {(lastOwnMessage != null && lastOwnMessage.id === message.id) && (
                 <div className="status">
-                  {message.when == null
+                  {message._hasPendingWrites
                     ? 'Sending'
                     : (message.delivered ? 'Delivered' : 'Sent')}
                 </div>
