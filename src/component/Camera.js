@@ -27,17 +27,15 @@ export default function Camera(props) {
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({video: true});
-      setTimeout(() =>
-          requestAnimationFrame(() =>
-            cameraContainerElem.current.classList.add('onVideo')),
-        500);
+      (cameraContainerElem.current
+        && cameraContainerElem.current.classList.add('onVideo'));
       currVideoElem.srcObject = stream;
       await currVideoElem.play();
       videoTrack = stream.getVideoTracks()[0];
       imageCapture.current = new ImageCapture(videoTrack);
     })();
     return () => videoTrack && videoTrack.stop();
-  }, [props]);
+  }, []);
 
   useEffect(() => {
     const snap = document.getElementById('snap');

@@ -3,11 +3,12 @@
   padding: 0;
   margin: 0;
   opacity: 0;
+  border-radius: 2rem;
 }
 
-#overlay.blur #cameraContainer video#video {
+#cameraContainer.onVideo video#video {
   opacity: 1;
-  transition: opacity 2s;
+  transition: opacity 1s;
 }
 
 #cameraContainer button#snap {
@@ -25,7 +26,7 @@
 }
 
 #cameraContainer.onVideo button#snap {
-  transition: opacity 1s;
+  transition: opacity 1s 500ms;
   opacity: 1;
 }
 
