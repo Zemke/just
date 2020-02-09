@@ -14,8 +14,23 @@
   justify-content: center;
 }
 
+#overlay:not(.blur) > * {
+  opacity: 0;
+}
+
+#overlay.blur > * {
+  opacity: 1;
+  transition: opacity 2s;
+}
+
 #overlay.blur {
   backdrop-filter: blur(.9rem);
   -webkit-backdrop-filter: blur(.9rem);
-  transition: backdrop-filter 2s, -webkit-backdrop-filter 1s;
+  transition: backdrop-filter 1s, -webkit-backdrop-filter 1s;
+}
+
+#overlay.blur {
+  backdrop-filter: blur(.9rem);
+  -webkit-backdrop-filter: blur(.9rem);
+  transition: backdrop-filter 1s, -webkit-backdrop-filter 1s;
 }
