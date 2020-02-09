@@ -19,21 +19,20 @@
   transition: backdrop-filter 2s, -webkit-backdrop-filter 1s;
 }
 
-#cameraContainer > video#video {
+#cameraContainer video#video {
   width: 100%;
   padding: 0;
   margin: 0;
   opacity: 0;
 }
 
-#cameraContainer.blur > video#video {
+#cameraContainer.blur video#video {
   opacity: 1;
   transition: opacity 2s;
 }
 
-#cameraContainer > button#snap {
-  margin-top: -3.7rem;
-  margin-left: .7rem;
+#cameraContainer button#snap {
+  position: absolute;
   border-radius: 100vh;
   height: 3rem;
   width: 3rem;
@@ -42,9 +41,15 @@
   background-color: rgba(255, 250, 250, .8);
   box-shadow: 0 0 1rem #151515;
   opacity: 0;
+  bottom: 1rem;
+  left: 1rem;
 }
 
-#cameraContainer.onVideo > button#snap {
+#cameraContainer.onVideo button#snap {
   transition: opacity 1s;
   opacity: 1;
+}
+
+#cameraContainer > .videoWrapper {
+  position: relative;
 }

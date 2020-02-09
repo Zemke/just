@@ -70,8 +70,10 @@ export default function Camera(props) {
            ref={cameraContainerElem}
            onClick={onContainerClick}
            tabIndex="10">
-        <video id="video" ref={videoElem}/>
-        <button id="snap" type="button" onClick={snap}/>
+        <div className="videoWrapper">
+          <video id="video" ref={videoElem}/>
+          <button id="snap" type="button" onClick={snap}/>
+        </div>
       </div>
     ),
     document.getElementById('appendToBodyContainer'));
