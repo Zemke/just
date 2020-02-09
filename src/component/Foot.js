@@ -79,21 +79,18 @@ export default function Foot(props) {
   useEffect(() => {
     const dropListener = e => {
       e.preventDefault();
-
       const files =
         (e.dataTransfer.items
           ? Array.from(e.dataTransfer.items).map(item => item.getAsFile())
           : Array.from(e.dataTransfer.files))
+          .filter(Boolean)
           .filter(f => f.type.startsWith('image/'))
           .map(f => [randomString(), f]);
-
       !!files.length && setFiles(files);
     };
-
     window.addEventListener("drop", dropListener, false);
     const dragOverListener = e => e.preventDefault();
     window.addEventListener("dragover", dragOverListener, false);
-
     return () => {
       window.removeEventListener("dragover", dragOverListener, false);
       window.removeEventListener("drop", dropListener, false);
