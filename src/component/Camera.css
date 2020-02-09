@@ -1,6 +1,7 @@
 #cameraContainer {
   position: absolute;
   display: flex;
+  padding: 2rem;
   top: 0;
   left: 0;
   bottom: 0;
@@ -52,4 +53,5 @@
 
 #cameraContainer > .videoWrapper {
   position: relative;
+  overflow: hidden;
 }
