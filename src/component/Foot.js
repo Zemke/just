@@ -34,7 +34,7 @@ export default function Foot(props) {
       return () => resizeObserver.disconnect();
     } else {
       const onFocusListener = () => {
-        window.isMobileJustDevice().then(isMobile => {
+        window.isMobileJustDevice.then(isMobile => {
           if (!isMobile) return;
           props.chatEl.current.classList.remove('scrollSmooth');
           props.scrollToBottom();
