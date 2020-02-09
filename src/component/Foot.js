@@ -58,7 +58,7 @@ export default function Foot(props) {
         input.trim() && DataStore.sendMessage({
           from: props.currentUser.uid,
           to: props.otherUser,
-          body: input,
+          body: input.trim(),
           when
         });
       } else {

@@ -35,7 +35,7 @@ function ContentEditable(props, ref) {
         }
 
         if (typeof acc[acc.length - 1] === 'string'
-          && typeof curr === 'string') {
+            && typeof curr === 'string') {
           acc[acc.length - 1] = acc[acc.length - 1] + curr;
         } else {
           acc.push(curr);
