@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import Storage from '../util/storage.js';
 import './ImageMessage.css';
 
