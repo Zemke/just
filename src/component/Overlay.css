@@ -1,0 +1,21 @@
+#overlay {
+  position: absolute;
+  display: flex;
+  padding: 2rem;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 9999;
+  overflow: hidden;
+  flex-direction: column;
+  align-content: center;
+  align-items: stretch;
+  justify-content: center;
+}
+
+#overlay.blur {
+  backdrop-filter: blur(.9rem);
+  -webkit-backdrop-filter: blur(.9rem);
+  transition: backdrop-filter 2s, -webkit-backdrop-filter 1s;
+}

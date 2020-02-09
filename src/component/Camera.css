@@ -1,25 +1,3 @@
-#cameraContainer {
-  position: absolute;
-  display: flex;
-  padding: 2rem;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  z-index: 9999;
-  overflow: hidden;
-  flex-direction: column;
-  align-content: center;
-  align-items: stretch;
-  justify-content: center;
-}
-
-#cameraContainer.blur {
-  backdrop-filter: blur(.9rem);
-  -webkit-backdrop-filter: blur(.9rem);
-  transition: backdrop-filter 2s, -webkit-backdrop-filter 1s;
-}
-
 #cameraContainer video#video {
   width: 100%;
   padding: 0;
@@ -27,7 +5,7 @@
   opacity: 0;
 }
 
-#cameraContainer.blur video#video {
+#overlay.blur #cameraContainer video#video {
   opacity: 1;
   transition: opacity 2s;
 }
@@ -49,6 +27,14 @@
 #cameraContainer.onVideo button#snap {
   transition: opacity 1s;
   opacity: 1;
+}
+
+#cameraContainer.onVideo button#snap:hover {
+  cursor: pointer;
+}
+
+#cameraContainer.onVideo button#snap:focus {
+  outline: none;
 }
 
 #cameraContainer > .videoWrapper {

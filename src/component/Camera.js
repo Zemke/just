@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useRef} from "react";
 import randomString from "../util/randomString";
 import 'image-capture';
 import './Camera.css';
-import ReactDOM from "react-dom";
+import Overlay from "./Overlay";
 
 export default function Camera(props) {
 
@@ -40,15 +40,8 @@ export default function Camera(props) {
   }, [props]);
 
   useEffect(() => {
-    const currCameraContainerElem = cameraContainerElem.current;
-    if (!currCameraContainerElem) return;
-    currCameraContainerElem.focus();
-  }, []);
-
-  useEffect(() => {
-    const currCameraContainerElem = cameraContainerElem.current;
-    if (!currCameraContainerElem) return;
-    requestAnimationFrame(() => currCameraContainerElem.classList.add('blur'));
+    const snap = document.getElementById('snap');
+    snap && snap.focus && snap.focus();
   }, []);
 
   useEffect(() => {
@@ -61,20 +54,26 @@ export default function Camera(props) {
     return () => document.removeEventListener('keydown', keyDownListener)
   }, [props, snap]);
 
-  const onContainerClick = e =>
-    e.target.id === 'cameraContainer' && props.onClose();
+  useEffect(() => {
+    const outsideClickListener = e => e.target.id === 'overlay' && props.onClose();
+    document
+      .getElementById('overlay')
+      .addEventListener('click', outsideClickListener);
+    return () => document
+      .getElementById('overlay')
+      .removeEventListener('click', outsideClickListener)
+  });
 
-  return ReactDOM.createPortal(
-    (
+  return (
+    <Overlay>
       <div id="cameraContainer"
            ref={cameraContainerElem}
-           onClick={onContainerClick}
            tabIndex="10">
         <div className="videoWrapper">
           <video id="video" ref={videoElem}/>
           <button id="snap" type="button" onClick={snap}/>
         </div>
       </div>
-    ),
-    document.getElementById('appendToBodyContainer'));
+    </Overlay>
+  );
 };
