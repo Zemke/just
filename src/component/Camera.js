@@ -44,26 +44,18 @@ export default function Camera(props) {
 
   useEffect(() => {
     const keyDownListener = e => {
-      e.preventDefault(); // stops chat input field auto focus (thereby re-renders)
-      e.key === 'Escape' && props.onClose();
-      e.key === 'Enter' && snap(e);
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        e.stopPropagation();
+        snap(e);
+      }
     };
     document.addEventListener('keydown', keyDownListener);
     return () => document.removeEventListener('keydown', keyDownListener)
   }, [props, snap]);
 
-  useEffect(() => {
-    const outsideClickListener = e => e.target.id === 'overlay' && props.onClose();
-    document
-      .getElementById('overlay')
-      .addEventListener('click', outsideClickListener);
-    return () => document
-      .getElementById('overlay')
-      .removeEventListener('click', outsideClickListener)
-  });
-
   return (
-    <Overlay>
+    <Overlay onClose={props.onClose}>
       <div id="cameraContainer"
            ref={cameraContainerElem}
            tabIndex="10">

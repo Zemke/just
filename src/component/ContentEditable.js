@@ -113,6 +113,7 @@ function ContentEditable(props, ref) {
   }, [props.placeholder, props.files, onInput]);
 
   const onKeydown = e => {
+    if (document.getElementById('overlay')) return;
     if (e.key === 'Enter' && (isMobileJustDevice.current)) {
       document.execCommand('insertHTML', false, '<br><br>');
       e.preventDefault();
