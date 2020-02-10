@@ -24,12 +24,8 @@ export default function App() {
     Auth
       .current()
       .then(currentUser => {
-        if (!currentUser) {
-          setLoading(false);
-          return;
-        }
+        if (!currentUser) return;
         webNotifications.requestPermission();
-        setTimeout(() => setLoading(false), 300);
         setCurrentUser(currentUser);
       });
   }, []);
