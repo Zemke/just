@@ -86,3 +86,64 @@ exports.createMessageForFile = functions.storage.object().onFinalize(async objec
     .collection('messages')
     .add(message);
 });
+
+exports.purge = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'POST') {
+    return res
+      .status(405)
+      .send("Please issue a post")
+  }
+
+  const max = req.query.max || 50;
+
+  console.log(`Going to be keeping ${max} messages per conversation.`);
+
+  const subjects =
+    Object.entries(
+      (await admin.firestore().collection('messages').get()).docs
+        .reduce((acc, curr) => {
+          const conversationId = curr.data().users.join('-');
+          acc[conversationId] = acc[conversationId] || [];
+          acc[conversationId].push(curr);
+          return acc;
+        }, {}))
+      .filter(([_id, conversation]) => conversation.length > max)
+      .map(([_id, conversation]) => conversation
+        .sort((m1, m2) => m2.createTime - m1.createTime)
+        .slice(max))
+      .reduce((acc, curr) => acc.concat(curr)); // Array.prototype.flat
+
+  console.log(`Deleting ${subjects.length} messages.`);
+
+  if (!subjects.length) {
+    return res
+      .status(200)
+      .send("There are no messages to delete");
+  }
+
+  const batchSize = 500;
+  const batchQuantity = Math.ceil(subjects.length / batchSize);
+
+  console.log(`Execution will take place in ${batchQuantity} batches.`);
+
+  const promises = subjects
+    .reduce((acc, curr) => {
+      acc[acc.length - 1].length < batchSize
+        ? acc[acc.length - 1].push(curr)
+        : acc.push([curr]);
+      return acc;
+    }, [[]])
+    .map(messageBatch => {
+      const batchWrite = admin.firestore().batch();
+      messageBatch.forEach(docSnap => batchWrite.delete(docSnap.ref));
+      return batchWrite.commit()
+        .then(() => console.log("Batch successfully committed."))
+        .catch(console.error);
+    });
+
+  await Promise.all(promises);
+
+  return res
+    .status(200)
+    .send(`${subjects.length} messages deleted.`);
+});
