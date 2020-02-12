@@ -102,7 +102,7 @@ exports.purge = functions.https.onRequest(async (req, res) => {
     Object.entries(
       (await admin.firestore().collection('messages').get()).docs
         .reduce((acc, curr) => {
-          const conversationId = curr.data().users.join('-');
+          const conversationId = curr.data().users.sort().join('-');
           acc[conversationId] = acc[conversationId] || [];
           acc[conversationId].push(curr);
           return acc;
