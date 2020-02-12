@@ -1,8 +1,13 @@
-import React, {Fragment} from "react";
+import React, {Fragment, useEffect, useRef, useState} from "react";
 import ImageMessage from "./ImageMessage";
 import Linkify from "react-linkify";
+import Tapback from "./Tapback";
 
 export default function Message(props) {
+
+  /** @type {{current: HTMLDivElement}} */ const boxElem = useRef(null);
+
+  const [tapback, setTapback] = useState(null);
 
   const isOnlyEmoji = message =>
     !!message && !message
@@ -10,12 +15,34 @@ export default function Message(props) {
       .replace(/[^\x00-\x7F]/g, "")
       .length;
 
+  // TODO Create touch events as well.
+  useEffect(() => {
+    const currBoxElem = boxElem.current;
+    if (!currBoxElem) return;
+
+    let timeoutId;
+    const mouseDownListener =
+      e => timeoutId = setTimeout(() => setTapback(e.target.closest("*[data-message=true]").dataset.messageId), 700);
+    currBoxElem.addEventListener('mousedown', mouseDownListener);
+
+    const mouseUpListener =
+      () => clearTimeout(timeoutId);
+    currBoxElem.addEventListener('mouseup', mouseUpListener);
+
+    return () => {
+      currBoxElem.removeEventListener('mouseup', mouseUpListener);
+      currBoxElem.removeEventListener('mousedown', mouseDownListener);
+    }
+  });
+
   return (
     <>
       {props.messageGaps[props.message.id] && (<div className="timestamp">{props.messageGaps[props.message.id]}</div>)}
       <div className="message-wrapper">
         <div
+          ref={boxElem} data-message-id={props.message.id} data-message="true"
           className={"message " + (props.otherUser === props.message.from ? "from" : "to") + (props.message.image ? " image" : "")}>
+          {tapback === props.message.id && <Tapback/>}
           {props.message.image
             ? (<ImageMessage message={props.message}/>)
             : (
