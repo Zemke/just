@@ -28,11 +28,11 @@
 }
 
 .chat > .body .message.to {
-  color: #151515;
+  color: snow;
 }
 
 .chat > .body .message.from {
-  color: snow;
+  color: #151515;
 }
 
 .chat > .body .message {
@@ -100,11 +100,11 @@
 }
 
 .chat > .body .message.to > .overlay {
-  background: snow;
+  background: #151515;
 }
 
 .chat > .body .message.from > .overlay {
-  background: #151515;
+  background: snow;
 }
 
 .chat > .body .status {
