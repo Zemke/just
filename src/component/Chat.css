@@ -27,10 +27,17 @@
   overflow: hidden;
 }
 
+.chat > .body .message.to {
+  color: #151515;
+}
+
+.chat > .body .message.from {
+  color: snow;
+}
+
 .chat > .body .message {
   position: relative;
   display: inline-block;
-  color: #151515;
   z-index: 1;
   max-width: 60%;
   margin: .1rem .4rem .1rem 1rem;
@@ -84,13 +91,20 @@
 
 .chat > .body .message > .overlay {
   filter: blur(.1rem);
-  background: snow;
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   z-index: -1;
+}
+
+.chat > .body .message.to > .overlay {
+  background: snow;
+}
+
+.chat > .body .message.from > .overlay {
+  background: #151515;
 }
 
 .chat > .body .status {
