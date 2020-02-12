@@ -109,7 +109,7 @@ exports.purge = functions.https.onRequest(async (req, res) => {
         }, {}))
       .filter(([_id, conversation]) => conversation.length > max)
       .map(([_id, conversation]) => conversation
-        .sort((m1, m2) => m2.createTime - m1.createTime)
+        .sort((m1, m2) => m2.createTime.toMillis() - m1.createTime.toMillis())
         .slice(max))
       .reduce((acc, curr) => acc.concat(curr)); // Array.prototype.flat
 
