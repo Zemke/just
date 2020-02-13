@@ -6,11 +6,7 @@ export default function Tapback(props) {
   /** @type {{current: HTMLDivElement}} */ const elem = useRef(null);
 
   useEffect(() => {
-    const currElem = elem.current;
-    if (!currElem) return;
-    const clickListener = () => props.tap(null);
-    document.addEventListener('click', clickListener);
-    return () => document.removeEventListener('click', clickListener);
+    // todo outside click
   }, [props]);
 
   const tap = (e, action) => {
