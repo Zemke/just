@@ -2,6 +2,7 @@ import React, {Fragment, useEffect, useRef, useState} from "react";
 import ImageMessage from "./ImageMessage";
 import Linkify from "react-linkify";
 import Tapback from "./Tapback";
+import DataStore from '../util/dataStore';
 
 export default function Message(props) {
 
@@ -35,6 +36,11 @@ export default function Message(props) {
     }
   });
 
+  const tap = (action, messageId) => {
+    if (action) DataStore.sendTapback(action, messageId);
+    setTapback(null);
+  };
+
   return (
     <>
       {props.messageGaps[props.message.id] && (<div className="timestamp">{props.messageGaps[props.message.id]}</div>)}
@@ -42,7 +48,7 @@ export default function Message(props) {
         <div
           ref={boxElem} data-message-id={props.message.id} data-message="true"
           className={"message " + (props.otherUser === props.message.from ? "from" : "to") + (props.message.image ? " image" : "")}>
-          {tapback === props.message.id && <Tapback/>}
+          {tapback === props.message.id && <Tapback tap={action => tap(action, props.message.id)}/>}
           {props.message.image
             ? (<ImageMessage message={props.message}/>)
             : (

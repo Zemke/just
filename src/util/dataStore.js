@@ -64,6 +64,12 @@ api.deleteChatWithUser = async userUid =>
   getConversation(userUid, (await Auth.current()).uid)
     .then(docs => docs.forEach(doc => doc.ref.delete()));
 
+api.sendTapback = (tapback, messageId) =>
+  firebase
+    .firestore()
+    .collection('messages')
+    .doc(messageId)
+    .update({tapback});
 
 api.setDelivered = message =>
   message.update({delivered: true});
