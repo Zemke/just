@@ -3,6 +3,7 @@ import ImageMessage from "./ImageMessage";
 import Linkify from "react-linkify";
 import Tapback from "./Tapback";
 import DataStore from '../util/dataStore';
+import './Message.css';
 
 export default function Message(props) {
 
