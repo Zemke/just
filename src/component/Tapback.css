@@ -1,3 +1,53 @@
 #tapback {
   position: absolute;
+  top: -1rem;
+  left: 2rem;
+}
+
+#tapback ul > li {
+  display: flex;
+  float: left;
+  background-color: snow;
+  border-radius: 100vh;
+  height: 4rem;
+  width: 4rem;
+  font-size: 5rem;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 .6rem #151515;
+  overflow: hidden;
+}
+
+#tapback ul > li:first-child  {
+  top: -2rem;
+}
+
+#tapback ul > li:nth-child(2)  {
+  top: .7rem;
+  left: -1rem;
+}
+
+#tapback ul > li:nth-child(3)  {
+  left: -1.4rem;
+  top: -1rem;
+}
+
+#tapback ul > li:nth-child(4)  {
+  left: -8.7rem;
+  top: -2.5rem;
+}
+
+#tapback ul > li:nth-child(5)  {
+  left: -9.7rem;
+  top: -4.4rem;
+}
+
+#tapback ul > li:hover {
+  cursor: pointer;
+}
+
+#tapback ul {
+  list-style-type: none;
 }

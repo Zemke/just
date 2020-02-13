@@ -1,5 +1,4 @@
 import React, {useEffect, useRef} from "react";
-import ReactDOM from "react-dom";
 import './Tapback.css';
 
 export default function Tapback(props) {
@@ -20,16 +19,25 @@ export default function Tapback(props) {
     props.tap(action);
   };
 
-  return ReactDOM.createPortal(
-    (<div ref={elem} id="tapback">
+  return (
+    <div ref={elem} id="tapback">
       <ul>
-        <li onClick={e => tap(e, 'thumbsUp')}><span role="img" aria-label="thumbs up">👍</span></li>
-        <li onClick={e => tap(e, 'thumbsDown')}><span role="img" aria-label="thumbs down">👎</span></li>
-        <li onClick={e => tap(e, 'exclamation')}><span role="img" aria-label="exclamation">️‼️</span></li>
-        <li onClick={e => tap(e, 'question')}><span role="img" aria-label="question">❓</span></li>
-        <li onClick={e => tap(e, 'funny')}><span role="img" aria-label="funny">😄</span></li>
+        <li onClick={e => tap(e, 'thumbsUp')} role="button">
+          <span role="img" aria-label="thumbs up">👍</span>
+        </li>
+        <li onClick={e => tap(e, 'thumbsDown')} role="button">
+          <span role="img" aria-label="thumbs down">👎</span>
+        </li>
+        <li onClick={e => tap(e, 'exclamation')} role="button">
+          <span role="img" aria-label="exclamation">❗️️</span>
+        </li>
+        <li onClick={e => tap(e, 'question')} role="button">
+          <span role="img" aria-label="question">❓</span>
+        </li>
+        <li onClick={e => tap(e, 'funny')} role="button">
+          <span role="img" aria-label="funny">😄</span>
+        </li>
       </ul>
-    </div>),
-    document.getElementById('appendToBodyContainer'));
-
+    </div>
+  );
 };

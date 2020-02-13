@@ -29,6 +29,11 @@
   font-size: 4rem;
 }
 
+.chat > .body .message-container {
+  position: relative;
+  overflow: visible;
+}
+
 .chat > .body .message-wrapper {
   overflow: auto;
 }
