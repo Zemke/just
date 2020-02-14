@@ -4,9 +4,18 @@ import './Tapback.css';
 export default function Tapback(props) {
 
   /** @type {{current: HTMLDivElement}} */ const elem = useRef(null);
+  const isHoldClick = useRef(true);
 
   useEffect(() => {
-    // todo outside click
+    const clickListener = e => {
+      if (isHoldClick.current) {
+        isHoldClick.current = false;
+        return;
+      }
+      props.tap(null);
+    };
+    document.addEventListener('click', clickListener);
+    return () => document.removeEventListener('click', clickListener);
   }, [props]);
 
   const tap = (e, action) => {
