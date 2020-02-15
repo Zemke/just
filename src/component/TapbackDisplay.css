@@ -1,0 +1,30 @@
+.tapback {
+  position: absolute;
+  top: -1rem;
+  left: 2rem;
+}
+
+.tapback.from {
+  background-color: snow;
+}
+
+.tapback.to {
+  background-color: #151515;
+}
+
+.tapback {
+  display: flex;
+  float: left;
+  background-color: snow;
+  border-radius: 100vh;
+  height: 4rem;
+  width: 4rem;
+  font-size: 5rem;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 .6rem #151515;
+  overflow: hidden;
+}
+
