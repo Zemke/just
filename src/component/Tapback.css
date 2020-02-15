@@ -40,8 +40,13 @@
 }
 
 #tapback ul > li:nth-child(5)  {
-  left: -9.7rem;
-  top: -4.4rem;
+  left: -6.7rem;
+  top: -3.4rem;
+}
+
+#tapback ul > li:nth-child(6)  {
+  left: -14rem;
+  top: -4.5rem;
 }
 
 #tapback ul > li:hover {
@@ -93,10 +98,10 @@
     transform: scale(.6);
   }
   70% {
-    transform: scale(2.5) rotate(-5deg);
+    transform: scale(2.5) rotate(280deg);
   }
   100% {
-    transform: scale(1) rotate(-5deg);
+    transform: scale(1) rotate(365deg);
   }
 }
 
@@ -109,6 +114,18 @@
   }
   100% {
     transform: scale(1) rotate(15deg);
+  }
+}
+
+@keyframes bump6 {
+  0% {
+    transform: scale(.8);
+  }
+  70% {
+    transform: scale(2.7) rotate(3deg);
+  }
+  100% {
+    transform: scale(1.1) rotate(10deg);
   }
 }
 
@@ -129,10 +146,15 @@
 
 #tapback ul > li:nth-child(4)  {
   animation: bump4 400ms;
-  transform: rotate(-5deg);
+  transform: rotate(365deg);
 }
 
 #tapback ul > li:nth-child(5)  {
   animation: bump5 300ms;
-  transform: rotate(15deg);
+  transform: rotate(365deg);
+}
+
+#tapback ul > li:nth-child(6)  {
+  animation: bump6 300ms;
+  transform: rotate(10deg);
 }

@@ -39,12 +39,15 @@ export default function Tapback(props) {
         </li>
         <li onClick={e => tap(e, 'exclamation')} role="button">
           <span role="img" aria-label="exclamation">❗️️</span>
+        </li> [
+        <li onClick={e => tap(e, 'funny')} role="button">
+          <span role="img" aria-label="funny">😄</span>
+        </li>
+        <li onClick={e => tap(e, 'love')} role="button">
+          <span role="img" aria-label="love">❤️</span>
         </li>
         <li onClick={e => tap(e, 'question')} role="button">
           <span role="img" aria-label="question">❓</span>
-        </li>
-        <li onClick={e => tap(e, 'funny')} role="button">
-          <span role="img" aria-label="funny">😄</span>
         </li>
       </ul>
     </div>
