@@ -37,9 +37,9 @@ api.onMessage = async cb =>
     .firestore()
     .collection('messages')
     .where('users', 'array-contains', (await Auth.current()).uid)
-    .onSnapshot(snapshot =>
+    .onSnapshot({includeMetadataChanges: true}, snapshot =>
       cb(snapshot
-        .docChanges()
+        .docChanges({includeMetadataChanges: true})
         .map(({doc, type}) => ({message: {...mapTimestamp(doc.data()), id: doc.id}, doc, type}))));
 
 const getConversation = (userUidA, userUidB) =>
