@@ -12,11 +12,11 @@
   cursor: pointer;
 }
 
-.chat > .body .message.from .image img {
+.chat > .body .message-wrapper.from .message .image img {
   border-bottom-left-radius: 0;
 }
 
-.chat > .body .message.to .image img {
+.chat > .body .message-wrapper.to .message .image img {
   border-bottom-right-radius: 0;
 }
 

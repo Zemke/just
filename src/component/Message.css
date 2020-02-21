@@ -1,8 +1,8 @@
-.chat > .body .message.to {
+.chat > .body .message-wrapper.to .message {
   color: snow;
 }
 
-.chat > .body .message.from {
+.chat > .body .message-wrapper.from .message {
   color: #151515;
 }
 
@@ -38,11 +38,11 @@
   overflow: auto;
 }
 
-.chat > .body .message.from {
+.chat > .body .message-wrapper.from .message {
   border-bottom-left-radius: 0;
 }
 
-.chat > .body .message.to {
+.chat > .body .message-wrapper.to .message {
   border-bottom-right-radius: 0;
   float: right;
 }
@@ -75,10 +75,10 @@
   z-index: -1;
 }
 
-.chat > .body .message.to > .overlay {
+.chat > .body .message-wrapper.to .message > .overlay {
   background: #151515;
 }
 
-.chat > .body .message.from > .overlay {
+.chat > .body .message-wrapper.from .message > .overlay {
   background: snow;
 }
