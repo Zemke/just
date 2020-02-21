@@ -102,14 +102,14 @@ exports.purge = functions.https.onRequest(async (req, res) => {
     Object.entries(
       (await admin.firestore().collection('messages').get()).docs
         .reduce((acc, curr) => {
-          const conversationId = curr.data().users.join('-');
+          const conversationId = curr.data().users.sort().join('-');
           acc[conversationId] = acc[conversationId] || [];
           acc[conversationId].push(curr);
           return acc;
         }, {}))
       .filter(([_id, conversation]) => conversation.length > max)
       .map(([_id, conversation]) => conversation
-        .sort((m1, m2) => m2.createTime - m1.createTime)
+        .sort((m1, m2) => m2.createTime.toMillis() - m1.createTime.toMillis())
         .slice(max))
       .reduce((acc, curr) => acc.concat(curr)); // Array.prototype.flat
 

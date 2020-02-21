@@ -95,9 +95,9 @@ export default function Message(props) {
       </div>
       {(props.lastOwnMessage != null && props.lastOwnMessage.id === props.message.id) && (
         <div className="status">
-          {props.message._hasPendingWrites
-            ? 'Sending'
-            : (props.message.delivered ? 'Delivered' : 'Sent')}
+          {props.message.delivered
+            ? 'Delivered'
+            : (props.message._hasPendingWrites ? 'Sending' : 'Sent')}
         </div>
       )}
     </div>
