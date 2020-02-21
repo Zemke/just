@@ -127,8 +127,7 @@ function ContentEditable(props, ref) {
   const onPaste = e => {
     e.preventDefault();
     const data = e.clipboardData.getData('text/plain')
-      .replace(/\n/g, '<br/>')
-      .replace(/ /g, '&nbsp;');
+      .replace(/\n/g, '<br/>');
     document.execCommand(
       "insertHTML", false, data);
   };
