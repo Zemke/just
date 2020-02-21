@@ -1,8 +1,17 @@
+.message-wrapper.to #tapback {
+  transform: scale(-1, 1);
+  right: 2rem;
+}
+
+.message-wrapper.from #tapback {
+  left: 2rem;
+}
+
 #tapback {
   position: absolute;
   top: -1rem;
-  left: 2rem;
   width: 25rem;
+  z-index: 2;
 }
 
 #tapback ul > li {
