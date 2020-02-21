@@ -1,30 +1,59 @@
-.tapback {
-  position: absolute;
-  top: -1rem;
-  left: 2rem;
-}
-
-.tapback.from {
-  background-color: snow;
-}
-
-.tapback.to {
+.message-wrapper.from .tapback {
   background-color: #151515;
+  left: .6rem;
+}
+
+.message-wrapper.to .tapback {
+  background-color: snow;
+  right: .2rem;
+}
+
+.tapback:not(.appeared) {
+  transform: scale(0);
+}
+
+@keyframes scaleIt {
+  0% {
+    transform: scale(0);
+  }
+  20% {
+    transform: scale(.3);
+  }
+
+  85% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.tapback.appeared {
+  animation: scaleIt 400ms;
 }
 
 .tapback {
+  z-index: 2;
+  position: absolute;
   display: flex;
   float: left;
-  background-color: snow;
   border-radius: 100vh;
-  height: 4rem;
-  width: 4rem;
-  font-size: 5rem;
+  height: .7rem;
+  width: .7rem;
+  padding: .2rem;
+  font-size: .8rem;
   align-items: center;
   text-align: center;
   justify-content: center;
-  position: relative;
-  box-shadow: 0 0 .6rem #151515;
+  box-shadow: 0 0 0.6rem #151515;
   overflow: hidden;
 }
 
+.message-container.timestamped .tapback {
+  top: 1.6rem;
+}
+
+.message-container:not(.timestamped) .tapback {
+  top: -.3rem;
+}

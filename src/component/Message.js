@@ -44,7 +44,7 @@ export default function Message(props) {
   };
 
   return (
-    <div className="message-container">
+    <div className={"message-container" + (props.messageGaps[props.message.id] ? ' timestamped' : '')}>
       {props.messageGaps[props.message.id] && (<div className="timestamp">{props.messageGaps[props.message.id]}</div>)}
       <div className={'message-wrapper ' + (props.otherUser === props.message.from ? "from" : "to")}>
         {props.message.tapback && <DisplayTapback tapback={props.message.tapback} otherUser={props.otherUser}/>}
