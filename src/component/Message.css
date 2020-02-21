@@ -52,7 +52,7 @@
 }
 
 .chat > .body .message p a {
-  color: #0000FF;
+  color: #ec173a;
   text-decoration: none;
   word-break: break-all;
 }
@@ -62,7 +62,7 @@
 }
 
 .chat > .body .message p a:active {
-  color: #000078;
+  color: #8a1733;
 }
 
 .chat > .body .message > .overlay {
