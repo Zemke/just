@@ -9,7 +9,7 @@ api.requestPermission = async () => {
 api.notify = async (title, body, data) => {
   if (Notification.permission !== 'granted') return;
   return (await navigator.serviceWorker.ready).showNotification(
-    title, {body, icon: '/logo192.png', badge: 'https://just.zemke.io/logo96.png', data});
+    title, {body, icon: '/logo192.png', badge: 'https://just.zemke.io/badge.png', data});
 };
 
 export default api;
