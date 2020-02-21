@@ -18,7 +18,7 @@ export default function Message(props) {
       .replace(/[^\x00-\x7F]/g, "")
       .length;
 
-  // TODO Create touch events as well.
+  // Tapback click hold
   useEffect(() => {
     const currBoxElem = boxElem.current;
     if (!currBoxElem) return;
@@ -36,7 +36,33 @@ export default function Message(props) {
       currBoxElem.removeEventListener('mouseup', mouseUpListener);
       currBoxElem.removeEventListener('mousedown', mouseDownListener);
     }
-  });
+  }, []);
+
+  // Tapback double tap
+  useEffect(() => {
+    const currBoxElem = boxElem.current;
+    if (!currBoxElem) return;
+
+    let tapped = false;
+    let timeoutForTap;
+
+    const touchStartListener = e => {
+      if (tapped) {
+        setTapback(e.target.closest("*[data-message=true]").dataset.messageId);
+        clearTimeout(timeoutForTap);
+      } else {
+        tapped = true;
+        setTimeout(() => tapped = false, 200);
+      }
+    };
+
+    currBoxElem.addEventListener('touchstart', touchStartListener);
+
+    return () => {
+      currBoxElem.removeEventListener('touchstart', touchStartListener);
+      clearTimeout(timeoutForTap);
+    };
+  }, []);
 
   const tap = (action, messageId) => {
     if (action) DataStore.sendTapback(action, messageId);
