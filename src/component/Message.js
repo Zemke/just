@@ -84,7 +84,7 @@ export default function Message(props) {
               <>
                 <div className="overlay"/>
                 <p className={isOnlyEmoji(props.message.body.trim()) ? 'onlyEmoji' : ''}>
-                  <Linkify>
+                  <Linkify properties={{target: '_blank'}}>
                     {props.message.body.split('\n')
                       .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
                   </Linkify>
