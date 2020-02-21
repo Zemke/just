@@ -1,11 +1,17 @@
 .message-wrapper.from .tapback {
-  background-color: #151515;
   left: .6rem;
 }
 
 .message-wrapper.to .tapback {
-  background-color: snow;
   right: .2rem;
+}
+
+.tapback.from {
+  background-color: #151515;
+}
+
+.tapback.to {
+  background-color: snow;
 }
 
 .tapback:not(.appeared) {
