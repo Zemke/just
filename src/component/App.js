@@ -24,7 +24,11 @@ export default function App() {
     Auth
       .current()
       .then(currentUser => {
-        if (!currentUser) return;
+        if (!currentUser) {
+          console.log('not logged in');
+          setLoading(false);
+          return;
+        }
         webNotifications.requestPermission();
         setCurrentUser(currentUser);
       });
