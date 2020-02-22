@@ -90,6 +90,7 @@
   margin-left: -2.45rem;
   margin-top: .05rem;
   font-size: 1rem;
+  z-index: 0;
 }
 
 .chat > .foot .submit:hover {
