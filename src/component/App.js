@@ -25,7 +25,6 @@ export default function App() {
       .current()
       .then(currentUser => {
         if (!currentUser) {
-          console.log('not logged in');
           setLoading(false);
           return;
         }
