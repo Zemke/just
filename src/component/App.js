@@ -51,7 +51,10 @@ export default function App() {
   }, [enterAnotherCode, shareYourCode]);
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser) {
+      setLoading(false);
+      return;
+    }
 
     const onMessageSubscription = DataStore.onMessage(messages => {
       setMessages(curr => {
