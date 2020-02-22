@@ -24,6 +24,17 @@ export default function Overlay(props) {
   }, [props]);
 
   useEffect(() => {
+    const currElem = elem.current;
+    if (!currElem) return;
+    const touchMoveListener = e => {
+      e.preventDefault();
+      props.onClose();
+    };
+    document.addEventListener('touchmove', touchMoveListener);
+    return () => document.removeEventListener('touchmove', touchMoveListener)
+  }, [props]);
+
+  useEffect(() => {
     if (!props.onClose) return;
     const outsideClickListener =
       e => e.target.id === 'overlay' && props.onClose();
