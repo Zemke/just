@@ -22,12 +22,12 @@ export default function ImageMessage(props) {
       currElemRef.appendChild(imgEl);
       const imgClickListener = e => {
         e.preventDefault();
-        setDetailView(e.target.src);
+        props.enableDetailView && setDetailView(e.target.src);
       };
       imgEl.addEventListener('click', imgClickListener);
       return () => imgEl.removeEventListener('click', imgClickListener);
     })();
-  }, [props.message]);
+  }, [props]);
 
   return (
     <div className={'image' + (props.message.placeholder ? ' sending' : '')}>
