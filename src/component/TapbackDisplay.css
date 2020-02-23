@@ -62,3 +62,7 @@
 .message-container:not(.timestamped) .tapback {
   top: -.3rem;
 }
+
+.chat > .body .message-wrapper.to .tapback {
+  transform: scale(-1, 1);
+}
