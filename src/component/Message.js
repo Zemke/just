@@ -18,6 +18,9 @@ export default function Message(props) {
       .replace(/[^\x00-\x7F]/g, "")
       .length;
 
+  const openTapback = (e) =>
+    setTapback(e.target.closest("*[data-message=true]").dataset.messageId);
+
   // Tapback click hold
   useEffect(() => {
     const currBoxElem = boxElem.current;
@@ -25,7 +28,7 @@ export default function Message(props) {
 
     let timeoutId;
     const mouseDownListener =
-      e => timeoutId = setTimeout(() => setTapback(e.target.closest("*[data-message=true]").dataset.messageId), 700);
+      e => timeoutId = setTimeout(() => openTapback(e), 700);
     currBoxElem.addEventListener('mousedown', mouseDownListener);
 
     const mouseUpListener =
@@ -48,7 +51,7 @@ export default function Message(props) {
 
     const touchStartListener = e => {
       if (tapped) {
-        setTapback(e.target.closest("*[data-message=true]").dataset.messageId);
+        openTapback(e);
         clearTimeout(timeoutForTap);
       } else {
         tapped = true;
