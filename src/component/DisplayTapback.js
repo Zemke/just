@@ -10,7 +10,8 @@ export default function DisplayTapback(props) {
     const currElem = elem.current;
     if (!currElem) return;
     requestAnimationFrame(() => currElem.classList.add('appeared'));
-    requestAnimationFrame(() => currElem.style.transform = `rotate(${Math.random() * 60 - 30}deg)`);
+    requestAnimationFrame(() =>
+      currElem.children[0].style.transform = `rotate(${Math.ceil(Math.random() * 60 - 30)}deg)`);
   }, []);
 
   return (
