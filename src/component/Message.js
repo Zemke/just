@@ -73,6 +73,9 @@ export default function Message(props) {
     setTapback(null);
   };
 
+  const proceedWithDetailView = () =>
+    tapback !== props.message.id;
+
   return (
     <div className={"message-container" + (props.messageGaps[props.message.id] ? ' timestamped' : '')}>
       {props.messageGaps[props.message.id] && (<div className="timestamp">{props.messageGaps[props.message.id]}</div>)}
@@ -84,7 +87,7 @@ export default function Message(props) {
           className={"message" + (props.message.image ? " image" : "")}>
           {props.message.image
             ? (<ImageMessage message={props.message}
-                             enableDetailView={tapback !== props.message.id}/>)
+                             proceedWithDetailView={proceedWithDetailView}/>)
             : (
               <>
                 <div className="overlay"/>
