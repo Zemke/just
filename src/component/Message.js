@@ -55,7 +55,7 @@ export default function Message(props) {
         clearTimeout(timeoutForTap);
       } else {
         tapped = true;
-        setTimeout(() => tapped = false, 200);
+        timeoutForTap = setTimeout(() => tapped = false, 200);
       }
     };
 
