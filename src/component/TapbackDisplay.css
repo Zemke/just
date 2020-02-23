@@ -45,10 +45,9 @@
   display: flex;
   float: left;
   border-radius: 100vh;
-  height: .7rem;
-  width: .7rem;
-  padding: .2rem;
-  font-size: .8rem;
+  height: 1.3rem;
+  width: 1.3rem;
+  font-size: 1.2rem;
   align-items: center;
   text-align: center;
   justify-content: center;
