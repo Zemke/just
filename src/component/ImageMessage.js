@@ -20,9 +20,9 @@ export default function ImageMessage(props) {
       imgEl.src = imageSrc;
       currElemRef.innerHTML = '';
       currElemRef.appendChild(imgEl);
-      const imgClickListener = e => {
+      const imgClickListener = async e => {
         e.preventDefault();
-        props.proceedWithDetailView() && setDetailView(e.target.src);
+        await props.proceedWithDetailView() && setDetailView(e.target.src);
       };
       imgEl.addEventListener('click', imgClickListener);
       return () => imgEl.removeEventListener('click', imgClickListener);

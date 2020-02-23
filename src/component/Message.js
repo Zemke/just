@@ -1,4 +1,4 @@
-import React, {Fragment, useEffect, useRef, useState} from "react";
+import React, {Fragment, useCallback, useEffect, useRef, useState} from "react";
 import ImageMessage from "./ImageMessage";
 import Linkify from "react-linkify";
 import Tapback from "./Tapback";
@@ -9,6 +9,7 @@ import DisplayTapback from "./DisplayTapback";
 export default function Message(props) {
 
   /** @type {{current: HTMLDivElement}} */ const boxElem = useRef(null);
+  /** @type {{current: boolean}} */ const openImageDetails = useRef(false);
 
   const [tapback, setTapback] = useState(null);
 
@@ -56,7 +57,10 @@ export default function Message(props) {
         tapped = false;
       } else {
         tapped = true;
-        timeoutForTap = setTimeout(() => tapped = false, 200);
+        timeoutForTap = setTimeout(() => {
+          tapped = false;
+          openImageDetails.current = true;
+        }, 200);
       }
     };
 
@@ -73,8 +77,16 @@ export default function Message(props) {
     setTapback(null);
   };
 
-  const proceedWithDetailView = () =>
-    tapback !== props.message.id;
+  const pastDoubleTap = useCallback(
+    () => new Promise(resolve =>
+      setTimeout(() => {
+        resolve(openImageDetails.current);
+        openImageDetails.current = false;
+      }, 201)),
+    []);
+
+  const proceedWithDetailView = async () =>
+    tapback !== props.message.id && await pastDoubleTap();
 
   return (
     <div className={"message-container" + (props.messageGaps[props.message.id] ? ' timestamped' : '')}>
