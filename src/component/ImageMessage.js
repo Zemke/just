@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import Storage from '../util/storage.js';
 import './ImageMessage.css';
 import Overlay from "./Overlay";
@@ -29,7 +29,7 @@ export default function ImageMessage(props) {
     })();
   }, [props]);
 
-  return (
+  return useMemo(() => (
     <div className={'image' + (props.message.placeholder ? ' sending' : '')}>
       {detailView && (
         <Overlay onClose={() => setDetailView(null)}>
@@ -43,5 +43,5 @@ export default function ImageMessage(props) {
       <div ref={elemRef}/>
       {props.message.placeholder && (<div className="status">Sending</div>)}
     </div>
-  );
+  ), [detailView, props.message.placeholder]);
 };
