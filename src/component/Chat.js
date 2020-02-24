@@ -23,7 +23,8 @@ export default function Chat(props) {
         m => m.from === otherUserFromPathname || m.to === otherUserFromPathname);
       if (otherUserFromPathnameExists) return otherUserFromPathname;
     }
-    return MessageUtils.extractOtherUser(props.currentUser.uid, props.messages);
+    return MessageUtils.extractOtherUser(
+      props.currentUser.uid, props.messages.sort((c1, c2) => c2.when - c1.when));
   });
   const [otherUsers, setOtherUsers] = useState([]);
   const [lastOwnMessage, setLastOwnMessage] = useState(null);
