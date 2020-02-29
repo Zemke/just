@@ -147,3 +147,15 @@ exports.purge = functions.https.onRequest(async (req, res) => {
     .status(200)
     .send(`${subjects.length} messages deleted.`);
 });
+
+exports.deleteAssociatedImage = functions.firestore
+  .document('messages/{messageId}')
+  .onDelete(async (snap, _context) => {
+    const image = snap.data().image;
+    if (!image) return Promise.resolve(null);
+
+    return admin.storage()
+      .bucket("just-pwa.appspot.com")
+      .file(image)
+      .delete();
+  });
