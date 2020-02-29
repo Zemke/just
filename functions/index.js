@@ -121,27 +121,7 @@ exports.purge = functions.https.onRequest(async (req, res) => {
       .send("There are no messages to delete");
   }
 
-  const batchSize = 500;
-  const batchQuantity = Math.ceil(subjects.length / batchSize);
-
-  console.log(`Execution will take place in ${batchQuantity} batches.`);
-
-  const promises = subjects
-    .reduce((acc, curr) => {
-      acc[acc.length - 1].length < batchSize
-        ? acc[acc.length - 1].push(curr)
-        : acc.push([curr]);
-      return acc;
-    }, [[]])
-    .map(messageBatch => {
-      const batchWrite = admin.firestore().batch();
-      messageBatch.forEach(docSnap => batchWrite.delete(docSnap.ref));
-      return batchWrite.commit()
-        .then(() => console.log("Batch successfully committed."))
-        .catch(console.error);
-    });
-
-  await Promise.all(promises);
+  await performInBatches(subjects, (batchWrite, docSnap) => batchWrite.delete(docSnap.ref));
 
   return res
     .status(200)
@@ -159,3 +139,59 @@ exports.deleteAssociatedImage = functions.firestore
       .file(image)
       .delete();
   });
+
+exports.deleteChat = functions.https.onCall(async (data, context) => {
+  if (!context.auth) throw new functions.https.HttpsError('unauthenticated', 'Unauthenticated.');
+  if (!data.otherUser) throw new functions.https.HttpsError('invalid-argument', 'Invalid otherUser.');
+
+  console.log(
+    `Delete conversation of ${context.auth.uid} and ${data.otherUser} as triggered by ${context.auth.uid}`);
+
+  const docRefs = [];
+
+  await Promise
+    .all([
+      (admin
+        .firestore()
+        .collection('messages')
+        .where('from', '==', data.otherUser)
+        .where('to', '==', context.auth.uid)
+        .get()),
+      (admin
+        .firestore()
+        .collection('messages')
+        .where('from', '==', context.auth.uid)
+        .where('to', '==', data.otherUser)
+        .get())
+    ])
+    .then(res => res[0].docs.concat(...res[1].docs))
+    .then(docs => docRefs.push(...docs));
+
+  await performInBatches(docRefs, (batchWrite, docSnap) => batchWrite.delete(docSnap.ref));
+
+  return true;
+});
+
+async function performInBatches(subjects, onEach) {
+  const batchSize = 500;
+  const batchQuantity = Math.ceil(subjects.length / batchSize);
+
+  console.log(`Execution will take place in ${batchQuantity} batches.`);
+
+  const promises = subjects
+    .reduce((acc, curr) => {
+      acc[acc.length - 1].length < batchSize
+        ? acc[acc.length - 1].push(curr)
+        : acc.push([curr]);
+      return acc;
+    }, [[]])
+    .map(messageBatch => {
+      const batchWrite = admin.firestore().batch();
+      messageBatch.forEach(docSnap => onEach(batchWrite, docSnap));
+      return batchWrite.commit()
+        .then(() => console.log("Batch successfully committed."))
+        .catch(console.error);
+    });
+
+  return await Promise.all(promises);
+}

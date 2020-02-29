@@ -1,5 +1,6 @@
 import firebase from './firebase.js';
 import "firebase/firestore";
+import "firebase/functions";
 import Auth from "./auth";
 
 firebase.firestore().enablePersistence()
@@ -42,27 +43,10 @@ api.onMessage = async cb =>
         .docChanges({includeMetadataChanges: true})
         .map(({doc, type}) => ({message: {...mapTimestamp(doc.data()), id: doc.id}, doc, type}))));
 
-const getConversation = (userUidA, userUidB) =>
-  Promise
-    .all([
-      (firebase
-        .firestore()
-        .collection('messages')
-        .where('from', '==', userUidA)
-        .where('to', '==', userUidB)
-        .get()),
-      (firebase
-        .firestore()
-        .collection('messages')
-        .where('from', '==', userUidB)
-        .where('to', '==', userUidA)
-        .get())
-    ])
-    .then(res => res[0].docs.concat(...res[1].docs));
-
-api.deleteChatWithUser = async userUid =>
-  getConversation(userUid, (await Auth.current()).uid)
-    .then(docs => docs.forEach(doc => doc.ref.delete()));
+api.deleteChatWithUser = async otherUser =>
+  firebase
+    .functions()
+    .httpsCallable('deleteChat')({otherUser});
 
 api.sendTapback = async (action, messageId) =>
   firebase
