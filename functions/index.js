@@ -153,7 +153,7 @@ exports.deleteAssociatedImage = functions.firestore
   .onDelete(async (snap, _context) => {
     const image = snap.data().image;
     if (!image) return Promise.resolve(null);
-
+    console.log(`Deleting image ${image} of message ${snap.id}`);
     return admin.storage()
       .bucket("just-pwa.appspot.com")
       .file(image)

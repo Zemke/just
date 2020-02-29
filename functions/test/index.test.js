@@ -71,3 +71,21 @@ const myFunctions = require('../index.js');
   console.log('\x1b[32m%s\x1b[0m', 'Success');
   return test.cleanup();
 })();
+
+// deleteAssociatedImage
+(() => {
+  const message = {
+    from: testData.users.flzemke,
+    to: testData.users.zemke,
+    body: null,
+    image: 'images/82q9kwezmjvoh1tn2hezp9'
+  };
+
+  const snap = test.firestore.makeDocumentSnapshot(message, 'messages/RhJ6UPfcCvU4puGir0eB');
+
+  return test.wrap(myFunctions.deleteAssociatedImage)(snap)
+    .then(() => {
+      console.log('\x1b[32m%s\x1b[0m', 'Success');
+      return test.cleanup();
+    });
+})();
