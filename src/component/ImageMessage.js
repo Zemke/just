@@ -3,7 +3,7 @@ import Storage from '../util/storage.js';
 import './ImageMessage.css';
 import Overlay from "./Overlay";
 
-export default React.memo(function ImageMessage(props) {
+export default React.memo(({image, placeholder, proceedWithDetailView}) => {
 
   /** @type {{current: HTMLDivElement}} */ const elemRef = useRef(null);
 
@@ -13,24 +13,24 @@ export default React.memo(function ImageMessage(props) {
     const currElemRef = elemRef.current;
     if (!currElemRef) return;
     (async () => {
-      const imageSrc = props.placeholder
-        ? URL.createObjectURL(props.placeholder)
-        : await Storage.download(props.image);
+      const imageSrc = placeholder
+        ? URL.createObjectURL(placeholder)
+        : await Storage.download(image);
       const imgEl = document.createElement('img');
       imgEl.src = imageSrc;
       currElemRef.innerHTML = '';
       currElemRef.appendChild(imgEl);
       const imgClickListener = async e => {
         e.preventDefault();
-        await props.proceedWithDetailView() && setDetailView(e.target.src);
+        await proceedWithDetailView() && setDetailView(e.target.src);
       };
       imgEl.addEventListener('click', imgClickListener);
       return () => imgEl.removeEventListener('click', imgClickListener);
     })();
-  }, [props]);
+  }, [image, placeholder, proceedWithDetailView]);
 
   return useMemo(() => (
-    <div className={'image' + (props.placeholder ? ' sending' : '')}>
+    <div className={'image' + (placeholder ? ' sending' : '')}>
       {detailView && (
         <Overlay onClose={() => setDetailView(null)}>
           <a href={detailView} download>
@@ -41,7 +41,7 @@ export default React.memo(function ImageMessage(props) {
         </Overlay>
       )}
       <div ref={elemRef}/>
-      {props.placeholder && (<div className="status">Sending</div>)}
+      {placeholder && (<div className="status">Sending</div>)}
     </div>
-  ), [detailView, props.placeholder]);
+  ), [detailView, placeholder]);
 });
