@@ -98,7 +98,8 @@ export default function Message(props) {
           ref={boxElem} data-message-id={props.message.id} data-message="true"
           className={"message" + (props.message.image ? " image" : "")}>
           {props.message.image
-            ? (<ImageMessage message={props.message}
+            ? (<ImageMessage placeholder={props.message.placeholder}
+                             image={props.message.image}
                              proceedWithDetailView={proceedWithDetailView}/>)
             : (
               <>
