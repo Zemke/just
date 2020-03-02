@@ -28,7 +28,7 @@ export default function Chat(props) {
   });
   const [otherUsers, setOtherUsers] = useState([]);
   const [lastOwnMessage, setLastOwnMessage] = useState(null);
-  const [messageGaps, setMessageGaps] = useState({});
+  const [messageGaps, setMessageGaps] = useState(null);
   const [imagePlaceholders, setImagePlaceholders] = useState([]);
 
   const {messages: propsMessages} = props;
@@ -183,10 +183,14 @@ export default function Chat(props) {
         </div>
       </div>
       <div className="body" ref={chatBodyEl}>
-        {messagesToRender()
-          .filter(m => MessageUtils.extractOtherUser(props.currentUser.uid, [m]) === otherUser)
-          .map(message => (<Message key={message.id || message.image}
-                                    {...{message, otherUser, lastOwnMessage, messageGaps}} />))}
+        {lastOwnMessage && messageGaps && (
+          messagesToRender()
+            .filter(m => MessageUtils.extractOtherUser(props.currentUser.uid, [m]) === otherUser)
+            .map(message => (<Message key={message.id || message.image}
+                                      messageGap={messageGaps[message.id]}
+                                      lastOwnMessage={lastOwnMessage.id === message.id}
+                                      {...{message, otherUser}} />))
+        )}
       </div>
       <div className="foot">
         <Foot chatBodyEl={chatBodyEl}

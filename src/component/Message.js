@@ -6,7 +6,7 @@ import DataStore from '../util/dataStore';
 import './Message.css';
 import DisplayTapback from "./DisplayTapback";
 
-export default function Message(props) {
+export default React.memo(function Message(props) {
 
   /** @type {{current: HTMLDivElement}} */ const boxElem = useRef(null);
   /** @type {{current: boolean}} */ const openImageDetails = useRef(false);
@@ -89,8 +89,8 @@ export default function Message(props) {
     tapback !== props.message.id && await pastDoubleTap();
 
   return (
-    <div className={"message-container" + (props.messageGaps[props.message.id] ? ' timestamped' : '')}>
-      {props.messageGaps[props.message.id] && (<div className="timestamp">{props.messageGaps[props.message.id]}</div>)}
+    <div className={"message-container" + (props.messageGap ? ' timestamped' : '')}>
+      {props.messageGap && (<div className="timestamp">{props.messageGap}</div>)}
       <div className={'message-wrapper ' + (props.otherUser === props.message.from ? "from" : "to")}>
         {props.message.tapback && <DisplayTapback tapback={props.message.tapback} otherUser={props.otherUser}/>}
         {tapback === props.message.id && <Tapback tap={action => tap(action, props.message.id)}/>}
@@ -123,4 +123,6 @@ export default function Message(props) {
       )}
     </div>
   );
-};
+}, ((prevProps, nextProps) =>
+  prevProps.message._hasPendingWrites === nextProps.message._hasPendingWrites
+  && prevProps.message.delivered === nextProps.message.delivered));
