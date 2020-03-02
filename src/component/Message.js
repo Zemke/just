@@ -114,7 +114,7 @@ export default React.memo(function Message(props) {
             )}
         </div>
       </div>
-      {(props.lastOwnMessage != null && props.lastOwnMessage.id === props.message.id) && (
+      {props.lastOwnMessage && (
         <div className="status">
           {props.message.delivered
             ? 'Delivered'
