@@ -111,8 +111,11 @@ export default function Chat(props) {
   const rename = async newName =>
     await DataStore.putNames({...props.names, [otherUser]: newName});
 
-  const deleteChat = async () =>
+  const deleteChat = async () => {
+    alert("The chat with that user is being deleted in the background. " +
+      "It might take some time and the chat will just vanish once the deed is done.");
     await DataStore.deleteChatWithUser(otherUser);
+  };
 
   const onSelect = otherUser =>
     setOtherUser(otherUser);
