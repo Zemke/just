@@ -11,6 +11,12 @@ ReactDOM.render(<App/>, document.getElementById('root'));
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register();
 
+document.onvisibilitychange = () =>
+  !document.hidden && navigator.serviceWorker.getRegistration()
+    .then(async reg => reg && (await reg.getNotifications()).forEach(n => n.close()))
+    .catch(console.error);
+
+
 window.isMobileJustDevice = new Promise(resolve => {
   let check = false;
   (function (a) {
