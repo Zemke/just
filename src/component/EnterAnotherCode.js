@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import DataStore from '../util/dataStore';
+import Close from "./Close";
 
 export default function EnterAnotherCode(props) {
 
@@ -22,8 +23,14 @@ export default function EnterAnotherCode(props) {
     });
   };
 
+  const close = () => {
+    // todo
+  };
+
   return (
     <div className="translucent translucent-center text-center">
+      <Close close={close}/>
+
       <h1>Just</h1>
       <p>
         Enter the code you have received here

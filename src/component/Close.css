@@ -1,0 +1,28 @@
+button.close {
+  position: absolute;
+  right: 1rem;
+  top: 0;
+  background: transparent;
+  border: none;
+  font-size: 5rem;
+  padding: 0;
+  color: snow;
+}
+
+button.close:before {
+  content: "\00d7";
+  text-shadow: 0 0 .6rem #151515;
+}
+
+button.close {
+  transform: scale(1) rotate(0deg);
+  transition: transform 500ms;
+}
+
+button.close:hover,
+button.close:focus {
+  transform: scale(1.2) rotate(10deg);
+  transition: transform 500ms;
+  cursor: pointer;
+  outline: none;
+}
