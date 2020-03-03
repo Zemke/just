@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import QRCode from 'bluedrop-qrcode-generator';
+import Close from "./Close";
 
 export default function ShareYourCode(props) {
 
@@ -34,6 +35,8 @@ export default function ShareYourCode(props) {
 
   return (
     <div className="translucent translucent-center text-center">
+      <Close close={props.close}/>
+
       <h1>Share your code</h1>
       <p>{props.currentUser.uid}</p>
       <div className="margin-top split-button">

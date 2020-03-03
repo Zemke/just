@@ -175,8 +175,8 @@ export default function Chat(props) {
   return (
     <div className="chat" ref={chatEl}>
       <div className="head">
-        <ChatMenu goToShareYourCode={props.goToShareYourCode}
-                  goToEnterAnotherCode={props.goToEnterAnotherCode}
+        <ChatMenu goToShareYourCode={() => props.goToShareYourCode(otherUser)}
+                  goToEnterAnotherCode={() => props.goToEnterAnotherCode(otherUser)}
                   rename={rename} deleteChat={deleteChat} signOut={props.signOut}/>
         <div className="changeChat">
           <ChatSelect otherUsers={otherUsers}

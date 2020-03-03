@@ -19,6 +19,7 @@ export default function App() {
   const [initMessages, setInitMessages] = useState(false);
   const [loading, setLoading] = useState(true);
   const [names, setNames] = useState(null);
+  const [otherUser, setOtherUser] = useState(null);
 
   useEffect(() => {
     Auth
@@ -124,13 +125,21 @@ export default function App() {
     webNotifications.requestPermission();
   };
 
-  const goToEnterAnotherCode = () => {
+  const goToEnterAnotherCode = otherUser => {
+    setOtherUser(otherUser);
     setShareYourCode(false);
     setEnterAnotherCode(true);
   };
 
-  const goToShareYourCode = () => {
+  const goToShareYourCode = otherUser => {
+    setOtherUser(otherUser);
     setShareYourCode(true);
+    setEnterAnotherCode(false);
+  };
+
+  const close = () => {
+    window.history.replaceState({}, "", '/' + otherUser);
+    setShareYourCode(false);
     setEnterAnotherCode(false);
   };
 
@@ -139,9 +148,9 @@ export default function App() {
   } else if (!currentUser) {
     return <SignIn signedIn={signIn}/>;
   } else if (enterAnotherCode) {
-    return <EnterAnotherCode currentUser={currentUser}/>;
+    return <EnterAnotherCode currentUser={currentUser} close={close}/>;
   } else if (shareYourCode) {
-    return <ShareYourCode currentUser={currentUser}/>;
+    return <ShareYourCode currentUser={currentUser} close={close}/>;
   } else if (messages && messages.length) {
     return <Chat messages={messages}
                  currentUser={currentUser}

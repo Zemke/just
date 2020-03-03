@@ -23,13 +23,9 @@ export default function EnterAnotherCode(props) {
     });
   };
 
-  const close = () => {
-    // todo
-  };
-
   return (
     <div className="translucent translucent-center text-center">
-      <Close close={close}/>
+      <Close close={props.close}/>
 
       <h1>Just</h1>
       <p>
