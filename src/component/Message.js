@@ -123,10 +123,16 @@ export default React.memo(function Message(props) {
       )}
     </div>
   );
-}, ((prevProps, nextProps) =>
-  prevProps.message._hasPendingWrites === nextProps.message._hasPendingWrites
-  && prevProps.message.messageGap === nextProps.message.messageGap
-  && prevProps.message.lastOwnMessage === nextProps.message.lastOwnMessage
-  && prevProps.message.delivered === nextProps.message.delivered
-  && prevProps.message.tapback.action === nextProps.message.tapback.action
-  && prevProps.message.tapback.from === nextProps.message.tapback.from));
+}, ((prevProps, nextProps) => {
+  const tapbackUnchanged = prevProps.message.tapback != null && nextProps.message.tapback != null
+    ? (prevProps.message.tapback.action === nextProps.message.tapback.action
+      && prevProps.message.tapback.from === nextProps.message.tapback.from)
+    : ((prevProps.message.tapback == null && nextProps.message.tapback != null)
+      || (prevProps.message.tapback != null && nextProps.message.tapback == null));
+
+  return tapbackUnchanged
+    && prevProps.message._hasPendingWrites === nextProps.message._hasPendingWrites
+    && prevProps.message.messageGap === nextProps.message.messageGap
+    && prevProps.message.lastOwnMessage === nextProps.message.lastOwnMessage
+    && prevProps.message.delivered === nextProps.message.delivered;
+}));
