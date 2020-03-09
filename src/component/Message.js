@@ -127,4 +127,6 @@ export default React.memo(function Message(props) {
   prevProps.message._hasPendingWrites === nextProps.message._hasPendingWrites
   && prevProps.message.messageGap === nextProps.message.messageGap
   && prevProps.message.lastOwnMessage === nextProps.message.lastOwnMessage
-  && prevProps.message.delivered === nextProps.message.delivered));
+  && prevProps.message.delivered === nextProps.message.delivered
+  && prevProps.message.tapback.action === nextProps.message.tapback.action
+  && prevProps.message.tapback.from === nextProps.message.tapback.from));
