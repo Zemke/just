@@ -38,32 +38,22 @@ export default function Chat(props) {
   const scrollToBottom = useCallback(() => {
     const currChatEl = chatEl.current;
     if (!currChatEl) return;
-    currChatEl.scrollTo(0, maxScrollTop(currChatEl));
-    setInitMessages(true);
-    setTimeout(() => {
+    if (currChatEl.scrollTop >= maxScrollTop(currChatEl) - arbitraryTolerance) {
       currChatEl.scrollTo(0, maxScrollTop(currChatEl));
-      currChatEl.classList.add('scrollSmooth');
-    }, 300);
+      setInitMessages(true);
+      setTimeout(() => {
+        currChatEl.scrollTo(0, maxScrollTop(currChatEl));
+        currChatEl.classList.add('scrollSmooth');
+      }, 300);
+    }
   }, []);
 
   useEffect(() => {
-    const currChatEl = chatEl.current;
-    if (!currChatEl) return;
-    if (currChatEl.scrollTop >= maxScrollTop(currChatEl) - arbitraryTolerance
-          || (props.initMessages && !initMessages)) {
-      scrollToBottom();
-    }
+    (props.initMessages && !initMessages) && scrollToBottom();
   }, [scrollToBottom, props.initMessages, initMessages, props.messages, otherUser]);
 
   useEffect(() => {
-    const resizeListener = () => {
-      const currChatEl = chatEl.current;
-      if (!currChatEl) return;
-      if (currChatEl.scrollTop >= maxScrollTop(currChatEl) - arbitraryTolerance) {
-        currChatEl.classList.remove('scrollSmooth');
-        scrollToBottom();
-      }
-    };
+    const resizeListener = () => scrollToBottom();
     window.addEventListener('resize', resizeListener);
     return () => window.removeEventListener('resize', resizeListener);
   }, [scrollToBottom]);
