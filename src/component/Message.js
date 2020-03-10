@@ -20,7 +20,8 @@ export default React.memo(function Message(props) {
       .length;
 
   const openTapback = (e) =>
-    setTapback(e.target.closest("*[data-message=true]").dataset.messageId);
+    setTimeout(() =>
+      setTapback(e.target.closest("*[data-message=true]").dataset.messageId));
 
   // Tapback click hold
   useEffect(() => {
