@@ -18,10 +18,6 @@ export default function Tapback(props) {
     return () => document.removeEventListener('click', clickListener);
   }, [props]);
 
-  useEffect(() => {
-    requestAnimationFrame(() => elem.current.classList.add('appeared'));
-  }, []);
-
   const tap = (e, action) => {
     e.preventDefault();
     e.stopPropagation();
