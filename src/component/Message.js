@@ -87,7 +87,8 @@ export default React.memo(function Message(props) {
     []);
 
   const proceedWithDetailView = async () =>
-    tapback !== props.message.id && await pastDoubleTap();
+    tapback !== props.message.id
+      && (!('ontouchstart' in window) || await pastDoubleTap());
 
   return (
     <div className={"message-container" + (props.messageGap ? ' timestamped' : '')}>
