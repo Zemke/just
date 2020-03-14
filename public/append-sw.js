@@ -29,3 +29,16 @@ if (firebase.messaging.isSupported()) {
     self.registration.showNotification(
       data.fromName, {body: data.body, badge: 'https://just.zemke.io/badge.png', icon: '/logo192.png'}));
 }
+
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'POST'
+      || !event.request.url.endsWith('/share-target')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+  event.respondWith(Response.redirect('/share-target'));
+  event.waitUntil((async () => {
+    (await self.clients.get(event.resultingClientId || event.clientId))
+      .postMessage({shareTarget: Array.from((await event.request.formData()).entries())});
+  })());
+});
