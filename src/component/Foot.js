@@ -77,6 +77,23 @@ export default function Foot(props) {
   };
 
   useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+    const onShareTargetListener = e => {
+      if (!('shareTarget' in e.data)) return;
+      const formData = e.data.shareTarget.data.shareTarget; // lol
+      const image = formData.find(x => x[0] === 'images');
+      if (image) {
+        setFiles(curr => [...curr, [randomString(), image[1]]]);
+      } else {
+        alert('Currently only image sharing is supported.');
+      }
+    };
+    navigator.serviceWorker.addEventListener('message', onShareTargetListener);
+    return () =>
+      navigator.serviceWorker.removeEventListener('message', onShareTargetListener)
+  }, []);
+
+  useEffect(() => {
     const dropListener = e => {
       e.preventDefault();
       const files =
