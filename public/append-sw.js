@@ -57,3 +57,28 @@ self.addEventListener('push', e => {
     })
   });
 });
+
+self.addEventListener('push', e => {
+  if (e.data.text() !== 'reddit') return;
+
+  clients.matchAll({type: 'window'}).then(clients => {
+    clients.forEach(async client => {
+      client.postMessage({shareTarget: [["description", 'https://reddit.com/r/hhkb']]})
+    })
+  });
+});
+
+
+self.addEventListener('push', e => {
+  if (e.data.text() !== 'youtube') return;
+
+  clients.matchAll({type: 'window'}).then(clients => {
+    clients.forEach(async client => {
+      client.postMessage({
+        shareTarget: [
+          ["description", 'https://youtube.com?watch=v02367x4'],
+          ["name", 'Lionel Messi - Best Of']]
+      })
+    })
+  });
+});
