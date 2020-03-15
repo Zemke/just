@@ -7,12 +7,9 @@ export default function DisplayTapback(props) {
   /** @type {{current: HTMLDivElement}} */ const elem = useRef(null);
 
   useEffect(() => {
-    const currElem = elem.current;
-    if (!currElem) return;
-    requestAnimationFrame(() => currElem.classList.add('appeared'));
-    requestAnimationFrame(() =>
-      currElem.children[0].style.transform = `rotate(${Math.ceil(Math.random() * 60 - 30)}deg)`);
-  }, []);
+    elem.current.classList.add('appeared');
+    elem.current.children[0].style.transform = `rotate(${Math.ceil(Math.random() * 60 - 30)}deg)`;
+  }, [props.tapback.action, props.tapback.from]);
 
   return (
     <div className={'tapback ' + (from === props.otherUser ? 'to' : 'from')} ref={elem}>
