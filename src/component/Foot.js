@@ -85,7 +85,19 @@ export default function Foot(props) {
       if (image) {
         setFiles(curr => [...curr, [randomString(), image[1]]]);
       } else {
-        alert('Currently only image sharing is supported.');
+        const message = [];
+
+        const name = formData.find(x => x[0] === 'name');
+        name && message.push(name[1], ' — ');
+
+        const description = formData.find(x => x[0] === 'description');
+        description && message.push(description[1], ' — ');
+
+        const link = formData.find(x => x[0] === 'link');
+        link && message.push(link[1], ' — ');
+
+        message.splice(-1);
+        setField([message.join('').trim()]);
       }
     };
     navigator.serviceWorker.addEventListener('message', onShareTargetListener);
