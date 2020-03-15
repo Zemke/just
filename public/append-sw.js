@@ -30,6 +30,8 @@ if (firebase.messaging.isSupported()) {
       data.fromName, {body: data.body, badge: 'https://just.zemke.io/badge.png', icon: '/logo192.png'}));
 }
 
+// todo this fakes the message event which would come from the service worker
+//  when something is shared to Just
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'POST'
       || !event.request.url.endsWith('/share-target')) {
