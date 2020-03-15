@@ -53,9 +53,7 @@ self.addEventListener('push', e => {
       const img = await fetch('https://cwtsite.com/assets/icon.1471fd5444f559a02015f08810d998a9.png');
       const blob = await img.blob();
       const file = new File([blob], "test.png", {type: "image/png", lastModified: Date.now()});
-      const init = {data: {shareTarget: [["images", file]]}};
-      console.log('MessageEvent shareTarget', init);
-      client.postMessage({shareTarget: init})
+      client.postMessage({shareTarget: [["images", file]]})
     })
   });
 });

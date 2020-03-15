@@ -80,7 +80,7 @@ export default function Foot(props) {
     if (!('serviceWorker' in navigator)) return;
     const onShareTargetListener = e => {
       if (!('shareTarget' in e.data)) return;
-      const formData = e.data.shareTarget.data.shareTarget; // lol
+      const formData = e.data.shareTarget;
       const image = formData.find(x => x[0] === 'images');
       if (image) {
         setFiles(curr => [...curr, [randomString(), image[1]]]);
