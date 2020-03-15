@@ -30,6 +30,7 @@ export default function Chat(props) {
   const [lastOwnMessage, setLastOwnMessage] = useState(null);
   const [messageGaps, setMessageGaps] = useState(null);
   const [imagePlaceholders, setImagePlaceholders] = useState([]);
+  const [shareTarget, setShareTarget] = useState(false);
 
   const {messages: propsMessages} = props;
 
@@ -97,6 +98,17 @@ export default function Chat(props) {
   useEffect(() => {
     window.history.pushState({}, "", '/' + otherUser);
   }, [otherUser]);
+
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+    const onShareTargetListener = e => {
+      if (!('shareTarget' in e.data)) return;
+      setShareTarget(e.data.shareTarget.data.shareTarget); // lol
+    };
+    navigator.serviceWorker.addEventListener('message', onShareTargetListener);
+    return () =>
+      navigator.serviceWorker.removeEventListener('message', onShareTargetListener)
+  }, []);
 
   const rename = async newName =>
     await DataStore.putNames({...props.names, [otherUser]: newName});

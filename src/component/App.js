@@ -55,17 +55,6 @@ export default function App() {
   }, [enterAnotherCode, shareYourCode]);
 
   useEffect(() => {
-    if (!('serviceWorker' in navigator)) return;
-    const onShareTargetListener = e => {
-      if (!('shareTarget' in e.data)) return;
-      window.shareTarget = e; // todo
-    };
-    navigator.serviceWorker.addEventListener('message', onShareTargetListener);
-    return () =>
-      navigator.serviceWorker.removeEventListener('message', onShareTargetListener)
-  }, []);
-
-  useEffect(() => {
     if (!currentUser) return;
 
     const onMessageSubscription = DataStore.onMessage(messages => {
