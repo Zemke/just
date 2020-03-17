@@ -107,8 +107,10 @@ export default function Chat(props) {
     await DataStore.deleteChatWithUser(otherUser);
   };
 
-  const onSelect = otherUser =>
+  const onSelect = otherUser => {
     setOtherUser(otherUser);
+    scrollToBottom();
+  };
 
   useEffect(() => {
     const otherUsers = props.messages
