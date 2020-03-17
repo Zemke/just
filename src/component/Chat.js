@@ -30,7 +30,6 @@ export default function Chat(props) {
   const [lastOwnMessage, setLastOwnMessage] = useState(null);
   const [messageGaps, setMessageGaps] = useState(null);
   const [imagePlaceholders, setImagePlaceholders] = useState([]);
-  const [shareTarget, setShareTarget] = useState(false);
 
   const {messages: propsMessages} = props;
 
