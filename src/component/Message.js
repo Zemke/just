@@ -6,7 +6,7 @@ import DataStore from '../util/dataStore';
 import './Message.css';
 import DisplayTapback from "./DisplayTapback";
 
-export default React.memo(function Message(props) {
+export default function Message(props) {
 
   /** @type {{current: HTMLDivElement}} */ const boxElem = useRef(null);
   /** @type {{current: boolean}} */ const openImageDetails = useRef(false);
@@ -88,7 +88,9 @@ export default React.memo(function Message(props) {
 
   const proceedWithDetailView = async () =>
     tapback !== props.message.id
-      && (!('ontouchstart' in window) || await pastDoubleTap());
+    && (!('ontouchstart' in window) || await pastDoubleTap());
+
+  if (props.message.id == null) console.log("there's no message ID");
 
   return (
     <div className={"message-container" + (props.messageGap ? ' timestamped' : '')}>
@@ -125,16 +127,4 @@ export default React.memo(function Message(props) {
       )}
     </div>
   );
-}, ((prevProps, nextProps) => {
-  const tapbackUnchanged = prevProps.message.tapback != null && nextProps.message.tapback != null
-    ? (prevProps.message.tapback.action === nextProps.message.tapback.action
-      && prevProps.message.tapback.from === nextProps.message.tapback.from)
-    : ((prevProps.message.tapback == null && nextProps.message.tapback != null)
-      || (prevProps.message.tapback != null && nextProps.message.tapback == null));
-
-  return tapbackUnchanged
-    && prevProps.message._hasPendingWrites === nextProps.message._hasPendingWrites
-    && prevProps.message.messageGap === nextProps.message.messageGap
-    && prevProps.message.lastOwnMessage === nextProps.message.lastOwnMessage
-    && prevProps.message.delivered === nextProps.message.delivered;
-}));
+};
