@@ -146,6 +146,14 @@ function ContentEditable(props, ref) {
     e.target.textContent = props.placeholder;
   };
 
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+    if (!navigator.serviceWorker.controller) return;
+    navigator.serviceWorker.ready.then(() =>
+      navigator.serviceWorker.controller
+        .postMessage('onChatLoad'));
+  }, []);
+
   return <div contentEditable tabIndex="0" ref={elem}
               onFocus={onFocus} onBlur={onBlur} onInput={onInput}
               onKeyDown={onKeydown} onPaste={onPaste}/>;

@@ -44,10 +44,10 @@ if (firebase.messaging.isSupported()) {
 
 let waitingShareTarget = null;
 
-self.addEventListener('message', e => {
-  if (!('onChatLoad' in e.data)) return;
-  waitingShareTarget && waitingShareTarget();
-});
+self.addEventListener('message', e =>
+  e.data === 'onChatLoad'
+    && waitingShareTarget
+    && waitingShareTarget());
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'POST'
@@ -55,7 +55,7 @@ self.addEventListener('fetch', event => {
     event.respondWith(fetch(event.request));
     return;
   }
-  event.respondWith(Response.redirect('/share-target'));
+  event.respondWith(Response.redirect('/'));
   event.waitUntil((async () => {
     waitingShareTarget = async () => {
       (await self.clients.get(event.resultingClientId || event.clientId))
