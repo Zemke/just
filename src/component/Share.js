@@ -15,6 +15,9 @@ export default function Share(props) {
   const imageGallery = () =>
     uploadButton.current.click();
 
+  const giphy = () =>
+    console.log('something with gifs');
+
   const onUploadChange = () => {
     if (!uploadButton.current.files.length) return;
     props.onFiles(
@@ -50,6 +53,10 @@ export default function Share(props) {
                 dropdownTrigger={dropdownTrigger}
                 className="attachBottomLeft text-left">
         <ul>
+          <li onClick={giphy}>
+            <span className="icon" role="img" aria-label="GIF">🤡</span>
+            GIF
+          </li>
           <li onClick={imageGallery}>
             <span className="icon" role="img" aria-label="Gallery">🌉</span>
             Gallery
