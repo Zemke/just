@@ -1,3 +1,7 @@
+//
+// Push Notifications
+//
+
 self.addEventListener('notificationclick', e => {
   e.notification.close();
   e.waitUntil(clients.matchAll({type: 'window'}).then(clients => {
@@ -30,6 +34,17 @@ if (firebase.messaging.isSupported()) {
       data.fromName, {body: data.body, badge: 'https://just.zemke.io/badge.png', icon: '/logo192.png'}));
 }
 
+//
+// Share Target
+//
+
+let waitingShareTarget = null;
+
+self.addEventListener('message', e => {
+  if (!('onChatLoad' in e.data)) return;
+  waitingShareTarget && waitingShareTarget();
+});
+
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'POST'
       || !event.request.url.endsWith('/share-target')) {
@@ -38,7 +53,9 @@ self.addEventListener('fetch', event => {
   }
   event.respondWith(Response.redirect('/share-target'));
   event.waitUntil((async () => {
-    (await self.clients.get(event.resultingClientId || event.clientId))
-      .postMessage({shareTarget: Array.from((await event.request.formData()).entries())});
+    waitingShareTarget = async () => {
+      (await self.clients.get(event.resultingClientId || event.clientId))
+        .postMessage({shareTarget: Array.from((await event.request.formData()).entries())})
+    }
   })());
 });

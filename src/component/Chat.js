@@ -10,6 +10,25 @@ import Foot from "./Foot";
 import Storage from '../util/storage.js';
 import Message from "./Message";
 
+const findInitialOtherUser = (currentUserUid, messages) => {
+  const otherUserFromPathname = window.location.pathname.substr(1);
+  if (!!otherUserFromPathname) {
+    const otherUserFromPathnameExists = messages.find(
+      m => m.from === otherUserFromPathname || m.to === otherUserFromPathname);
+    if (otherUserFromPathnameExists) return otherUserFromPathname;
+  }
+  return MessageUtils.extractOtherUser(
+    currentUserUid, messages.sort((c1, c2) => c2.when - c1.when));
+};
+
+const notifyServiceWorker = initialOtherUser => {
+  if (!('serviceWorker' in navigator)) return;
+  if (!navigator.serviceWorker.controller) return;
+  navigator.serviceWorker.ready.then(() =>
+    navigator.serviceWorker.controller
+      .postMessage({onChatLoad: initialOtherUser}));
+};
+
 export default function Chat(props) {
 
   /** @type {{current: HTMLDivElement}} */ const chatEl = useRef(null);
@@ -17,14 +36,9 @@ export default function Chat(props) {
 
   const [initMessages, setInitMessages] = useState(false);
   const [otherUser, setOtherUser] = useState(() => {
-    const otherUserFromPathname = window.location.pathname.substr(1);
-    if (!!otherUserFromPathname) {
-      const otherUserFromPathnameExists = props.messages.find(
-        m => m.from === otherUserFromPathname || m.to === otherUserFromPathname);
-      if (otherUserFromPathnameExists) return otherUserFromPathname;
-    }
-    return MessageUtils.extractOtherUser(
-      props.currentUser.uid, props.messages.sort((c1, c2) => c2.when - c1.when));
+    const initialOtherUser = findInitialOtherUser(props.currentUser.uid, props.messages);
+    notifyServiceWorker(initialOtherUser);
+    return initialOtherUser;
   });
   const [otherUsers, setOtherUsers] = useState([]);
   const [lastOwnMessage, setLastOwnMessage] = useState(null);
