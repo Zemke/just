@@ -12,7 +12,7 @@ export default function Share(props) {
   const [giphyTrigger, setGiphyTrigger] = useState(null);
   const [cameraActive, setCameraActive] = useState(false);
   const [trending, setTrending] = useState(null);
-  // const [giphyTerm, setGiphyTerm] = useState(''); // todo
+  const [giphyTerm, setGiphyTerm] = useState('');
 
   /** @type {{current: HTMLInputElement}} */ const uploadButton = useRef(null);
   /** @type {{current: HTMLDivElement}} */ const dropdownRef = useRef(null);
@@ -69,11 +69,11 @@ export default function Share(props) {
                 dropdownTrigger={giphyTrigger}
                 className="attachBottomLeft">
         <div className="giphy">
-          {/*/!* todo click on input closes dropdown *!/*/}
-          {/*<input*/}
-          {/*  className="form-control"*/}
-          {/*  onChange={e => setGiphyTerm(e.target.value)}*/}
-          {/*  value={giphyTerm}/>*/}
+          <input
+            placeholder="Search GIFs…"
+            className="form-control giphy-term"
+            onChange={e => setGiphyTerm(e.target.value)}
+            value={giphyTerm}/>
           {trending ? (
             trending.map(d =>
               <input key={d.id} type="image" src={d.url} alt={d.title}
