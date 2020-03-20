@@ -8,6 +8,10 @@ api.getTrending = async () =>
   (await fetch(`${baseUrl}/trending?api_key=${apiKey}&limit=10`)
     .then(res => res.json()));
 
+api.search = async term =>
+  (await fetch(`${baseUrl}/search?q=${term}&api_key=${apiKey}&limit=10`)
+    .then(res => res.json()));
+
 api.getSearch = async term =>
   (await fetch(`${baseUrl}/search?api_key=${apiKey}&q=${term}&limit=10`)
     .then(res => res.json()));

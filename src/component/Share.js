@@ -18,6 +18,7 @@ export default function Share(props) {
   /** @type {{current: HTMLDivElement}} */ const dropdownRef = useRef(null);
   /** @type {{current: HTMLDivElement}} */ const giphyRef = useRef(null);
   /** @type {{current: HTMLInputElement}} */ const giphyTermInputEl = useRef(null);
+  /** @type {{current: number}} */ const giphyTermDebouncer = useRef(null);
 
   const imageGallery = () =>
     uploadButton.current.click();
@@ -39,6 +40,21 @@ export default function Share(props) {
     currGiphyTermInputEl.addEventListener('keydown', keyDownListener, false);
     return () => currGiphyTermInputEl.removeEventListener('keydown', keyDownListener, false);
   }, []);
+
+  useEffect(() => {
+    if (!giphyTerm) return;
+    clearTimeout(giphyTermDebouncer.current);
+    giphyTermDebouncer.current = null;
+    giphyTermDebouncer.current = setTimeout(async () => {
+      const data = (await Giphy.search(giphyTerm)).data;
+      debugger;
+      setTrending(data.map(d => ({
+        url: d.images.fixed_height_small.url,
+        title: d.title,
+        id: d.id,
+      })));
+    }, 400);
+  }, [giphyTerm]);
 
   const onUploadChange = () => {
     if (!uploadButton.current.files.length) return;
