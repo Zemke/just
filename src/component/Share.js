@@ -24,6 +24,7 @@ export default function Share(props) {
     uploadButton.current.click();
 
   const giphy = async () => {
+    setGiphyTerm('');
     if (giphyTermInputEl.current) giphyTermInputEl.current.focus();
     setGyphies((await Giphy.getTrending()).data
       .map(d => ({
