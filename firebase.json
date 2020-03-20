@@ -17,7 +17,7 @@
     ],
     "headers": [
       {
-        "source": "/bg_stone.jpg",
+        "source": "/bg_jupiter.jpg",
         "headers": [
           {
             "key": "Cache-Control",

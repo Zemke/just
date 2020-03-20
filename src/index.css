@@ -9,13 +9,8 @@ body, html {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   width: 100%;
-  background:
-      linear-gradient(135deg, #ECEDDC 25%, transparent 25%) -50px 0,
-      linear-gradient(225deg, #ECEDDC 25%, transparent 25%) -50px 0,
-      linear-gradient(315deg, #ECEDDC 25%, transparent 25%),
-      linear-gradient(45deg, #ECEDDC 25%, transparent 25%);
-  background-size: 100px 100px;
-  background-color: #EC173A;
+  background-image: url('/bg_jupiter.jpg');
+  background-size: cover;
 }
 
 code {
