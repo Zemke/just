@@ -11,7 +11,7 @@ export default function Share(props) {
   const [dropdownTrigger, setDropdownTrigger] = useState(null);
   const [giphyTrigger, setGiphyTrigger] = useState(null);
   const [cameraActive, setCameraActive] = useState(false);
-  const [trending, setTrending] = useState(null);
+  const [giphys, setGyphies] = useState(null);
   const [giphyTerm, setGiphyTerm] = useState('');
 
   /** @type {{current: HTMLInputElement}} */ const uploadButton = useRef(null);
@@ -25,7 +25,7 @@ export default function Share(props) {
 
   const giphy = async () => {
     if (giphyTermInputEl.current) giphyTermInputEl.current.focus();
-    setTrending((await Giphy.getTrending()).data
+    setGyphies((await Giphy.getTrending()).data
       .map(d => ({
         url: d.images.fixed_height_small.url,
         title: d.title,
@@ -47,8 +47,7 @@ export default function Share(props) {
     giphyTermDebouncer.current = null;
     giphyTermDebouncer.current = setTimeout(async () => {
       const data = (await Giphy.search(giphyTerm)).data;
-      debugger;
-      setTrending(data.map(d => ({
+      setGyphies(data.map(d => ({
         url: d.images.fixed_height_small.url,
         title: d.title,
         id: d.id,
@@ -105,8 +104,8 @@ export default function Share(props) {
             onChange={e => setGiphyTerm(e.target.value)}
             value={giphyTerm}
             ref={giphyTermInputEl}/>
-          {trending ? (
-            trending.map(d =>
+          {giphys ? (
+            giphys.map(d =>
               <input key={d.id} type="image" src={d.url} alt={d.title}
                      onClick={() => props.onGiphyClick(d.id)}/>)
           ) : "Loading…"}
