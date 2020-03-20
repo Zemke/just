@@ -17,11 +17,13 @@ export default function Share(props) {
   /** @type {{current: HTMLInputElement}} */ const uploadButton = useRef(null);
   /** @type {{current: HTMLDivElement}} */ const dropdownRef = useRef(null);
   /** @type {{current: HTMLDivElement}} */ const giphyRef = useRef(null);
+  /** @type {{current: HTMLInputElement}} */ const giphyTermInputEl = useRef(null);
 
   const imageGallery = () =>
     uploadButton.current.click();
 
   const giphy = async () => {
+    if (giphyTermInputEl.current) giphyTermInputEl.current.focus();
     setTrending((await Giphy.getTrending()).data
       .map(d => ({
         url: d.images.fixed_height_small.url,
@@ -29,6 +31,14 @@ export default function Share(props) {
         id: d.id,
       })));
   };
+
+  useEffect(() => {
+    const currGiphyTermInputEl = giphyTermInputEl.current;
+    if (!currGiphyTermInputEl) return;
+    const keyDownListener = e => e.stopPropagation();
+    currGiphyTermInputEl.addEventListener('keydown', keyDownListener, false);
+    return () => currGiphyTermInputEl.removeEventListener('keydown', keyDownListener, false);
+  }, []);
 
   const onUploadChange = () => {
     if (!uploadButton.current.files.length) return;
@@ -73,7 +83,8 @@ export default function Share(props) {
             placeholder="Search GIFs…"
             className="form-control giphy-term"
             onChange={e => setGiphyTerm(e.target.value)}
-            value={giphyTerm}/>
+            value={giphyTerm}
+            ref={giphyTermInputEl}/>
           {trending ? (
             trending.map(d =>
               <input key={d.id} type="image" src={d.url} alt={d.title}
