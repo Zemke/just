@@ -1,4 +1,4 @@
-.giphy {
+div.giphy {
   backdrop-filter: blur(.9rem);
   -webkit-backdrop-filter: blur(.9rem);
   text-shadow: 0 0 0.2rem #151515;

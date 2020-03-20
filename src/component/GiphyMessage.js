@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import Giphy from '../util/giphy';
-import './Giphy.css';
 
 // todo react memo, does never change
 
@@ -20,7 +19,7 @@ export default function GiphyMessage({id}) {
   }, [id]);
 
   return original ? (
-    <picture className="giphy">
+    <picture className="image">
       <source srcSet={original.webp} type="image/webp"/>
       <source srcSet={original.url} type="image/gif"/>
       <img src={original.url} alt={original.title}/>
