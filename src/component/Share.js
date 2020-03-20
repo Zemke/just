@@ -3,20 +3,32 @@ import Dropdown from "./Dropdown";
 import randomString from "../util/randomString";
 import 'image-capture';
 import Camera from "./Camera";
+import Giphy from '../util/giphy';
+import './Share.css';
 
 export default function Share(props) {
 
   const [dropdownTrigger, setDropdownTrigger] = useState(null);
+  const [giphyTrigger, setGiphyTrigger] = useState(null);
   const [cameraActive, setCameraActive] = useState(false);
+  const [trending, setTrending] = useState(null);
+  // const [giphyTerm, setGiphyTerm] = useState(''); // todo
 
   /** @type {{current: HTMLInputElement}} */ const uploadButton = useRef(null);
   /** @type {{current: HTMLDivElement}} */ const dropdownRef = useRef(null);
+  /** @type {{current: HTMLDivElement}} */ const giphyRef = useRef(null);
 
   const imageGallery = () =>
     uploadButton.current.click();
 
-  const giphy = () =>
-    console.log('something with gifs');
+  const giphy = async () => {
+    setTrending((await Giphy.getTrending()).data
+      .map(d => ({
+        url: d.images.fixed_height_small.url,
+        title: d.title,
+        id: d.id,
+      })));
+  };
 
   const onUploadChange = () => {
     if (!uploadButton.current.files.length) return;
@@ -33,9 +45,13 @@ export default function Share(props) {
   };
 
   useEffect(() => {
+    const marginBottom = props.inputFieldHeight + 'px';
+
     const currDropdownRef = dropdownRef.current;
-    if (!currDropdownRef) return;
-    currDropdownRef.style.marginBottom = props.inputFieldHeight + 'px';
+    if (currDropdownRef) currDropdownRef.style.marginBottom = marginBottom;
+
+    const currGiphyRef = giphyRef.current;
+    if (currGiphyRef) currGiphyRef.style.marginBottom = marginBottom;
   }, [props.inputFieldHeight]);
 
   return (
@@ -49,11 +65,24 @@ export default function Share(props) {
                ref={uploadButton}
                onChange={onUploadChange}/>
       </div>
+      <Dropdown ref={giphyRef}
+                dropdownTrigger={giphyTrigger}
+                className="attachBottomLeft">
+        <div className="giphy">
+          {/*/!* todo click on input closes dropdown *!/*/}
+          {/*<input*/}
+          {/*  className="form-control"*/}
+          {/*  onChange={e => setGiphyTerm(e.target.value)}*/}
+          {/*  value={giphyTerm}/>*/}
+          {trending && trending.map(d =>
+            <input key={d.id} type="image" src={d.url} alt={d.title}/>)}
+        </div>
+      </Dropdown>
       <Dropdown ref={dropdownRef}
                 dropdownTrigger={dropdownTrigger}
                 className="attachBottomLeft text-left">
         <ul>
-          <li onClick={giphy}>
+          <li onClick={giphy} ref={ref => setGiphyTrigger(ref)}>
             <span className="icon" role="img" aria-label="GIF">🤡</span>
             GIF
           </li>
