@@ -45,6 +45,21 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!('serviceWorker' in navigator)) return;
+    const onMessageListener = e => {
+      if (!('onMessage' in e.data)) return;
+      console.log('here', messages[0], e.data.onMessage);
+
+      setMessages(curr =>
+        curr.find(m => m.id === e.data.onMessage.id)
+          ? curr
+          : [...curr, e.date.onMessage]);
+    };
+    navigator.serviceWorker.addEventListener('message', onMessageListener);
+    return () =>
+      navigator.serviceWorker.removeEventListener('message', onMessageListener);
+  }, []);
 
   useEffect(() => {
     if (enterAnotherCode) {

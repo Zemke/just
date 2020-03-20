@@ -39,6 +39,7 @@ exports.sendMessageNotification = functions.firestore
       fromName: otherUserName,
       fromUid: message.from,
       body: message.body,
+      message
     };
 
     console.log(`Sending to ${tokens.length} tokens:`, notification);

@@ -29,13 +29,21 @@ if (firebase.messaging.isSupported()) {
 
   const messaging = firebase.messaging();
 
-  messaging.setBackgroundMessageHandler(({data}) =>
+  messaging.setBackgroundMessageHandler(async ({data}) => {
+    if ('message' in data) {
+      const clients = self.clients.matchAll();
+      clients.forEach(client =>
+        client.postMessage
+          && client.postMessage({onMessage: data.message}));
+    }
+
     self.registration.showNotification(
       data.fromName, {
         body: data.body,
         badge: 'https://just.zemke.io/badge.png',
         icon: '/logo192.png'
-      }));
+      });
+  });
 }
 
 //
