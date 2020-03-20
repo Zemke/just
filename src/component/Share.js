@@ -105,12 +105,14 @@ export default function Share(props) {
             onChange={e => setGiphyTerm(e.target.value)}
             value={giphyTerm}
             ref={giphyTermInputEl}/>
-          {giphys ? (
-            giphys.map(d =>
-              <input key={d.id} type="image" src={d.url} alt={d.title}
-                     onClick={() => props.onGiphyClick(d.id)}/>)
-          ) : "Loading…"}
-          {giphys && giphys.length === 0 && <p>Nothing found.</p>}
+          <div className="giphy-suggestions">
+            {giphys ? (
+              giphys.map(d =>
+                <input key={d.id} type="image" src={d.url} alt={d.title}
+                       onClick={() => props.onGiphyClick(d.id)}/>)
+            ) : "Loading…"}
+            {giphys && giphys.length === 0 && <p>Nothing found.</p>}
+          </div>
         </div>
       </Dropdown>
       <Dropdown ref={dropdownRef}
