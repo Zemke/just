@@ -76,6 +76,14 @@ export default function Foot(props) {
     formEl.current.reset();
   };
 
+  const onGiphyClick = id =>
+    DataStore.sendMessage({
+      from: props.currentUser.uid,
+      to: props.otherUser,
+      body: null,
+      giphy: id,
+    });
+
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
     const onShareTargetListener = e => {
@@ -137,7 +145,9 @@ export default function Foot(props) {
 
   return (
     <form onSubmit={onSubmit} ref={formEl}>
-      <Share onFiles={setFiles} inputFieldHeight={inputFieldHeight}/>
+      <Share onFiles={setFiles}
+             inputFieldHeight={inputFieldHeight}
+             onGiphyClick={onGiphyClick}/>
       <ContentEditable
         onChange={setField}
         onResize={setInputFieldHeight}

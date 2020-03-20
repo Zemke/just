@@ -5,6 +5,7 @@ import Tapback from "./Tapback";
 import DataStore from '../util/dataStore';
 import './Message.css';
 import DisplayTapback from "./DisplayTapback";
+import GiphyMessage from "./GiphyMessage";
 
 export default function Message(props) {
 
@@ -101,21 +102,23 @@ export default function Message(props) {
         <div
           ref={boxElem} data-message-id={props.message.id} data-message="true"
           className={"message" + (props.message.image ? " image" : "")}>
-          {props.message.image
-            ? (<ImageMessage placeholder={props.message.placeholder}
-                             image={props.message.image}
-                             proceedWithDetailView={proceedWithDetailView}/>)
-            : (
-              <>
-                <div className="overlay"/>
-                <p className={isOnlyEmoji(props.message.body.trim()) ? 'onlyEmoji' : ''}>
-                  <Linkify properties={{target: '_blank'}}>
-                    {props.message.body.split('\n')
-                      .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
-                  </Linkify>
-                </p>
-              </>
-            )}
+          {props.message.image ? (
+            <ImageMessage placeholder={props.message.placeholder}
+                          image={props.message.image}
+                          proceedWithDetailView={proceedWithDetailView}/>
+          ) : props.message.giphy ? (
+            <GiphyMessage id={props.message.giphy}/>
+          ) : (
+            <>
+              <div className="overlay"/>
+              <p className={isOnlyEmoji(props.message.body.trim()) ? 'onlyEmoji' : ''}>
+                <Linkify properties={{target: '_blank'}}>
+                  {props.message.body.split('\n')
+                    .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
+                </Linkify>
+              </p>
+            </>
+          )}
         </div>
       </div>
       {props.lastOwnMessage && (

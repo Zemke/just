@@ -74,8 +74,11 @@ export default function Share(props) {
           {/*  className="form-control"*/}
           {/*  onChange={e => setGiphyTerm(e.target.value)}*/}
           {/*  value={giphyTerm}/>*/}
-          {trending && trending.map(d =>
-            <input key={d.id} type="image" src={d.url} alt={d.title}/>)}
+          {trending ? (
+            trending.map(d =>
+              <input key={d.id} type="image" src={d.url} alt={d.title}
+                     onClick={() => props.onGiphyClick(d.id)}/>)
+          ) : "Loading…"}
         </div>
       </Dropdown>
       <Dropdown ref={dropdownRef}
