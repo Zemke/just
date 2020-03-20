@@ -117,10 +117,6 @@ export default function Share(props) {
                 dropdownTrigger={dropdownTrigger}
                 className="attachBottomLeft text-left">
         <ul>
-          <li onClick={giphy} ref={ref => setGiphyTrigger(ref)}>
-            <span className="icon" role="img" aria-label="GIF">🤡</span>
-            GIF
-          </li>
           <li onClick={imageGallery}>
             <span className="icon" role="img" aria-label="Gallery">🌉</span>
             Gallery
@@ -128,6 +124,10 @@ export default function Share(props) {
           <li onClick={() => setCameraActive(true)}>
             <span className="icon" role="img" aria-label="Camera">📷</span>
             Camera
+          </li>
+          <li onClick={giphy} ref={ref => setGiphyTrigger(ref)}>
+            <span className="icon" role="img" aria-label="GIF">🤡</span>
+            GIF
           </li>
         </ul>
       </Dropdown>
