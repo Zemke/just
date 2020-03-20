@@ -1,3 +1,7 @@
+//
+// Push Notifications
+//
+
 self.addEventListener('notificationclick', e => {
   e.notification.close();
   e.waitUntil(clients.matchAll({type: 'window'}).then(clients => {
@@ -25,10 +29,33 @@ if (firebase.messaging.isSupported()) {
 
   const messaging = firebase.messaging();
 
-  messaging.setBackgroundMessageHandler(({data}) =>
+  messaging.setBackgroundMessageHandler(async ({data}) => {
+    if ('message' in data) {
+      const clients = self.clients.matchAll();
+      clients.forEach(client =>
+        client.postMessage
+          && client.postMessage({onMessage: data.message}));
+    }
+
     self.registration.showNotification(
-      data.fromName, {body: data.body, badge: 'https://just.zemke.io/badge.png', icon: '/logo192.png'}));
+      data.fromName, {
+        body: data.body,
+        badge: 'https://just.zemke.io/badge.png',
+        icon: '/logo192.png'
+      });
+  });
 }
+
+//
+// Share Target
+//
+
+let waitingShareTarget = null;
+
+self.addEventListener('message', e =>
+  e.data === 'onChatLoad'
+    && waitingShareTarget
+    && waitingShareTarget());
 
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'POST'
@@ -36,49 +63,12 @@ self.addEventListener('fetch', event => {
     event.respondWith(fetch(event.request));
     return;
   }
-  event.respondWith(Response.redirect('/share-target'));
+  event.respondWith(Response.redirect('/'));
   event.waitUntil((async () => {
-    (await self.clients.get(event.resultingClientId || event.clientId))
-      .postMessage({shareTarget: Array.from((await event.request.formData()).entries())});
+    waitingShareTarget = async () => {
+      const client = await self.clients.get(event.resultingClientId || event.clientId);
+      client.postMessage &&
+        client.postMessage({shareTarget: Array.from((await event.request.formData()).entries())})
+    }
   })());
-});
-
-// todo this fakes the message event which would come from the service worker
-//  when something is shared to Just
-self.addEventListener('push', e => {
-  if (e.data.text() !== 'share') return;
-
-  clients.matchAll({type: 'window'}).then(clients => {
-    clients.forEach(async client => {
-      const img = await fetch('https://cwtsite.com/assets/icon.1471fd5444f559a02015f08810d998a9.png');
-      const blob = await img.blob();
-      const file = new File([blob], "test.png", {type: "image/png", lastModified: Date.now()});
-      client.postMessage({shareTarget: [["images", file]]})
-    })
-  });
-});
-
-self.addEventListener('push', e => {
-  if (e.data.text() !== 'reddit') return;
-
-  clients.matchAll({type: 'window'}).then(clients => {
-    clients.forEach(async client => {
-      client.postMessage({shareTarget: [["description", 'https://reddit.com/r/hhkb']]})
-    })
-  });
-});
-
-
-self.addEventListener('push', e => {
-  if (e.data.text() !== 'youtube') return;
-
-  clients.matchAll({type: 'window'}).then(clients => {
-    clients.forEach(async client => {
-      client.postMessage({
-        shareTarget: [
-          ["description", 'https://youtube.com?watch=v02367x4'],
-          ["name", 'Lionel Messi - Best Of']]
-      })
-    })
-  });
 });
