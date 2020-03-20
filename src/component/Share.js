@@ -110,6 +110,7 @@ export default function Share(props) {
               <input key={d.id} type="image" src={d.url} alt={d.title}
                      onClick={() => props.onGiphyClick(d.id)}/>)
           ) : "Loading…"}
+          {giphys && giphys.length === 0 && <p>Nothing found.</p>}
         </div>
       </Dropdown>
       <Dropdown ref={dropdownRef}
