@@ -11,7 +11,7 @@ export default function GiphyMessage({id}) {
   useEffect(() => {
     Giphy.getById(id).then(({data}) =>
       // todo cache
-      setOriginal({
+      data && data.images && setOriginal({
         webp: data.images.original.webp,
         url: data.images.original.url,
         title: data.title,
