@@ -10,6 +10,10 @@ function Dropdown(props, ref) {
   useImperativeHandle(ref, () => elem.current);
 
   useEffect(() => {
+    props.onToggle && props.onToggle(collapsed);
+  }, [collapsed]);
+
+  useEffect(() => {
     if (!props.dropdownTrigger) return;
 
     const outsideClickListener = e =>

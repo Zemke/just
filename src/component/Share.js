@@ -80,6 +80,9 @@ export default function Share(props) {
     if (currGiphyRef) currGiphyRef.style.marginBottom = marginBottom;
   }, [props.inputFieldHeight]);
 
+  const onGiphyDropdownToggle = () =>
+    setGiphyTerm('');
+
   return (
     <>
       {cameraActive && <Camera onSnap={onSnap} onClose={() => setCameraActive(false)}/>}
@@ -93,6 +96,7 @@ export default function Share(props) {
       </div>
       <Dropdown ref={giphyRef}
                 dropdownTrigger={giphyTrigger}
+                onToggle={onGiphyDropdownToggle}
                 className="attachBottomLeft">
         <div className="giphy">
           <input
