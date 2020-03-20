@@ -58,8 +58,9 @@ self.addEventListener('fetch', event => {
   event.respondWith(Response.redirect('/'));
   event.waitUntil((async () => {
     waitingShareTarget = async () => {
-      (await self.clients.get(event.resultingClientId || event.clientId))
-        .postMessage({shareTarget: Array.from((await event.request.formData()).entries())})
+      const client = await self.clients.get(event.resultingClientId || event.clientId);
+      client.postMessage &&
+        client.postMessage({shareTarget: Array.from((await event.request.formData()).entries())})
     }
   })());
 });

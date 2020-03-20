@@ -150,8 +150,8 @@ function ContentEditable(props, ref) {
     if (!('serviceWorker' in navigator)) return;
     if (!navigator.serviceWorker.controller) return;
     navigator.serviceWorker.ready.then(() =>
-      navigator.serviceWorker.controller
-        .postMessage('onChatLoad'));
+      navigator.serviceWorker.controller.postMessage
+        && navigator.serviceWorker.controller.postMessage('onChatLoad'));
   }, []);
 
   return <div contentEditable tabIndex="0" ref={elem}
