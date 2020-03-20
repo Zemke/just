@@ -15,7 +15,9 @@ function Dropdown(props, ref) {
     const outsideClickListener = e =>
       props.dropdownTrigger === e.target
         ? setCollapsed(curr => !curr)
-        : (e.target.tagName !== 'INPUT' && setCollapsed(true));
+        : (e.target.tagName !== 'INPUT'
+            && e.target.type !== 'text'
+            && setCollapsed(true));
     document.addEventListener("click", outsideClickListener);
 
     return () => document.removeEventListener("click", outsideClickListener);
