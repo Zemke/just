@@ -5,6 +5,7 @@ import 'image-capture';
 import Camera from "./Camera";
 import Giphy from '../util/giphy';
 import './Share.css';
+import Peering from '../util/peering';
 
 export default function Share(props) {
 
@@ -127,6 +128,12 @@ export default function Share(props) {
             <span className="icon" role="img" aria-label="Camera">📷</span>
             Camera
           </li>
+          {Peering.supported && (
+            <li onClick={props.onVideoCall}>
+              <span className="icon" role="img" aria-label="Video">🎥</span>
+              Call
+            </li>
+          )}
           <li onClick={giphy} ref={ref => setGiphyTrigger(ref)}>
             <span className="icon" role="img" aria-label="GIF">🤡</span>
             GIF

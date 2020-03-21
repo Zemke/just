@@ -33,6 +33,26 @@ const mapTimestamp = message => {
   return message;
 };
 
+api.sendVideoCallRequest = async ({from, to, signalingFrom}) =>
+  await firebase
+    .firestore()
+    .collection('videos')
+    .add({from, to, signalingFrom});
+
+api.onVideoCallRequest = async cb =>
+  firebase
+    .firestore()
+    .collection('videos')
+    .where('to', '==', (await Auth.current()).uid)
+    .onSnapshot(snapshot =>
+      snapshot
+        .docChanges()
+        .filter(docChange =>
+          docChange.type === "added"
+            && !docChange.doc.metadata.fromCache
+            && !docChange.doc.metadata.hasPendingWrites)
+        .forEach(docChange => cb({req: docChange.doc.data(), doc: docChange.doc})));
+
 api.onMessage = async cb =>
   firebase
     .firestore()

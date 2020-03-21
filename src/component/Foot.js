@@ -5,6 +5,7 @@ import DataStore from "../util/dataStore";
 import Storage from "../util/storage.js";
 import './Foot.css';
 import randomString from "../util/randomString";
+import Peering from '../util/peering';
 
 export default function Foot(props) {
 
@@ -143,11 +144,18 @@ export default function Foot(props) {
     props.scrollToBottom();
   }, [inputFieldHeight, props]);
 
+  const onVideoCall = async () => {
+    // todo calling indication
+    await Peering.requestCall(props.otherUser);
+    Peering.send('hello there, here is somebody talking');
+  };
+
   return (
     <form onSubmit={onSubmit} ref={formEl}>
       <Share onFiles={setFiles}
              inputFieldHeight={inputFieldHeight}
-             onGiphyClick={onGiphyClick}/>
+             onGiphyClick={onGiphyClick}
+             onVideoCall={onVideoCall}/>
       <ContentEditable
         onChange={setField}
         onResize={setInputFieldHeight}

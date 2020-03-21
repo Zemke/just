@@ -9,6 +9,8 @@ import Start from './Start';
 import Chat from "./Chat";
 import MessageUtils from "../util/messageUtils";
 import webNotifications from '../util/webNotification';
+import Peering from "../util/peering";
+import toName from "../util/toName";
 
 export default function App() {
 
@@ -101,6 +103,15 @@ export default function App() {
     return async () => {
       (await onMessageSubscription)();
     };
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (!Peering.supported || !currentUser || !names || !Object.keys(names).length) return;
+    const listenToCallRequestsSubscription =
+      Peering.listenToCallRequests(
+        data => console.log(data.toString()),
+        from => window.confirm(`${toName(from, names)} is calling, answer?`));
+    return async () => (await listenToCallRequestsSubscription)();
   }, [currentUser, names]);
 
   useEffect(() => {
