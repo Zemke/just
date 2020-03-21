@@ -1,15 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import Giphy from '../util/giphy';
 
-// todo react memo, does never change
-
 export default function GiphyMessage({id}) {
 
   const [original, setOriginal] = useState(null);
 
   useEffect(() => {
     Giphy.getById(id).then(({data}) =>
-      // todo cache
       data && data.images && setOriginal({
         webp: data.images.original.webp,
         url: data.images.original.url,
