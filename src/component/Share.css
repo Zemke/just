@@ -13,7 +13,7 @@ div.giphy {
 .giphy .giphy-suggestions {
   overflow-x: hidden;
   overflow-y: scroll;
-  height: 20rem;
+  height: 40vh;
   width: 15rem;
 }
 
@@ -24,13 +24,13 @@ input.form-control.giphy-term {
   border-radius: .3rem;
 }
 
-@media screen and ( min-height: 660px ) {
+@media screen and ( min-height: 550px ) {
   .giphy .giphy-suggestions {
-    height: 26rem;
+    height: 60vh;
   }
 }
 
-@media screen and ( min-height: 750px ) {
+@media screen and ( min-height: 720px ) {
   .giphy .giphy-suggestions {
     height: auto;
   }
