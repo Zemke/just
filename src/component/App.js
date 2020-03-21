@@ -12,12 +12,11 @@ import webNotifications from '../util/webNotification';
 
 export default function App() {
 
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => DataStore.getRememberedUser());
   const [enterAnotherCode, setEnterAnotherCode] = useState(window.location.pathname === '/enter-code');
   const [shareYourCode, setShareYourCode] = useState(window.location.pathname === '/share-code');
   const [messages, setMessages] = useState([]);
   const [initMessages, setInitMessages] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [names, setNames] = useState(null);
   const [otherUser, setOtherUser] = useState(null);
 
@@ -26,10 +25,11 @@ export default function App() {
       .current()
       .then(currentUser => {
         if (!currentUser) {
-          setLoading(false);
+          DataStore.alienateRememberedUser();
           return;
         }
         webNotifications.requestPermission();
+        DataStore.rememberUser(currentUser);
         setCurrentUser(currentUser);
       });
   }, []);
@@ -93,7 +93,6 @@ export default function App() {
         }, curr).sort((c1, c2) => c1.when - c2.when);
 
         setInitMessages(true);
-        setLoading(false);
 
         return [...accumulation];
       });
@@ -136,7 +135,6 @@ export default function App() {
 
   const signIn = currentUser => {
     setCurrentUser(currentUser);
-    setLoading(true);
     webNotifications.requestPermission();
   };
 
@@ -158,25 +156,27 @@ export default function App() {
     setEnterAnotherCode(false);
   };
 
-  if (loading) {
-    return <div className="translucent translucent-center"><p>On my way...</p></div>;
-  } else if (!currentUser) {
+  if (!currentUser) {
     return <SignIn signedIn={signIn}/>;
   } else if (enterAnotherCode) {
     return <EnterAnotherCode currentUser={currentUser} close={close}/>;
   } else if (shareYourCode) {
     return <ShareYourCode currentUser={currentUser} close={close}/>;
-  } else if (messages && messages.length) {
-    return <Chat messages={messages}
-                 currentUser={currentUser}
-                 signOut={signOut}
-                 names={names}
-                 goToEnterAnotherCode={goToEnterAnotherCode}
-                 goToShareYourCode={goToShareYourCode}
-                 initMessages={initMessages}/>
   } else {
-    return <Start
-      enterAnotherCode={goToEnterAnotherCode}
-      shareYourCode={goToShareYourCode}/>;
+    if (messages && messages.length) {
+      return <Chat messages={messages}
+                   currentUser={currentUser}
+                   signOut={signOut}
+                   names={names}
+                   goToEnterAnotherCode={goToEnterAnotherCode}
+                   goToShareYourCode={goToShareYourCode}
+                   initMessages={initMessages}/>;
+    } else if (initMessages) {
+      return <Start
+        enterAnotherCode={goToEnterAnotherCode}
+        shareYourCode={goToShareYourCode}/>;
+    } else {
+      return <div className="translucent translucent-center"><p>On my way...</p></div>;
+    }
   }
 }

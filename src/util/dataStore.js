@@ -79,6 +79,17 @@ api.saveToken = async token =>
     .doc((await Auth.current()).uid)
     .set({tokens: firebase.firestore.FieldValue.arrayUnion(token)}, {merge: true});
 
+api.alienateRememberedUser = () =>
+  window.localStorage.removeItem('currentUser');
+
+api.rememberUser = currentUser =>
+  window.localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+api.getRememberedUser = () => {
+  const fromStorage = window.localStorage.getItem('currentUser');
+  return !fromStorage ? null : JSON.parse(fromStorage);
+};
+
 api.saveSignInEmail = emailForSignIn => window.localStorage.setItem('emailForSignIn', emailForSignIn);
 api.getSignInEmail = () => window.localStorage.getItem('emailForSignIn');
 api.removeSignInEmail = () => window.localStorage.removeItem('emailForSignIn');
