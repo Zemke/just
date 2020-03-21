@@ -101,7 +101,7 @@ export default function App() {
     return async () => {
       (await onMessageSubscription)();
     };
-  }, [currentUser, names]);
+  }, [currentUser]);
 
   useEffect(() => {
     if (!currentUser) return;
