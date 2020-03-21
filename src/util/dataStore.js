@@ -22,11 +22,11 @@ const api = {};
 api.timestampFromMillis = millis =>
   new firebase.firestore.Timestamp.fromMillis(millis);
 
-api.sendMessage = ({from, to, body, image, when = serverTimestamp(), giphy}) =>
+api.sendMessage = ({from, to, body, image = null, when = serverTimestamp(), giphy = null}) =>
   firebase
     .firestore()
     .collection('messages')
-    .add({from, to, body, users: [from, to], when, image: image || null, giphy});
+    .add({from, to, body, users: [from, to], when, image: image, giphy});
 
 const mapTimestamp = message => {
   message.when = message.when?.toMillis();
