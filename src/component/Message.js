@@ -101,7 +101,7 @@ export default function Message(props) {
         {tapback === props.message.id && <Tapback tap={action => tap(action, props.message.id)}/>}
         <div
           ref={boxElem} data-message-id={props.message.id} data-message="true"
-          className={"message" + (props.message.image ? " image" : "")}>
+          className={"message" + ((props.message.image || props.message.giphy) ? " image" : "")}>
           {props.message.image ? (
             <ImageMessage placeholder={props.message.placeholder}
                           image={props.message.image}
