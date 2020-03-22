@@ -36,6 +36,9 @@ export default function VideoChat(props) {
     return () => videoTrack && videoTrack.stop();
   }, [props.stream, props.otherUser]);
 
+  // todo mic and cam toggle buttons
+  // hang up button
+
   return (
     <Overlay onClose={props.onClose}>
       <div id="cameraContainer"
