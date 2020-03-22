@@ -30,9 +30,6 @@ api.listenToCallRequests = (onStreamCb, onCallCb) => {
 
 
 api.requestCall = (callee, stream) => {
-  // todo calling timeout when no answer and
-  //  transaction safe deletion of video request in firestore
-
   callerPeer = new Peer({initiator: true, stream});
   callerPeer.on('signal', async data => {
     if (!videoCallRequestSent) {
@@ -45,9 +42,12 @@ api.requestCall = (callee, stream) => {
         const snapshotData = snapshot.data();
         if (snapshotData && snapshotData.signalingTo) {
           callerPeer.signal(JSON.parse(snapshotData.signalingTo));
+
+          // todo calling timeout when no answer and
+          //  transaction safe deletion of video request in firestore
           setTimeout(() => {
             snapshot.ref.delete();
-          }, 5000); // todo
+          }, 5000);
         }
       });
     }
