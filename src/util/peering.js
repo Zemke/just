@@ -29,34 +29,29 @@ api.listenToCallRequests = (onStreamCb, onCallCb) => {
 };
 
 
-api.requestCall = (callee, stream) => {
+api.requestCall = (callee, stream) => new Promise((resolve, _) => {
+  // todo call timeout and rejection handling
   callerPeer = new Peer({initiator: true, stream});
   callerPeer.on('signal', async data => {
-    if (!videoCallRequestSent) {
-      videoCallRequestSent = true;
-      (await DataStore.sendVideoCallRequest({
-        from: (await Auth.current()).uid,
-        to: callee,
-        signalingFrom: JSON.stringify(data)
-      })).onSnapshot(snapshot => {
-        const snapshotData = snapshot.data();
-        if (snapshotData && snapshotData.signalingTo) {
-          callerPeer.signal(JSON.parse(snapshotData.signalingTo));
-
-          // todo calling timeout when no answer and
-          //  transaction safe deletion of video request in firestore
-          setTimeout(() => {
-            snapshot.ref.delete();
-          }, 5000);
-        }
-      });
-    }
+    if (videoCallRequestSent) return;
+    videoCallRequestSent = true;
+    (await DataStore.sendVideoCallRequest({
+      from: (await Auth.current()).uid,
+      to: callee,
+      signalingFrom: JSON.stringify(data)
+    })).onSnapshot(snapshot => {
+      const snapshotData = snapshot.data();
+      if (snapshotData && snapshotData.signalingTo) {
+        callerPeer.signal(JSON.parse(snapshotData.signalingTo));
+        callerPeer.on('stream', stream => {
+          resolve(stream);
+          snapshot.ref.delete();
+        });
+      }
+    });
   });
 
-  return new Promise((resolve, _) =>
-    callerPeer.on('stream', resolve));
-};
-
+});
 api.supported = Peer.WEBRTC_SUPPORT;
 
 export default api;
