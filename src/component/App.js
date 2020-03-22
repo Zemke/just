@@ -10,7 +10,6 @@ import Chat from "./Chat";
 import MessageUtils from "../util/messageUtils";
 import webNotifications from '../util/webNotification';
 import Peering from "../util/peering";
-import toName from "../util/toName";
 
 export default function App() {
 
