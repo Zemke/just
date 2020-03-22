@@ -56,11 +56,12 @@ export default function Chat(props) {
     if (!Peering.supported || !props.currentUser) return;
     let listenToCallRequestsSubscription;
     (async () => {
-      // todo user media is gottan without there even being a call
       listenToCallRequestsSubscription = Peering.listenToCallRequests(
-        await getUserMedia(),
         stream => setVideoChat(stream),
-        from => window.confirm(`${from} is calling, answer?`)); // todo name
+        async from =>
+          window.confirm(`${from} is calling, answer?`) // todo name
+            ? getUserMedia()
+            : Promise.resolve(null));
     })();
     return async () => listenToCallRequestsSubscription && (await listenToCallRequestsSubscription)();
   }, [props.currentUser]);

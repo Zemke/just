@@ -14,9 +14,10 @@ let callerPeer;
 
 const api = {};
 
-api.listenToCallRequests = (stream, onStreamCb, onCallCb) => {
-  return DataStore.onVideoCallRequest(({req, doc}) => {
-    if (onCallCb && !onCallCb(req.from)) {
+api.listenToCallRequests = (onStreamCb, onCallCb) => {
+  return DataStore.onVideoCallRequest(async ({req, doc}) => {
+    const stream = await onCallCb(req.from);
+    if (!stream) {
       doc.ref.update({accept: false});
       return;
     }
