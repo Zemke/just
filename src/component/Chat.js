@@ -11,6 +11,7 @@ import Storage from '../util/storage.js';
 import Message from "./Message";
 import Peering from '../util/peering';
 import VideoChat from "./VideoChat";
+import getUserMedia from '../util/getUserMedia';
 
 export default function Chat(props) {
 
@@ -51,21 +52,13 @@ export default function Chat(props) {
     }
   }, []);
 
-  // todo this is a duplicate from VideoChat
-  const getOwnStream = async () => {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      throw new Error('Video chat is not supported on your device.'); // todo handle
-    }
-    return await navigator.mediaDevices.getUserMedia({video: true, audio: true});
-  };
-
   useEffect(() => {
     if (!Peering.supported || !props.currentUser) return;
     let listenToCallRequestsSubscription;
     (async () => {
       // todo user media is gottan without there even being a call
       listenToCallRequestsSubscription = Peering.listenToCallRequests(
-        await getOwnStream(),
+        await getUserMedia(),
         stream => setVideoChat(stream),
         from => window.confirm(`${from} is calling, answer?`)); // todo name
     })();

@@ -2,6 +2,7 @@ import React, {useEffect, useRef} from "react";
 import './Camera.css';
 import Overlay from "./Overlay";
 import Peering from '../util/peering';
+import getUserMedia from '../util/getUserMedia';
 
 export default function VideoChat(props) {
 
@@ -16,13 +17,6 @@ export default function VideoChat(props) {
     return stream;
   };
 
-  const getOwnStream = async () => {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      throw new Error('Video chat is not supported on your device.'); // todo handle
-    }
-    return await navigator.mediaDevices.getUserMedia({video: true, audio: true});
-  };
-
   useEffect(() => {
     if (!props.stream) return;
     let videoTrack;
@@ -35,7 +29,7 @@ export default function VideoChat(props) {
 
     let videoTrack;
     (async () => {
-      const ownStream = await getOwnStream();
+      const ownStream = await getUserMedia();
       const otherStream = await Peering.requestCall(props.otherUser, ownStream);
       videoTrack = (await displayStream(otherStream)).getVideoTracks()[0];
     })();
