@@ -13,13 +13,20 @@ export default function VideoChat(props) {
       && cameraContainerElem.current.classList.add('onVideo'));
     videoElem.current.srcObject = stream;
     await videoElem.current.play();
-    return stream.getVideoTracks()[0];
+    return stream;
+  };
+
+  const getOwnStream = async () => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw new Error('Video chat is not supported on your device.'); // todo handle
+    }
+    return await navigator.mediaDevices.getUserMedia({video: true, audio: true});
   };
 
   useEffect(() => {
     if (!props.stream) return;
     let videoTrack;
-    displayStream(props.stream).then(vt => videoTrack = vt);
+    (async () => videoTrack = (await displayStream(props.stream)).getVideoTracks()[0])();
     return () => videoTrack && videoTrack.stop();
   }, [props.stream]);
 
@@ -28,15 +35,9 @@ export default function VideoChat(props) {
 
     let videoTrack;
     (async () => {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert('Video chat is not supported on your device.');
-        return;
-      }
-
-      const stream = await navigator.mediaDevices.getUserMedia({video: true});
-      videoTrack = await displayStream(stream);
-
-      await Peering.requestCall(props.otherUser, stream);
+      const ownStream = await getOwnStream();
+      const otherStream = await Peering.requestCall(props.otherUser, ownStream);
+      videoTrack = (await displayStream(otherStream)).getVideoTracks()[0];
     })();
     return () => videoTrack && videoTrack.stop();
   }, [props.stream, props.otherUser]);

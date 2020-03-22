@@ -2,7 +2,6 @@ import DataStore from "./dataStore";
 import Peer from "simple-peer";
 import Auth from './auth';
 
-let peer;
 let videoCallRequestSent = false;
 let callerPeer;
 
@@ -15,14 +14,13 @@ let callerPeer;
 
 const api = {};
 
-api.listenToCallRequests = (onStreamCb, onCallCb) => {
+api.listenToCallRequests = (stream, onStreamCb, onCallCb) => {
   return DataStore.onVideoCallRequest(({req, doc}) => {
-    console.log('onVideoCallRequest');
     if (onCallCb && !onCallCb(req.from)) {
       doc.ref.update({accept: false});
       return;
     }
-    const calleePeer = new Peer();
+    const calleePeer = new Peer({stream});
     calleePeer.signal(JSON.parse(req.signalingFrom));
     calleePeer.on(
       'signal',
@@ -39,7 +37,6 @@ api.requestCall = (callee, stream) => {
   callerPeer = new Peer({initiator: true, stream});
   callerPeer.on('signal', async data => {
     if (!videoCallRequestSent) {
-      console.log('videoCallRequestSent', videoCallRequestSent);
       videoCallRequestSent = true;
       (await DataStore.sendVideoCallRequest({
         from: (await Auth.current()).uid,
@@ -48,28 +45,19 @@ api.requestCall = (callee, stream) => {
       })).onSnapshot(snapshot => {
         const snapshotData = snapshot.data();
         if (snapshotData && snapshotData.signalingTo) {
-          console.log('signalingTo', snapshotData.signalingTo);
           callerPeer.signal(JSON.parse(snapshotData.signalingTo));
           setTimeout(() => {
-            snapshot.ref.delete(); // todo
-          }, 5000);
+            snapshot.ref.delete();
+          }, 5000); // todo
         }
       });
     }
   });
 
   return new Promise((resolve, _) =>
-    callerPeer.on('connect', () => {
-      peer = callerPeer;
-      resolve();
-    }));
+    callerPeer.on('stream', resolve));
 };
 
 api.supported = Peer.WEBRTC_SUPPORT;
-
-api.send = data => {
-  if (!peer) throw new Error("There's no peer");
-  peer.send(data);
-};
 
 export default api;

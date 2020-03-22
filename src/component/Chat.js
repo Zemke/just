@@ -51,16 +51,25 @@ export default function Chat(props) {
     }
   }, []);
 
+  // todo this is a duplicate from VideoChat
+  const getOwnStream = async () => {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw new Error('Video chat is not supported on your device.'); // todo handle
+    }
+    return await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+  };
+
   useEffect(() => {
     if (!Peering.supported || !props.currentUser) return;
-    const listenToCallRequestsSubscription =
-      Peering.listenToCallRequests(
-        stream => {
-          console.log('stream', stream);
-          setVideoChat(stream)
-        },
+    let listenToCallRequestsSubscription;
+    (async () => {
+      // todo user media is gottan without there even being a call
+      listenToCallRequestsSubscription = Peering.listenToCallRequests(
+        await getOwnStream(),
+        stream => setVideoChat(stream),
         from => window.confirm(`${from} is calling, answer?`)); // todo name
-    return async () => (await listenToCallRequestsSubscription)();
+    })();
+    return async () => listenToCallRequestsSubscription && (await listenToCallRequestsSubscription)();
   }, [props.currentUser]);
 
   useEffect(() => {
