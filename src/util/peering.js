@@ -11,10 +11,13 @@ let callerPeer;
 
 // todo show modal that you're being called
 
+// todo this is unidirectional streaming/data transfer at the moment
+
 const api = {};
 
-api.listenToCallRequests = (onMessageCb, onCallCb) => {
+api.listenToCallRequests = (onStreamCb, onCallCb) => {
   return DataStore.onVideoCallRequest(({req, doc}) => {
+    console.log('onVideoCallRequest');
     if (onCallCb && !onCallCb(req.from)) {
       doc.ref.update({accept: false});
       return;
@@ -24,16 +27,16 @@ api.listenToCallRequests = (onMessageCb, onCallCb) => {
     calleePeer.on(
       'signal',
       data => doc.ref.update({accept: true, signalingTo: JSON.stringify(data)}));
-    calleePeer.on('data', onMessageCb);
+    calleePeer.on('stream', onStreamCb);
   });
 };
 
 
-api.requestCall = callee => {
+api.requestCall = (callee, stream) => {
   // todo calling timeout when no answer and
   //  transaction safe deletion of video request in firestore
 
-  callerPeer = new Peer({initiator: true});
+  callerPeer = new Peer({initiator: true, stream});
   callerPeer.on('signal', async data => {
     if (!videoCallRequestSent) {
       console.log('videoCallRequestSent', videoCallRequestSent);
@@ -47,7 +50,9 @@ api.requestCall = callee => {
         if (snapshotData && snapshotData.signalingTo) {
           console.log('signalingTo', snapshotData.signalingTo);
           callerPeer.signal(JSON.parse(snapshotData.signalingTo));
-          // snapshot.ref.delete(); todo
+          setTimeout(() => {
+            snapshot.ref.delete(); // todo
+          }, 5000);
         }
       });
     }

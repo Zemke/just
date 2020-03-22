@@ -9,6 +9,8 @@ import webNotifications from "../util/webNotification";
 import Foot from "./Foot";
 import Storage from '../util/storage.js';
 import Message from "./Message";
+import Peering from '../util/peering';
+import VideoChat from "./VideoChat";
 
 export default function Chat(props) {
 
@@ -30,6 +32,7 @@ export default function Chat(props) {
   const [lastOwnMessage, setLastOwnMessage] = useState(null);
   const [messageGaps, setMessageGaps] = useState(null);
   const [imagePlaceholders, setImagePlaceholders] = useState([]);
+  const [videoChat, setVideoChat] = useState(null);
 
   const {messages: propsMessages} = props;
 
@@ -47,6 +50,18 @@ export default function Chat(props) {
       }, 300);
     }
   }, []);
+
+  useEffect(() => {
+    if (!Peering.supported || !props.currentUser) return;
+    const listenToCallRequestsSubscription =
+      Peering.listenToCallRequests(
+        stream => {
+          console.log('stream', stream);
+          setVideoChat(stream)
+        },
+        from => window.confirm(`${from} is calling, answer?`)); // todo name
+    return async () => (await listenToCallRequestsSubscription)();
+  }, [props.currentUser]);
 
   useEffect(() => {
     (props.initMessages && !initMessages) && scrollToBottom();
@@ -163,6 +178,11 @@ export default function Chat(props) {
 
   return (
     <div className="chat" ref={chatEl}>
+      {videoChat && (
+        <VideoChat otherUser={otherUser}
+                   stream={videoChat}
+                   onClose={() => setVideoChat(null)}/>
+      )}
       <div className="head">
         <ChatMenu goToShareYourCode={() => props.goToShareYourCode(otherUser)}
                   goToEnterAnotherCode={() => props.goToEnterAnotherCode(otherUser)}

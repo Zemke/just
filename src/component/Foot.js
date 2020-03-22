@@ -6,6 +6,7 @@ import Storage from "../util/storage.js";
 import './Foot.css';
 import randomString from "../util/randomString";
 import Peering from '../util/peering';
+import VideoChat from "./VideoChat";
 
 export default function Foot(props) {
 
@@ -15,6 +16,7 @@ export default function Foot(props) {
   const [field, setField] = useState(['']);
   const [files, setFiles] = useState([]);
   const [inputFieldHeight, setInputFieldHeight] = useState(null);
+  const [videoChat, setVideoChat] = useState(false);
 
   useEffect(() => {
     const documentKeydownHandler = e => {
@@ -146,12 +148,12 @@ export default function Foot(props) {
 
   const onVideoCall = async () => {
     // todo calling indication
-    await Peering.requestCall(props.otherUser);
-    Peering.send('hello there, here is somebody talking');
+    setVideoChat(true);
   };
 
   return (
     <form onSubmit={onSubmit} ref={formEl}>
+      {videoChat && <VideoChat otherUser={props.otherUser} onClose={() => setVideoChat(false)}/>}
       <Share onFiles={setFiles}
              inputFieldHeight={inputFieldHeight}
              onGiphyClick={onGiphyClick}

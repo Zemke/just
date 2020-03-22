@@ -9,7 +9,6 @@ import Start from './Start';
 import Chat from "./Chat";
 import MessageUtils from "../util/messageUtils";
 import webNotifications from '../util/webNotification';
-import Peering from "../util/peering";
 
 export default function App() {
 
@@ -101,15 +100,6 @@ export default function App() {
     return async () => {
       (await onMessageSubscription)();
     };
-  }, [currentUser]);
-
-  useEffect(() => {
-    if (!Peering.supported || !currentUser) return;
-    const listenToCallRequestsSubscription =
-      Peering.listenToCallRequests(
-        data => console.log(data.toString()),
-        from => window.confirm(`${from} is calling, answer?`)); // todo name
-    return async () => (await listenToCallRequestsSubscription)();
   }, [currentUser]);
 
   useEffect(() => {
