@@ -10,8 +10,6 @@ let callerPeer;
 
 // todo show modal that you're being called
 
-// todo this is unidirectional streaming/data transfer at the moment
-
 const api = {};
 
 api.listenToCallRequests = (onStreamCb, onCallCb) => {
