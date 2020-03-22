@@ -70,7 +70,7 @@ api.putNames = async names =>
     .firestore()
     .collection('names')
     .doc((await Auth.current()).uid)
-    .set(names);
+    .set(names, {merge: true});
 
 api.saveToken = async token =>
   firebase

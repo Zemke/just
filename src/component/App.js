@@ -17,7 +17,6 @@ export default function App() {
   const [shareYourCode, setShareYourCode] = useState(window.location.pathname === '/share-code');
   const [messages, setMessages] = useState([]);
   const [initMessages, setInitMessages] = useState(false);
-  const [names, setNames] = useState(null);
   const [otherUser, setOtherUser] = useState(null);
 
   useEffect(() => {
@@ -104,15 +103,6 @@ export default function App() {
   }, [currentUser]);
 
   useEffect(() => {
-    if (!currentUser) return;
-    const onNamesSubscription = DataStore.onNames(
-      doc => setNames(() => doc.data()));
-    return async () => {
-      (await onNamesSubscription)();
-    };
-  }, [currentUser]);
-
-  useEffect(() => {
     if (!initMessages) return;
     if (!shareYourCode && !enterAnotherCode) return;
 
@@ -167,7 +157,6 @@ export default function App() {
       return <Chat messages={messages}
                    currentUser={currentUser}
                    signOut={signOut}
-                   names={names}
                    goToEnterAnotherCode={goToEnterAnotherCode}
                    goToShareYourCode={goToShareYourCode}
                    initMessages={initMessages}/>;
