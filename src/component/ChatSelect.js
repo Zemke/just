@@ -8,7 +8,7 @@ export default function ChatSelect(props) {
 
   const [otherUserName, setOtherUserName] = useState('');
   const [dropdownTrigger, setDropdownTrigger] = useState(null);
-  const [names, setNames] = useState(null);
+  const [names, setNames] = useState(DataStore.getCachedNames);
 
   useEffect(() => {
     setOtherUserName(names ? toName(props.otherUser, names) : '');
@@ -16,8 +16,13 @@ export default function ChatSelect(props) {
 
   useEffect(() => {
     if (!props.currentUser) return;
+    DataStore.clearCachedNames();
     const onNamesSubscription =
-      DataStore.onNames(doc => setNames(() => doc.data()));
+      DataStore.onNames(doc => {
+        const data = doc.data();
+        DataStore.cacheName(data);
+        setNames(() => data);
+      });
     return async () => (await onNamesSubscription)();
   }, [props.currentUser]);
 

@@ -114,4 +114,14 @@ api.saveSignInEmail = emailForSignIn => window.localStorage.setItem('emailForSig
 api.getSignInEmail = () => window.localStorage.getItem('emailForSignIn');
 api.removeSignInEmail = () => window.localStorage.removeItem('emailForSignIn');
 
+api.clearCachedNames = () =>
+  window.localStorage.removeItem('names');
+
+api.getCachedNames = () =>
+  JSON.parse(window.localStorage.getItem('names') || "{}");
+
+api.cacheName = names =>
+  window.localStorage.setItem(
+    'names', JSON.stringify({...(api.getCachedNames()), ...names}));
+
 export default api;
