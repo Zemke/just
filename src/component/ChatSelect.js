@@ -2,15 +2,24 @@ import React, {useEffect, useState} from 'react';
 import toName from '../util/toName';
 import Dropdown from "./Dropdown";
 import "./ChatSelect.css";
+import DataStore from "../util/dataStore";
 
 export default function ChatSelect(props) {
 
-  const [otherUserName, setOtherUserName] = useState(null);
+  const [otherUserName, setOtherUserName] = useState('');
   const [dropdownTrigger, setDropdownTrigger] = useState(null);
+  const [names, setNames] = useState(null);
 
   useEffect(() => {
-    setOtherUserName(toName(props.otherUser, props.names));
-  }, [props.otherUser, props.names]);
+    setOtherUserName(names ? toName(props.otherUser, names) : '');
+  }, [props.otherUser, names]);
+
+  useEffect(() => {
+    if (!props.currentUser) return;
+    const onNamesSubscription =
+      DataStore.onNames(doc => setNames(() => doc.data()));
+    return async () => (await onNamesSubscription)();
+  }, [props.currentUser]);
 
   return (<>
     {props.otherUsers.length > 0 ? (
@@ -23,7 +32,7 @@ export default function ChatSelect(props) {
           <ul>
             {props.otherUsers.map(user =>
               <li key={user} onClick={() => props.onSelect(user)}>
-                {toName(user, props.names)}
+                {toName(user, names)}
               </li>)}
           </ul>
         </Dropdown>

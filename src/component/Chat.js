@@ -98,9 +98,6 @@ export default function Chat(props) {
     window.history.pushState({}, "", '/' + otherUser);
   }, [otherUser]);
 
-  const rename = async newName =>
-    await DataStore.putNames({...props.names, [otherUser]: newName});
-
   const deleteChat = async () => {
     alert("The chat with that user is being deleted in the background. " +
       "It might take some time and the chat will just vanish once the deed is done.");
@@ -169,12 +166,12 @@ export default function Chat(props) {
       <div className="head">
         <ChatMenu goToShareYourCode={() => props.goToShareYourCode(otherUser)}
                   goToEnterAnotherCode={() => props.goToEnterAnotherCode(otherUser)}
-                  rename={rename} deleteChat={deleteChat} signOut={props.signOut}/>
+                  otherUser={otherUser} deleteChat={deleteChat} signOut={props.signOut}/>
         <div className="changeChat">
           <ChatSelect otherUsers={otherUsers}
                       otherUser={otherUser}
-                      names={props.names}
-                      onSelect={onSelect}/>
+                      onSelect={onSelect}
+                      currentUser={props.currentUser}/>
         </div>
       </div>
       <div className="body" ref={chatBodyEl}>

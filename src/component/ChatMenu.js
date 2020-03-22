@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './ChatMenu.css';
 import Auth from "../util/auth";
 import Dropdown from "./Dropdown";
+import DataStore from "../util/dataStore";
 
 export default function ChatMenu(props) {
 
@@ -10,7 +11,8 @@ export default function ChatMenu(props) {
   const rename = async () => {
     const newName = window.prompt("Name of chat:");
     if (newName != null && newName.trim() !== '') {
-      props.rename(newName.trim());
+
+      DataStore.putNames({[props.otherUser]: newName});
     }
   };
 

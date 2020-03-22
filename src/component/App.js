@@ -19,7 +19,6 @@ export default function App() {
   const [shareYourCode, setShareYourCode] = useState(window.location.pathname === '/share-code');
   const [messages, setMessages] = useState([]);
   const [initMessages, setInitMessages] = useState(false);
-  const [names, setNames] = useState(null);
   const [otherUser, setOtherUser] = useState(null);
 
   useEffect(() => {
@@ -106,21 +105,12 @@ export default function App() {
   }, [currentUser]);
 
   useEffect(() => {
-    if (!Peering.supported || !currentUser || !names || !Object.keys(names).length) return;
+    if (!Peering.supported || !currentUser) return;
     const listenToCallRequestsSubscription =
       Peering.listenToCallRequests(
         data => console.log(data.toString()),
-        from => window.confirm(`${toName(from, names)} is calling, answer?`));
+        from => window.confirm(`${from} is calling, answer?`)); // todo name
     return async () => (await listenToCallRequestsSubscription)();
-  }, [currentUser, names]);
-
-  useEffect(() => {
-    if (!currentUser) return;
-    const onNamesSubscription = DataStore.onNames(
-      doc => setNames(() => doc.data()));
-    return async () => {
-      (await onNamesSubscription)();
-    };
   }, [currentUser]);
 
   useEffect(() => {
@@ -178,7 +168,6 @@ export default function App() {
       return <Chat messages={messages}
                    currentUser={currentUser}
                    signOut={signOut}
-                   names={names}
                    goToEnterAnotherCode={goToEnterAnotherCode}
                    goToShareYourCode={goToShareYourCode}
                    initMessages={initMessages}/>;
