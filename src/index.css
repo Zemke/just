@@ -98,3 +98,7 @@ p {
 @keyframes blinker {
   50% { opacity: 0; }
 }
+
+.clickThrough {
+  pointer-events: none;
+}

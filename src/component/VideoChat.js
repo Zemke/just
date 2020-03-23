@@ -77,11 +77,19 @@ export default function VideoChat(props) {
                   📞
                 </span>
               </div>
+              <div className="margin-top">
+                <div>
+                  <button className="form-control" onClick={props.onClose}>
+                    Cancel
+                  </button>
+                </div>
+              </div>
             </>
           )}
         </div>
       )}
       <div id="cameraContainer"
+           className={!playing && 'clickThrough'}
            ref={cameraContainerElem}
            tabIndex="10">
         <div className="videoWrapper">
