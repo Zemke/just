@@ -27,25 +27,26 @@ export default function VideoChat(props) {
 
   useEffect(() => {
     if (!props.stream) return;
-    let videoTrack;
-    (async () => videoTrack = (await displayStream(props.stream)).getVideoTracks()[0])();
-    return () => videoTrack && videoTrack.stop();
+    let tracks;
+    (async () => tracks = (await displayStream(props.stream)).getTracks())();
+    return () => tracks && tracks.forEach(t => t.stop());
   }, [props.stream]);
 
   useEffect(() => {
     if (props.stream || !props.otherUser) return;
 
-    let videoTrack;
+    let tracks;
     (async () => {
       const ownStream = await getUserMedia();
       try {
         const otherStream = await Peering.requestCall(props.otherUser, ownStream);
-        videoTrack = (await displayStream(otherStream)).getVideoTracks()[0];
+        tracks = (await displayStream(otherStream)).getTracks();
       } catch (e) {
         setRequestCallFailure(e);
+        ownStream.getTracks().forEach(t => t.stop());
       }
     })();
-    return () => videoTrack && videoTrack.stop();
+    return () => tracks && tracks.forEach(t => t.stop());
   }, [props.stream, props.otherUser]);
 
   // todo mic and cam toggle buttons

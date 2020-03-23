@@ -17,7 +17,7 @@ export default function Camera(props) {
   }, [props]);
 
   useEffect(() => {
-    let videoTrack;
+    let videoTracks;
     (async () => {
       const currVideoElem = videoElem.current;
       if (!currVideoElem) return;
@@ -27,10 +27,10 @@ export default function Camera(props) {
         && cameraContainerElem.current.classList.add('onVideo'));
       currVideoElem.srcObject = stream;
       await currVideoElem.play();
-      videoTrack = stream.getVideoTracks()[0];
-      imageCapture.current = new ImageCapture(videoTrack);
+      videoTracks = stream.getVideoTracks();
+      imageCapture.current = new ImageCapture(videoTracks[0]);
     })();
-    return () => videoTrack && videoTrack.stop();
+    return () => videoTracks && videoTracks.forEach(vt => vt.stop());
   }, []);
 
   useEffect(() => {
