@@ -44,7 +44,7 @@ export default function VideoChat(props) {
   }, [props.stream, props.otherUser]);
 
   // todo mic and cam toggle buttons
-  // hang up button
+  // todo hang up button
 
   return (
     <Overlay onClose={props.onClose}>
