@@ -6,7 +6,7 @@ import getUserMedia from '../util/getUserMedia';
 
 export default function VideoChat(props) {
 
-  /** @type {{current: HTMLElement}} */ const videoElem = useRef(null);
+  /** @type {{current: HTMLVideoElement}} */ const videoElem = useRef(null);
   /** @type {{current: HTMLDivElement}} */ const cameraContainerElem = useRef(null);
 
   const displayStream = async stream => {
