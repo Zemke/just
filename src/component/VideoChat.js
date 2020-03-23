@@ -5,20 +5,16 @@ import Peering from '../util/peering';
 import getUserMedia from '../util/getUserMedia';
 import toName from '../util/toName';
 import DataStore from '../util/dataStore';
-import Close from "./Close";
 
 export default function VideoChat(props) {
 
   /** @type {{current: HTMLVideoElement}} */ const videoElem = useRef(null);
-  /** @type {{current: HTMLDivElement}} */ const cameraContainerElem = useRef(null);
 
   const [playing, setPlaying] = useState(false);
   const [names] = useState(DataStore.getCachedNames);
   const [requestCallFailure, setRequestCallFailure] = useState(null);
 
   const displayStream = async stream => {
-    (cameraContainerElem.current
-      && cameraContainerElem.current.classList.add('onVideo'));
     videoElem.current.srcObject = stream;
     await videoElem.current.play();
     setPlaying(true);
@@ -89,8 +85,7 @@ export default function VideoChat(props) {
         </div>
       )}
       <div id="cameraContainer"
-           className={!playing && 'clickThrough'}
-           ref={cameraContainerElem}
+           className={playing ? 'onVideo' : ''}
            tabIndex="10">
         <div className="videoWrapper">
           <video id="video" ref={videoElem}/>
