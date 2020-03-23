@@ -48,7 +48,7 @@ export default function VideoChat(props) {
       }
     })();
     return () => tracks && tracks.forEach(t => t.stop());
-  }, [props.stream, props.otherUser]);
+  }, [props]);
 
   // todo mic and cam toggle buttons
   // todo hang up button
