@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
 import './Camera.css';
-import './VideoChat.css';
 import Overlay from "./Overlay";
 import Peering from '../util/peering';
 import getUserMedia from '../util/getUserMedia';
@@ -72,7 +71,7 @@ export default function VideoChat(props) {
               Calling<br/>
               <span className="text-large">{toName(props.otherUser, names)}</span><br/>
               <div className="margin-top">
-                <span className="video-chat-blink" role="img" aria-label="calling">
+                <span className="blink" role="img" aria-label="calling">
                   📞
                 </span>
               </div>
