@@ -1,5 +1,6 @@
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import './Camera.css';
+import './VideoChat.css';
 import Overlay from "./Overlay";
 import Peering from '../util/peering';
 import getUserMedia from '../util/getUserMedia';
@@ -9,11 +10,14 @@ export default function VideoChat(props) {
   /** @type {{current: HTMLVideoElement}} */ const videoElem = useRef(null);
   /** @type {{current: HTMLDivElement}} */ const cameraContainerElem = useRef(null);
 
+  const [playing, setPlaying] = useState(false);
+
   const displayStream = async stream => {
     (cameraContainerElem.current
       && cameraContainerElem.current.classList.add('onVideo'));
     videoElem.current.srcObject = stream;
     await videoElem.current.play();
+    setPlaying(true);
     return stream;
   };
 
@@ -41,13 +45,17 @@ export default function VideoChat(props) {
 
   return (
     <Overlay onClose={props.onClose}>
-      <div id="cameraContainer"
-           ref={cameraContainerElem}
-           tabIndex="10">
-        <div className="videoWrapper">
-          <video id="video" ref={videoElem}/>
+      {!playing ? (
+        <div className="vidoe-calling">`Calling ${props.otherUser}`</div>
+      ) : (
+        <div id="cameraContainer"
+             ref={cameraContainerElem}
+             tabIndex="10">
+          <div className="videoWrapper">
+            <video id="video" ref={videoElem}/>
+          </div>
         </div>
-      </div>
+      )}
     </Overlay>
   );
 };
