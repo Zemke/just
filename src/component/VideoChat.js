@@ -6,6 +6,7 @@ import Peering from '../util/peering';
 import getUserMedia from '../util/getUserMedia';
 import toName from '../util/toName';
 import DataStore from '../util/dataStore';
+import Close from "./Close";
 
 export default function VideoChat(props) {
 
@@ -14,6 +15,7 @@ export default function VideoChat(props) {
 
   const [playing, setPlaying] = useState(false);
   const [names] = useState(DataStore.getCachedNames);
+  const [requestCallFailure, setRequestCallFailure] = useState(null);
 
   const displayStream = async stream => {
     (cameraContainerElem.current
@@ -37,8 +39,12 @@ export default function VideoChat(props) {
     let videoTrack;
     (async () => {
       const ownStream = await getUserMedia();
-      const otherStream = await Peering.requestCall(props.otherUser, ownStream);
-      videoTrack = (await displayStream(otherStream)).getVideoTracks()[0];
+      try {
+        const otherStream = await Peering.requestCall(props.otherUser, ownStream);
+        videoTrack = (await displayStream(otherStream)).getVideoTracks()[0];
+      } catch (e) {
+        setRequestCallFailure(e);
+      }
     })();
     return () => videoTrack && videoTrack.stop();
   }, [props.stream, props.otherUser]);
@@ -50,9 +56,28 @@ export default function VideoChat(props) {
     <Overlay onClose={props.onClose}>
       {!playing ? (
         <div className="translucent translucent-center text-center">
-          Calling<br/>
-          <span className="text-large">{toName(props.otherUser, names)}</span><br/>
-          <div className="margin-top"><span className="video-chat-blink">📞</span></div>
+          {requestCallFailure ? (
+            <>
+              <span className="text-large">{toName(props.otherUser, names)}</span><br/>
+              {requestCallFailure === 'timeout' && 'didn’t pick up'}
+              {requestCallFailure === 'rejected' && 'rejected the call'}
+              <div className="margin-top">
+                <span role="img" aria-label="call failure">
+                  🚫
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              Calling<br/>
+              <span className="text-large">{toName(props.otherUser, names)}</span><br/>
+              <div className="margin-top">
+                <span className="video-chat-blink" role="img" aria-label="calling">
+                  📞
+                </span>
+              </div>
+            </>
+          )}
         </div>
       ) : (
         <div id="cameraContainer"
