@@ -44,6 +44,7 @@ export default function VideoChat(props) {
       } catch (e) {
         setRequestCallFailure(e);
         ownStream.getTracks().forEach(t => t.stop());
+        setTimeout(() => props.onClose(), 1000);
       }
     })();
     return () => tracks && tracks.forEach(t => t.stop());

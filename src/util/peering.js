@@ -10,7 +10,7 @@ let callerPeer;
 
 const api = {};
 
-api.listenToCallRequests = (onStreamCb, onCallCb) => {
+api.listenToCallRequests = (onStreamCb, onCallCb, onHangUp) => {
   return DataStore.onVideoCallRequest(async ({req, doc}) => {
     let hungUp = false;
     doc.ref.onSnapshot(snapshot => {
@@ -19,9 +19,13 @@ api.listenToCallRequests = (onStreamCb, onCallCb) => {
     const stream = await onCallCb(req.from);
     if (!stream) {
       !hungUp && doc.ref.update({accept: false});
+      onHangUp();
       return;
     }
-    if (hungUp) return;
+    if (hungUp) {
+      onHangUp();
+      return;
+    }
     const calleePeer = new Peer({stream});
     calleePeer.signal(JSON.parse(req.signalingFrom));
     calleePeer.on(

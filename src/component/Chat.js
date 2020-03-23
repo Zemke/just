@@ -66,7 +66,8 @@ export default function Chat(props) {
             setIncomingCall({
               name: toName(from, DataStore.getCachedNames()),
               answer: resolve
-            }))) ? getUserMedia() : Promise.resolve(null));
+            }))) ? getUserMedia() : Promise.resolve(null),
+        () => setTimeout(() => setIncomingCall(null), 1200));
     })();
     return async () => listenToCallRequestsSubscription && (await listenToCallRequestsSubscription)();
   }, [props.currentUser]);
