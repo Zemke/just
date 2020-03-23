@@ -5,7 +5,6 @@ import DataStore from "../util/dataStore";
 import Storage from "../util/storage.js";
 import './Foot.css';
 import randomString from "../util/randomString";
-import Peering from '../util/peering';
 import VideoChat from "./VideoChat";
 
 export default function Foot(props) {
@@ -146,10 +145,8 @@ export default function Foot(props) {
     props.scrollToBottom();
   }, [inputFieldHeight, props]);
 
-  const onVideoCall = async () => {
-    // todo calling indication
+  const onVideoCall = () =>
     setVideoChat(true);
-  };
 
   return (
     <form onSubmit={onSubmit} ref={formEl}>

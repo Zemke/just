@@ -33,6 +33,10 @@ h1, h2 {
   text-align: center;
 }
 
+.text-large {
+  font-size: 1.8rem;
+}
+
 input.form-control,
 button.form-control {
   padding: .5rem;

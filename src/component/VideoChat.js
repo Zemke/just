@@ -4,6 +4,8 @@ import './VideoChat.css';
 import Overlay from "./Overlay";
 import Peering from '../util/peering';
 import getUserMedia from '../util/getUserMedia';
+import toName from '../util/toName';
+import DataStore from '../util/dataStore';
 
 export default function VideoChat(props) {
 
@@ -11,6 +13,7 @@ export default function VideoChat(props) {
   /** @type {{current: HTMLDivElement}} */ const cameraContainerElem = useRef(null);
 
   const [playing, setPlaying] = useState(false);
+  const [names] = useState(DataStore.getCachedNames);
 
   const displayStream = async stream => {
     (cameraContainerElem.current
@@ -46,7 +49,11 @@ export default function VideoChat(props) {
   return (
     <Overlay onClose={props.onClose}>
       {!playing ? (
-        <div className="vidoe-calling">`Calling ${props.otherUser}`</div>
+        <div className="translucent translucent-center text-center">
+          Calling<br/>
+          <span className="text-large">{toName(props.otherUser, names)}</span><br/>
+          <div className="margin-top"><span className="video-chat-blink">📞</span></div>
+        </div>
       ) : (
         <div id="cameraContainer"
              ref={cameraContainerElem}
