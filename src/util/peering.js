@@ -73,3 +73,5 @@ api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
 api.supported = Peer.WEBRTC_SUPPORT;
 
 export default api;
+
+// todo no document to update in callee's peering util file
