@@ -8,17 +8,20 @@ let callerPeer;
 // todo maybe that should be listened to from the service worker
 //  using firebase cloud messaging
 
-// todo show modal that you're being called
-
 const api = {};
 
 api.listenToCallRequests = (onStreamCb, onCallCb) => {
   return DataStore.onVideoCallRequest(async ({req, doc}) => {
+    let hungUp = false;
+    doc.ref.onSnapshot(snapshot => {
+      if (!snapshot.exists) hungUp = true;
+    });
     const stream = await onCallCb(req.from);
     if (!stream) {
-      doc.ref.update({accept: false});
+      !hungUp && doc.ref.update({accept: false});
       return;
     }
+    if (hungUp) return;
     const calleePeer = new Peer({stream});
     calleePeer.signal(JSON.parse(req.signalingFrom));
     calleePeer.on(

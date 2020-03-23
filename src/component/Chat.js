@@ -12,6 +12,8 @@ import Message from "./Message";
 import Peering from '../util/peering';
 import VideoChat from "./VideoChat";
 import getUserMedia from '../util/getUserMedia';
+import toName from '../util/toName';
+import Overlay from "./Overlay";
 
 export default function Chat(props) {
 
@@ -34,6 +36,7 @@ export default function Chat(props) {
   const [messageGaps, setMessageGaps] = useState(null);
   const [imagePlaceholders, setImagePlaceholders] = useState([]);
   const [videoChat, setVideoChat] = useState(null);
+  const [incomingCall, setIncomingCall] = useState(null);
 
   const {messages: propsMessages} = props;
 
@@ -59,9 +62,11 @@ export default function Chat(props) {
       listenToCallRequestsSubscription = Peering.listenToCallRequests(
         stream => setVideoChat(stream),
         async from =>
-          window.confirm(`${from} is calling, answer?`) // todo name
-            ? getUserMedia()
-            : Promise.resolve(null));
+          (await new Promise((resolve, _) =>
+            setIncomingCall({
+              name: toName(from, DataStore.getCachedNames()),
+              answer: resolve
+            }))) ? getUserMedia() : Promise.resolve(null));
     })();
     return async () => listenToCallRequestsSubscription && (await listenToCallRequestsSubscription)();
   }, [props.currentUser]);
@@ -181,6 +186,31 @@ export default function Chat(props) {
 
   return (
     <div className="chat" ref={chatEl}>
+      {incomingCall && (
+        <Overlay>
+          <div className="translucent translucent-center text-center">
+            Incoming call from<br/>
+            <span className="text-large">{incomingCall.name}</span><br/>
+            <div className="margin-top">
+                <span className="blink" role="img" aria-label="calling">
+                  📞
+                </span>
+            </div>
+            <div className="margin-top">
+              <div>
+                <button className="form-control" onClick={() => incomingCall.answer(true)}>
+                  Answer
+                </button>
+              </div>
+              <div>
+                <button className="form-control" onClick={() => incomingCall.answer(false)}>
+                  Hang up
+                </button>
+              </div>
+            </div>
+          </div>
+        </Overlay>
+      )}
       {videoChat && (
         <VideoChat otherUser={otherUser}
                    stream={videoChat}
