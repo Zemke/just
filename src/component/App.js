@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import './App.css';
 import DataStore from "../util/dataStore";
 import SignIn from "./SignIn";
 import Auth from "../util/auth";
