@@ -11,9 +11,9 @@ import Storage from '../util/storage.js';
 import Message from "./Message";
 import Peering from '../util/peering';
 import VideoChat from "./VideoChat";
-import getUserMedia from '../util/getUserMedia';
 import toName from '../util/toName';
 import Overlay from "./Overlay";
+import getUserMedia from "../util/getUserMedia";
 
 export default function Chat(props) {
 
@@ -61,16 +61,20 @@ export default function Chat(props) {
     (async () => {
       listenToCallRequestsSubscription = Peering.listenToCallRequests(
         stream => setVideoChat(stream),
-        async from =>
-          (await new Promise((resolve, _) =>
+        async (from, onOtherUserHangUp) =>
+          new Promise((resolve, _) => {
+            onOtherUserHangUp.then(() => {
+              resolve(null);
+              setIncomingCall(null);
+            });
             setIncomingCall({
               name: toName(from, DataStore.getCachedNames()),
               answer: resolve
-            }))) ? getUserMedia() : Promise.resolve(null),
-        () => setTimeout(() => setIncomingCall(null), 1200));
+            });
+          }));
     })();
     return async () => listenToCallRequestsSubscription && (await listenToCallRequestsSubscription)();
-  }, [props.currentUser]);
+  }, [props.currentUser, incomingCall]);
 
   useEffect(() => {
     (props.initMessages && !initMessages) && scrollToBottom();
@@ -199,12 +203,13 @@ export default function Chat(props) {
             </div>
             <div className="margin-top">
               <div>
-                <button className="form-control" onClick={() => incomingCall.answer(true)}>
+                <button className="form-control"
+                        onClick={() => incomingCall.answer(getUserMedia())}>
                   Answer
                 </button>
               </div>
               <div>
-                <button className="form-control" onClick={() => incomingCall.answer(false)}>
+                <button className="form-control" onClick={() => incomingCall.answer(null)}>
                   Hang up
                 </button>
               </div>

@@ -10,18 +10,21 @@ let callerPeer;
 
 const api = {};
 
-api.listenToCallRequests = (onStreamCb, onCallCb, onHangUp) => {
+api.listenToCallRequests = (onStreamCb, onCallCb) => {
   return DataStore.onVideoCallRequest(async ({req, doc}) => {
-    let hungUp = false;
-    doc.ref.onSnapshot(snapshot => hungUp = !snapshot.exists);
-    const stream = await onCallCb(req.from);
+    let otherUserHungUpResolver;
+    let otherUserHungUp = false;
+    const hungUpPromise = new Promise((resolve, _) => {
+      otherUserHungUpResolver = () => {
+        resolve();
+        otherUserHungUp = true;
+      }
+    });
+    doc.ref.onSnapshot(snapshot => !snapshot.exists && otherUserHungUpResolver());
+    const stream = await onCallCb(req.from, hungUpPromise);
+    if (otherUserHungUp) return;
     if (!stream) {
-      !hungUp && doc.ref.update({accept: false});
-      onHangUp();
-      return;
-    }
-    if (hungUp) {
-      onHangUp();
+      doc.ref.update({accept: false});
       return;
     }
     const calleePeer = new Peer({stream});
