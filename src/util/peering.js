@@ -13,9 +13,7 @@ const api = {};
 api.listenToCallRequests = (onStreamCb, onCallCb, onHangUp) => {
   return DataStore.onVideoCallRequest(async ({req, doc}) => {
     let hungUp = false;
-    doc.ref.onSnapshot(snapshot => {
-      if (!snapshot.exists) hungUp = true;
-    });
+    doc.ref.onSnapshot(snapshot => hungUp = !snapshot.exists);
     const stream = await onCallCb(req.from);
     if (!stream) {
       !hungUp && doc.ref.update({accept: false});
