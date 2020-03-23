@@ -55,7 +55,7 @@ export default function VideoChat(props) {
 
   return (
     <Overlay onClose={props.onClose}>
-      {!playing ? (
+      {!playing && (
         <div className="translucent translucent-center text-center">
           {requestCallFailure ? (
             <>
@@ -80,15 +80,14 @@ export default function VideoChat(props) {
             </>
           )}
         </div>
-      ) : (
-        <div id="cameraContainer"
-             ref={cameraContainerElem}
-             tabIndex="10">
-          <div className="videoWrapper">
-            <video id="video" ref={videoElem}/>
-          </div>
-        </div>
       )}
+      <div id="cameraContainer"
+           ref={cameraContainerElem}
+           tabIndex="10">
+        <div className="videoWrapper">
+          <video id="video" ref={videoElem}/>
+        </div>
+      </div>
     </Overlay>
   );
 };
