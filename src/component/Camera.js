@@ -3,6 +3,7 @@ import randomString from "../util/randomString";
 import 'image-capture';
 import './Camera.css';
 import Overlay from "./Overlay";
+import getUserMedia from '../util/getUserMedia';
 
 export default function Camera(props) {
 
@@ -21,12 +22,7 @@ export default function Camera(props) {
       const currVideoElem = videoElem.current;
       if (!currVideoElem) return;
 
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert('Camera is not supported on your device.');
-        return;
-      }
-
-      const stream = await navigator.mediaDevices.getUserMedia({video: true});
+      const stream = await getUserMedia({video: true});
       (cameraContainerElem.current
         && cameraContainerElem.current.classList.add('onVideo'));
       currVideoElem.srcObject = stream;

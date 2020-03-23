@@ -1,2 +1,2 @@
-export default async () =>
-  navigator.mediaDevices.getUserMedia({video: true, audio: true});
+export default async (constraints = {video: true, audio: true}) =>
+  navigator.mediaDevices.getUserMedia(constraints);
