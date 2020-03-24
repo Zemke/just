@@ -45,6 +45,7 @@ api.listenToCallRequests = (onStreamCb, onCallCb) => {
 
 
 api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
+  let callTimeout;
   callerPeer = new Peer({initiator: true, stream});
   callerPeer.on('signal', async data => {
     if (videoCallRequestSent) return;
@@ -54,11 +55,13 @@ api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
       to: callee,
       signalingFrom: JSON.stringify(data)
     })).onSnapshot(snapshot => {
-      const callTimeout = setTimeout(() => {
-        snapshot.ref.delete();
-        callerPeer.destroy();
-        reject('timeout');
-      }, 8000);
+      if (!callTimeout) {
+        callTimeout = setTimeout(() => {
+          snapshot.ref.delete();
+          callerPeer.destroy();
+          reject('timeout');
+        }, 8000);
+      }
       const snapshotData = snapshot.data();
       if (snapshotData && snapshotData.signalingTo) {
         callerPeer.signal(JSON.parse(snapshotData.signalingTo));
