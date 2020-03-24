@@ -1,4 +1,4 @@
-.controls {
+div#overlay > .controls {
   width: calc(100% - 4rem);
   white-space: nowrap;
   padding: 0;
