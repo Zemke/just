@@ -92,27 +92,25 @@ export default function VideoChat(props) {
       <div id="cameraContainer"
            className={playing ? 'onVideo' : ''}
            tabIndex="10">
+        {playing && (
+          <div className="controls">
+            <div className="margin-top text-center">
+              <button className="form-control circle" aria-label="Mute" onClick={toggleMute}>
+                <div className="cross-disabled"/>
+                <span role="img" aria-label="Microphone">🎙</span>
+              </button>
+              <button className="form-control circle" aria-label="Mute" onClick={toggleCamera}>
+                <div className="cross-disabled"/>
+                <span role="img" aria-label="Camera">📽</span>
+              </button>
+              <button className="form-control circle hang-up" onClick={hangUp} disabled={hangingUp}>
+                <span role="img" aria-label="phone">📞</span>
+              </button>
+            </div>
+          </div>
+        )}
         <div className="videoWrapper">
           <video id="video" ref={videoElem}/>
-          {playing && (
-            <>
-              <div className="margin-top text-center">
-                <button className="form-control circle" aria-label="Mute" onClick={toggleMute}>
-                  <div className="cross-disabled"/>
-                  <span role="img" aria-label="Microphone">🎙</span>
-                </button>
-                <button className="form-control circle" aria-label="Mute" onClick={toggleCamera}>
-                  <div className="cross-disabled"/>
-                  <span role="img" aria-label="Camera">📽</span>
-                </button>
-              </div>
-              <div className="margin-top">
-                <button className="form-control" onClick={hangUp} disabled={hangingUp}>
-                  {hangingUp ? 'Hanging up' : 'Hang up!'}
-                </button>
-              </div>
-            </>
-          )}
         </div>
       </div>
     </Overlay>
