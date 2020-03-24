@@ -1,5 +1,6 @@
 .controls {
-  width: 100%;
+  width: calc(100% - 4rem);
+  white-space: nowrap;
   padding: 0;
   z-index: 9999999;
   margin: 0;
