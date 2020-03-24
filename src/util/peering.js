@@ -36,6 +36,10 @@ api.listenToCallRequests = (onStreamCb, onCallCb) => {
       'signal',
       data => doc.ref.update({accept: true, signalingTo: JSON.stringify(data)}));
     calleePeer.on('stream', onStreamCb);
+    calleePeer.on('error', console.error);
+    calleePeer.on(
+      'close',
+      () => stream && stream.getTracks().forEach(t => t.stop()));
   });
 };
 
@@ -69,7 +73,14 @@ api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
         callerPeer.destroy();
         reject('rejected');
       }
+      callerPeer.on(
+        'close',
+        () => {
+          stream && stream.getTracks().forEach(t => t.stop());
+          snapshot.ref.delete();
+        });
     });
+    callerPeer.on('error', console.error);
   });
   // todo make sure deleted is called when something goes wrong
   //  maybe in callerPeer.on('error')
@@ -77,5 +88,3 @@ api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
 api.supported = Peer.WEBRTC_SUPPORT;
 
 export default api;
-
-// todo no document to update in callee's peering util file
