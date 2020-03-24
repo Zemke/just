@@ -15,6 +15,8 @@ export default function VideoChat(props) {
   const [names] = useState(DataStore.getCachedNames);
   const [requestCallFailure, setRequestCallFailure] = useState(null);
   const [hangingUp, setHangingUp] = useState(false);
+  const [camToggle, setCamToggle] = useState(true);
+  const [micToggle, setMicToggle] = useState(true);
 
   const displayStream = stream => {
     videoElem.current.srcObject = stream;
@@ -44,15 +46,19 @@ export default function VideoChat(props) {
     setTimeout(() => props.onClose(), 1000);
   };
 
-  const toggleCamera = () =>
+  const toggleCamera = () => {
     videoElem.current.srcObject
       .getVideoTracks()
       .forEach(track => track.enabled = !track.enabled);
+    setCamToggle(!!videoElem.current.srcObject.getVideoTracks().find(t => t.enabled))
+  };
 
-  const toggleMute = () =>
+  const toggleMute = () => {
     videoElem.current.srcObject
       .getAudioTracks()
       .forEach(track => track.enabled = !track.enabled);
+    setMicToggle(!!videoElem.current.srcObject.getAudioTracks().find(t => t.enabled))
+  };
 
   return (
     <Overlay onClose={props.onClose}>
@@ -96,11 +102,11 @@ export default function VideoChat(props) {
           <div className="controls">
             <div className="margin-top text-center">
               <button className="form-control circle" aria-label="Mute" onClick={toggleMute}>
-                <div className="cross-disabled"/>
+                {!micToggle && (<div className="cross-disabled r1"/>)}
                 <span role="img" aria-label="Microphone">🎙</span>
               </button>
               <button className="form-control circle" aria-label="Mute" onClick={toggleCamera}>
-                <div className="cross-disabled"/>
+                {!camToggle && (<div className="cross-disabled r2"/>)}
                 <span role="img" aria-label="Camera">📽</span>
               </button>
               <button className="form-control circle hang-up" onClick={hangUp} disabled={hangingUp}>

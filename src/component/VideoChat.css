@@ -27,9 +27,16 @@ button > .cross-disabled {
   width: .3rem;
   left: 50%;
   top: -.5rem;
-  transform: rotate(50deg);
   padding: 0;
   margin: 0;
+}
+
+button > .cross-disabled.r1 {
+  transform: rotate(50deg);
+}
+
+button > .cross-disabled.r2 {
+  transform: rotate(40deg);
 }
 
 button.hang-up {
