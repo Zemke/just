@@ -56,7 +56,7 @@ export default function Chat(props) {
   }, []);
 
   useEffect(() => {
-    if (!Peering.supported || !props.currentUser) return;
+    if (!Peering.supported || !props.currentUser || incomingCall) return;
     let listenToCallRequestsSubscription;
     (async () => {
       listenToCallRequestsSubscription = Peering.listenToCallRequests(
