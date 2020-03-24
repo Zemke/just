@@ -3,7 +3,6 @@ import Peer from "simple-peer";
 import Auth from './auth';
 
 let videoCallRequestSent = false;
-let callerPeer;
 
 // todo maybe that should be listened to from the service worker
 //  using firebase cloud messaging
@@ -39,14 +38,17 @@ api.listenToCallRequests = (onStreamCb, onCallCb) => {
     calleePeer.on('error', console.error);
     calleePeer.on(
       'close',
-      () => stream && stream.getTracks().forEach(t => t.stop()));
+      () => {
+        stream && stream.getTracks().forEach(t => t.stop());
+        doc.ref.delete(); // todo maybe it's enough to let the caller do this
+      });
   });
 };
 
 
 api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
   let callTimeout;
-  callerPeer = new Peer({initiator: true, stream});
+  const callerPeer = new Peer({initiator: true, stream});
   callerPeer.on('signal', async data => {
     if (videoCallRequestSent) return;
     videoCallRequestSent = true;
@@ -57,7 +59,6 @@ api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
     })).onSnapshot(snapshot => {
       if (!callTimeout) {
         callTimeout = setTimeout(() => {
-          snapshot.ref.delete();
           callerPeer.destroy();
           reject('timeout');
         }, 8000);
@@ -66,13 +67,11 @@ api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
       if (snapshotData && snapshotData.signalingTo) {
         callerPeer.signal(JSON.parse(snapshotData.signalingTo));
         callerPeer.on('stream', stream => {
-          snapshot.ref.delete();
           clearTimeout(callTimeout);
           resolve(stream);
         });
       } else if (snapshotData && snapshotData.accept === false) {
         clearTimeout(callTimeout);
-        snapshot.ref.delete();
         callerPeer.destroy();
         reject('rejected');
       }
