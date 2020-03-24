@@ -10,6 +10,7 @@ import DataStore from '../util/dataStore';
 export default function VideoChat(props) {
 
   /** @type {{current: HTMLVideoElement}} */ const videoElem = useRef(null);
+  /** @type {{current: MediaStream}} */ const ownMediaStream = useRef(props.ownStream);
 
   const [playing, setPlaying] = useState(false);
   const [names] = useState(DataStore.getCachedNames);
@@ -31,9 +32,9 @@ export default function VideoChat(props) {
   useEffect(() => {
     if (props.stream || !props.otherUser) return;
     (async () => {
-      const ownStream = await getUserMedia();
+      ownMediaStream.current = await getUserMedia();
       try {
-        displayStream(await Peering.requestCall(props.otherUser, ownStream));
+        displayStream(await Peering.requestCall(props.otherUser, ownMediaStream.current));
       } catch (e) {
         setRequestCallFailure(e);
         setTimeout(() => props.onClose(), 1000);
@@ -47,17 +48,17 @@ export default function VideoChat(props) {
   };
 
   const toggleCamera = () => {
-    videoElem.current.srcObject
+    ownMediaStream.current
       .getVideoTracks()
       .forEach(track => track.enabled = !track.enabled);
-    setCamToggle(!!videoElem.current.srcObject.getVideoTracks().find(t => t.enabled))
+    setCamToggle(!!ownMediaStream.current.getVideoTracks().find(t => t.enabled))
   };
 
   const toggleMute = () => {
-    videoElem.current.srcObject
+    ownMediaStream.current
       .getAudioTracks()
       .forEach(track => track.enabled = !track.enabled);
-    setMicToggle(!!videoElem.current.srcObject.getAudioTracks().find(t => t.enabled))
+    setMicToggle(!!ownMediaStream.current.getAudioTracks().find(t => t.enabled))
   };
 
   return (

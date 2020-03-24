@@ -36,6 +36,7 @@ export default function Chat(props) {
   const [messageGaps, setMessageGaps] = useState(null);
   const [imagePlaceholders, setImagePlaceholders] = useState([]);
   const [videoChat, setVideoChat] = useState(null);
+  const [ownStream, setOwnStream] = useState(null);
   const [incomingCall, setIncomingCall] = useState(null);
 
   const {messages: propsMessages} = props;
@@ -69,7 +70,10 @@ export default function Chat(props) {
             });
             setIncomingCall({
               name: toName(from, DataStore.getCachedNames()),
-              answer: resolve
+              answer: async stream => {
+                resolve(stream);
+                stream.then(s => setOwnStream(() => s));
+              }
             });
           }));
     })();
@@ -220,6 +224,7 @@ export default function Chat(props) {
       {videoChat && (
         <VideoChat otherUser={otherUser}
                    stream={videoChat}
+                   ownStream={ownStream}
                    onClose={() => setVideoChat(null)}/>
       )}
       <div className="head">
