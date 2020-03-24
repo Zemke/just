@@ -68,7 +68,7 @@ api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
         callerPeer.signal(JSON.parse(snapshotData.signalingTo));
         callerPeer.on('stream', stream => {
           clearTimeout(callTimeout);
-          resolve(stream);
+          resolve({stream, hangUpCb: () => callerPeer.destroy()});
         });
       } else if (snapshotData && snapshotData.accept === false) {
         clearTimeout(callTimeout);

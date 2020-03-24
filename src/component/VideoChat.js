@@ -12,6 +12,8 @@ export default function VideoChat(props) {
   /** @type {{current: HTMLVideoElement}} */ const videoElem = useRef(null);
   /** @type {{current: MediaStream}} */ const ownMediaStream =
     useRef(props.ownStream ? props.ownStream.stream : null);
+  /** @type {{current: Function}} */ const hangUpCb =
+    useRef(props.ownStream ? props.ownStream.hangUpCb : null);
 
   const [playing, setPlaying] = useState(false);
   const [names] = useState(DataStore.getCachedNames);
@@ -35,7 +37,9 @@ export default function VideoChat(props) {
     (async () => {
       ownMediaStream.current = await getUserMedia();
       try {
-        displayStream(await Peering.requestCall(props.otherUser, ownMediaStream.current));
+        const otherStream = await Peering.requestCall(props.otherUser, ownMediaStream.current);
+        hangUpCb.current = otherStream.hangUpCb;
+        displayStream(otherStream.stream);
       } catch (e) {
         setRequestCallFailure(e);
         setTimeout(() => props.onClose(), 1000);
@@ -45,7 +49,7 @@ export default function VideoChat(props) {
 
   const hangUp = () => {
     setHangingUp(true);
-    props.ownStream && props.ownStream.hangUpCb();
+    hangUpCb.current();
     setTimeout(() => props.onClose(), 1000);
   };
 
