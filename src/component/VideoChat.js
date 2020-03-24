@@ -98,27 +98,27 @@ export default function VideoChat(props) {
       <div id="cameraContainer"
            className={playing ? 'onVideo' : ''}
            tabIndex="10">
-        {playing && (
-          <div className="controls">
-            <div className="margin-top text-center">
-              <button className="form-control circle" aria-label="Mute" onClick={toggleMute}>
-                {!micToggle && (<div className="cross-disabled r1"/>)}
-                <span role="img" aria-label="Microphone">🎙</span>
-              </button>
-              <button className="form-control circle" aria-label="Mute" onClick={toggleCamera}>
-                {!camToggle && (<div className="cross-disabled r2"/>)}
-                <span role="img" aria-label="Camera">📽</span>
-              </button>
-              <button className="form-control circle hang-up" onClick={hangUp} disabled={hangingUp}>
-                <span role="img" aria-label="phone">📞</span>
-              </button>
-            </div>
-          </div>
-        )}
         <div className="videoWrapper">
           <video id="video" ref={videoElem}/>
         </div>
       </div>
+      {playing && (
+        <div className="controls">
+          <div className="margin-top text-center">
+            <button className="form-control circle" aria-label="Mute" onClick={toggleMute}>
+              {!micToggle && (<div className="cross-disabled r1"/>)}
+              <span role="img" aria-label="Microphone">🎙</span>
+            </button>
+            <button className="form-control circle" aria-label="Mute" onClick={toggleCamera}>
+              {!camToggle && (<div className="cross-disabled r2"/>)}
+              <span role="img" aria-label="Camera">📽</span>
+            </button>
+            <button className="form-control circle hang-up" onClick={hangUp} disabled={hangingUp}>
+              <span role="img" aria-label="phone">📞</span>
+            </button>
+          </div>
+        </div>
+      )}
     </Overlay>
   );
 };
