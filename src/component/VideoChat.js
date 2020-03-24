@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from "react";
 import './Camera.css';
+import './VideoChat.css';
 import Overlay from "./Overlay";
 import Peering from '../util/peering';
 import getUserMedia from '../util/getUserMedia';
@@ -13,6 +14,7 @@ export default function VideoChat(props) {
   const [playing, setPlaying] = useState(false);
   const [names] = useState(DataStore.getCachedNames);
   const [requestCallFailure, setRequestCallFailure] = useState(null);
+  const [hangingUp, setHangingUp] = useState(false);
 
   const displayStream = stream => {
     videoElem.current.srcObject = stream;
@@ -37,8 +39,20 @@ export default function VideoChat(props) {
     })();
   }, [props]);
 
-  // todo mic and cam toggle buttons
-  // todo hang up button
+  const hangUp = () => {
+    setHangingUp(true);
+    setTimeout(() => props.onClose(), 1000);
+  };
+
+  const toggleCamera = () =>
+    videoElem.current.srcObject
+      .getVideoTracks()
+      .forEach(track => track.enabled = !track.enabled);
+
+  const toggleMute = () =>
+    videoElem.current.srcObject
+      .getAudioTracks()
+      .forEach(track => track.enabled = !track.enabled);
 
   return (
     <Overlay onClose={props.onClose}>
@@ -80,6 +94,25 @@ export default function VideoChat(props) {
            tabIndex="10">
         <div className="videoWrapper">
           <video id="video" ref={videoElem}/>
+          {playing && (
+            <>
+              <div className="margin-top text-center">
+                <button className="form-control circle" aria-label="Mute" onClick={toggleMute}>
+                  <div className="cross-disabled"/>
+                  <span role="img" aria-label="Microphone">🎙</span>
+                </button>
+                <button className="form-control circle" aria-label="Mute" onClick={toggleCamera}>
+                  <div className="cross-disabled"/>
+                  <span role="img" aria-label="Camera">📽</span>
+                </button>
+              </div>
+              <div className="margin-top">
+                <button className="form-control" onClick={hangUp} disabled={hangingUp}>
+                  {hangingUp ? 'Hanging up' : 'Hang up!'}
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </Overlay>
