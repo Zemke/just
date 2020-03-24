@@ -62,7 +62,7 @@ export default function Chat(props) {
     (async () => {
       listenToCallRequestsSubscription = Peering.listenToCallRequests(
         stream => setVideoChat(stream),
-        async (from, onOtherUserHangUp) =>
+        async (from, onOtherUserHangUp, hangUpCb) =>
           new Promise((resolve, _) => {
             onOtherUserHangUp.then(() => {
               resolve(null);
@@ -72,7 +72,7 @@ export default function Chat(props) {
               name: toName(from, DataStore.getCachedNames()),
               answer: async stream => {
                 resolve(stream);
-                stream.then(s => setOwnStream(() => s));
+                stream.then(stream => setOwnStream(() => ({stream, hangUpCb})));
               }
             });
           }));

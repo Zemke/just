@@ -22,7 +22,7 @@ api.listenToCallRequests = (onStreamCb, onCallCb) => {
     });
     doc.ref.onSnapshot(snapshot =>
       !snapshot.exists && !signaled && otherUserHungUpResolver());
-    const stream = await onCallCb(req.from, hungUpPromise);
+    const stream = await onCallCb(req.from, hungUpPromise, () => calleePeer.destroy());
     if (otherUserHungUp) return;
     if (!stream) {
       doc.ref.update({accept: false});

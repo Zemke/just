@@ -10,7 +10,8 @@ import DataStore from '../util/dataStore';
 export default function VideoChat(props) {
 
   /** @type {{current: HTMLVideoElement}} */ const videoElem = useRef(null);
-  /** @type {{current: MediaStream}} */ const ownMediaStream = useRef(props.ownStream);
+  /** @type {{current: MediaStream}} */ const ownMediaStream =
+    useRef(props.ownStream ? props.ownStream.stream : null);
 
   const [playing, setPlaying] = useState(false);
   const [names] = useState(DataStore.getCachedNames);
@@ -44,6 +45,7 @@ export default function VideoChat(props) {
 
   const hangUp = () => {
     setHangingUp(true);
+    props.ownStream && props.ownStream.hangUpCb();
     setTimeout(() => props.onClose(), 1000);
   };
 
