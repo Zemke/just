@@ -47,12 +47,11 @@ export default function App() {
     if (!('serviceWorker' in navigator)) return;
     const onMessageListener = e => {
       if (!('onMessage' in e.data)) return;
-      console.log('here', messages[0], e.data.onMessage);
-
+      const message = JSON.parse(e.data.onMessage);
       setMessages(curr =>
-        curr.find(m => m.id === e.data.onMessage.id)
+        curr.find(m => m.id === message.id)
           ? curr
-          : [...curr, e.date.onMessage]);
+          : [...curr, message]);
     };
     navigator.serviceWorker.addEventListener('message', onMessageListener);
     return () =>
