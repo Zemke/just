@@ -12,12 +12,15 @@ export default function Overlay(props) {
     requestAnimationFrame(() => currElem.classList.add('blur'))
   }, []);
 
+  const close = () =>
+    props.onClose && props.onClose();
+
   useEffect(() => {
     const currElem = elem.current;
     if (!currElem) return;
     const keyDownListener = e => {
       e.preventDefault();
-      e.key === 'Escape' && props.onClose();
+      e.key === 'Escape' && close();
     };
     document.addEventListener('keydown', keyDownListener);
     return () => document.removeEventListener('keydown', keyDownListener)
@@ -28,7 +31,7 @@ export default function Overlay(props) {
     if (!currElem) return;
     const touchMoveListener = e => {
       e.preventDefault();
-      props.onClose();
+      close();
     };
     document.addEventListener('touchmove', touchMoveListener);
     return () => document.removeEventListener('touchmove', touchMoveListener)
@@ -37,7 +40,7 @@ export default function Overlay(props) {
   useEffect(() => {
     if (!props.onClose) return;
     const outsideClickListener =
-      e => e.target.id === 'overlay' && props.onClose();
+      e => e.target.id === 'overlay' && close();
     document
       .getElementById('overlay')
       .addEventListener('click', outsideClickListener);
