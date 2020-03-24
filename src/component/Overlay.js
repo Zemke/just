@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 import ReactDOM from "react-dom";
 import './Overlay.css';
 
@@ -12,8 +12,7 @@ export default function Overlay(props) {
     requestAnimationFrame(() => currElem.classList.add('blur'))
   }, []);
 
-  const close = () =>
-    props.onClose && props.onClose();
+  const close = useCallback(() => props.onClose && props.onClose(), [props]);
 
   useEffect(() => {
     const currElem = elem.current;
@@ -24,7 +23,7 @@ export default function Overlay(props) {
     };
     document.addEventListener('keydown', keyDownListener);
     return () => document.removeEventListener('keydown', keyDownListener)
-  }, [props]);
+  }, [close, props]);
 
   useEffect(() => {
     const currElem = elem.current;
@@ -35,7 +34,7 @@ export default function Overlay(props) {
     };
     document.addEventListener('touchmove', touchMoveListener);
     return () => document.removeEventListener('touchmove', touchMoveListener)
-  }, [props]);
+  }, [close, props]);
 
   useEffect(() => {
     if (!props.onClose) return;
