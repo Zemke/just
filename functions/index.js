@@ -15,7 +15,7 @@ exports.sendMessageNotification = functions.firestore
       .get();
 
     if (!userDoc.exists) {
-      console.info('User not found in names collection');
+      console.info(`User ${message.to} not found in users collection`);
       return Promise.resolve(null);
     }
 
