@@ -72,7 +72,7 @@ export default function Chat(props) {
               name: toName(from, DataStore.getCachedNames()),
               answer: async stream => {
                 resolve(stream);
-                stream.then(stream => setOwnStream(() => ({stream, hangUpCb})));
+                stream && stream.then(stream => setOwnStream(() => ({stream, hangUpCb})));
               }
             });
           }));
