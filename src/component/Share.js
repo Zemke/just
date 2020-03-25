@@ -131,7 +131,7 @@ export default function Share(props) {
           {Peering.supported && (
             <li onClick={props.onVideoCall}>
               <span className="icon" role="img" aria-label="Video">🎥</span>
-              Call
+              Video Call
             </li>
           )}
           <li onClick={giphy} ref={ref => setGiphyTrigger(ref)}>
