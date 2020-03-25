@@ -29,10 +29,21 @@ api.safariSignIn = (email, safariLink) =>
     .auth()
     .signInWithEmailLink(email, safariLink);
 
-api.current = () =>
-  new Promise(resolve =>
-    api.onAuthStateChanged(
-      user => user ? resolve(user) : resolve(null)));
+api.current = () => {
+  const authFromStorage = window.localStorage.getItem('auth');
+  return authFromStorage
+    ? Promise.resolve(JSON.parse(authFromStorage))
+    : new Promise(resolve => api.onAuthStateChanged(
+      user => {
+        if (user) {
+          window.localStorage.setItem('auth', JSON.stringify(user));
+          resolve(user);
+        } else {
+          window.localStorage.removeItem('auth');
+          resolve(null);
+        }
+      }));
+};
 
 api.onAuthStateChanged = cb =>
   firebase
