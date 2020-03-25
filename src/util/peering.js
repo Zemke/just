@@ -7,15 +7,12 @@ let videoCallRequestSent = false;
 // todo maybe that should be listened to from the service worker
 //  using firebase cloud messaging
 
-// todo callee always ends up with "Incoming call"
-
 const api = {};
 
 api.listenToCallRequests = (onStreamCb, onCallCb) => {
   return DataStore.onVideoCallRequest(async ({req, doc}) => {
     let otherUserHungUpResolver;
     let otherUserHungUp = false;
-    let signaled = false;
     const hungUpPromise = new Promise((resolve, _) => {
       otherUserHungUpResolver = () => {
         resolve();
@@ -23,14 +20,13 @@ api.listenToCallRequests = (onStreamCb, onCallCb) => {
       }
     });
     doc.ref.onSnapshot(snapshot =>
-      !snapshot.exists && !signaled && otherUserHungUpResolver());
+      !snapshot.exists && otherUserHungUpResolver());
     const stream = await onCallCb(req.from, hungUpPromise, () => calleePeer.destroy());
     if (otherUserHungUp) return;
     if (!stream) {
       doc.ref.update({accept: false});
       return;
     }
-    signaled = true;
     const calleePeer = new Peer({stream});
     calleePeer.signal(JSON.parse(req.signalingFrom));
     calleePeer.on(
