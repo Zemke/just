@@ -85,6 +85,7 @@ api.requestCall = (callee, stream, onClose) => new Promise((resolve, reject) => 
         () => {
           stream && stream.getTracks().forEach(t => t.stop());
           snapshot.ref.delete();
+          videoCallRequestSent = false;
           onClose();
         });
     });
