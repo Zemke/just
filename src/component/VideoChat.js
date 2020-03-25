@@ -18,7 +18,6 @@ export default function VideoChat(props) {
   const [playing, setPlaying] = useState(false);
   const [names] = useState(DataStore.getCachedNames);
   const [requestCallFailure, setRequestCallFailure] = useState(null);
-  const [otherUserHungUp, setOtherUserHungUp] = useState(null);
   const [hangingUp, setHangingUp] = useState(false);
   const [camToggle, setCamToggle] = useState(true);
   const [micToggle, setMicToggle] = useState(true);
@@ -30,14 +29,9 @@ export default function VideoChat(props) {
 
   useEffect(() => {
     if (!props.stream) return;
-    props.stream.getTracks().forEach(track => {
-      track.onended = () => {
-        console.log('other user hung up on callee side');
-        // todo other user hung up visuals
-        // setOtherUserHungUp(true);
-        setTimeout(() => props.onClose(), 1000);
-      }
-    });
+    props.stream.getTracks().forEach(track =>
+      track.onended = () =>
+        setTimeout(() => props.onClose(), 1000));
     displayStream(props.stream);
   }, [props]);
 
@@ -47,12 +41,9 @@ export default function VideoChat(props) {
       ownMediaStream.current = await getUserMedia();
       try {
         const otherStream =
-          await Peering.requestCall(props.otherUser, ownMediaStream.current, () => {
-            console.log('other user hung up on caller side');
-            // todo other user hung up visuals
-            // setOtherUserHungUp(true);
-            setTimeout(() => props.onClose(), 1000);
-          });
+          await Peering.requestCall(
+            props.otherUser, ownMediaStream.current,
+            () => setTimeout(() => props.onClose(), 1000));
         hangUpCb.current = otherStream.hangUpCb;
         displayStream(otherStream.stream);
       } catch (e) {
