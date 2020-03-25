@@ -46,7 +46,7 @@ api.listenToCallRequests = (onStreamCb, onCallCb) => {
 };
 
 
-api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
+api.requestCall = (callee, stream, onClose) => new Promise((resolve, reject) => {
   let callTimeout;
   const callerPeer = new Peer({initiator: true, stream});
   callerPeer.on('signal', async data => {
@@ -57,6 +57,7 @@ api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
       to: callee,
       signalingFrom: JSON.stringify(data)
     })).onSnapshot(snapshot => {
+      if (!snapshot.exists) callerPeer.destroy();
       if (!callTimeout) {
         callTimeout = setTimeout(() => {
           callerPeer.destroy();
@@ -80,6 +81,7 @@ api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
         () => {
           stream && stream.getTracks().forEach(t => t.stop());
           snapshot.ref.delete();
+          onClose();
         });
     });
     callerPeer.on('error', console.error);
@@ -87,6 +89,7 @@ api.requestCall = (callee, stream) => new Promise((resolve, reject) => {
   // todo make sure deleted is called when something goes wrong
   //  maybe in callerPeer.on('error')
 });
+
 api.supported = Peer.WEBRTC_SUPPORT;
 
 export default api;

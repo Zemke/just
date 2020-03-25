@@ -18,6 +18,7 @@ export default function VideoChat(props) {
   const [playing, setPlaying] = useState(false);
   const [names] = useState(DataStore.getCachedNames);
   const [requestCallFailure, setRequestCallFailure] = useState(null);
+  const [otherUserHungUp, setOtherUserHungUp] = useState(null);
   const [hangingUp, setHangingUp] = useState(false);
   const [camToggle, setCamToggle] = useState(true);
   const [micToggle, setMicToggle] = useState(true);
@@ -37,7 +38,13 @@ export default function VideoChat(props) {
     (async () => {
       ownMediaStream.current = await getUserMedia();
       try {
-        const otherStream = await Peering.requestCall(props.otherUser, ownMediaStream.current);
+        const otherStream =
+          await Peering.requestCall(props.otherUser, ownMediaStream.current, () => {
+            console.log('other user hung up');
+            // todo other user hung up visuals
+            // setOtherUserHungUp(true);
+            setTimeout(() => props.onClose(), 1000);
+          });
         hangUpCb.current = otherStream.hangUpCb;
         displayStream(otherStream.stream);
       } catch (e) {
