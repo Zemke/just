@@ -87,8 +87,6 @@ api.requestCall = (callee, stream, onClose) => new Promise((resolve, reject) => 
     });
     callerPeer.on('error', console.error);
   });
-  // todo make sure deleted is called when something goes wrong
-  //  maybe in callerPeer.on('error')
 });
 
 api.supported = Peer.WEBRTC_SUPPORT;
