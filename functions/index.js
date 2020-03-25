@@ -129,6 +129,57 @@ exports.purge = functions.https.onRequest(async (req, res) => {
     .send(`${subjects.length} messages deleted.`);
 });
 
+exports.purgeTest = functions.https.onRequest(async (req, res) => {
+  if (req.method !== 'POST') {
+    return res
+      .status(405)
+      .send("Please issue a post")
+  }
+
+  const max = req.query.max || 1;
+
+  console.log(`Going to be keeping ${max} test messages per test conversation.`);
+
+  const testUsers = [
+    'TTYqXE93wsMzCOF63pmXqeJgsdL2', // icloud
+    '70Xz1nX8lVgGF2BgZEATRfvmCKg1', // gmail
+  ];
+
+  console.log('Test users are', testUsers.join(', '));
+
+  const subjects =
+    Object.entries(
+      (await admin.firestore()
+        .collection('messages')
+        .where('users', 'array-contains-any', testUsers)
+        .get()).docs
+        .reduce((acc, curr) => {
+          const conversationId = curr.data().users.sort().join('-');
+          acc[conversationId] = acc[conversationId] || [];
+          acc[conversationId].push(curr);
+          return acc;
+        }, {}))
+      .filter(([_id, conversation]) => conversation.length > max)
+      .map(([_id, conversation]) => conversation
+        .sort((m1, m2) => m2.createTime.toMillis() - m1.createTime.toMillis())
+        .slice(max))
+      .reduce((acc, curr) => acc.concat(curr)); // Array.prototype.flat
+
+  console.log(`Deleting ${subjects.length} test messages.`);
+
+  if (!subjects.length) {
+    return res
+      .status(200)
+      .send("There are no messages to delete");
+  }
+
+  await performInBatches(subjects, (batchWrite, docSnap) => batchWrite.delete(docSnap.ref));
+
+  return res
+    .status(200)
+    .send(`${subjects.length} messages deleted.`);
+});
+
 exports.deleteAssociatedImage = functions.firestore
   .document('messages/{messageId}')
   .onDelete(async (snap, _context) => {
