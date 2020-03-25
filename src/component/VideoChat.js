@@ -30,8 +30,16 @@ export default function VideoChat(props) {
 
   useEffect(() => {
     if (!props.stream) return;
+    props.stream.getTracks().forEach(track => {
+      track.onended = () => {
+        console.log('other user hung up on callee side');
+        // todo other user hung up visuals
+        // setOtherUserHungUp(true);
+        setTimeout(() => props.onClose(), 1000);
+      }
+    });
     displayStream(props.stream);
-  }, [props.stream]);
+  }, [props]);
 
   useEffect(() => {
     if (props.stream || !props.otherUser) return;
@@ -40,7 +48,7 @@ export default function VideoChat(props) {
       try {
         const otherStream =
           await Peering.requestCall(props.otherUser, ownMediaStream.current, () => {
-            console.log('other user hung up');
+            console.log('other user hung up on caller side');
             // todo other user hung up visuals
             // setOtherUserHungUp(true);
             setTimeout(() => props.onClose(), 1000);

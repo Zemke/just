@@ -7,6 +7,8 @@ let videoCallRequestSent = false;
 // todo maybe that should be listened to from the service worker
 //  using firebase cloud messaging
 
+// todo callee always ends up with "Incoming call"
+
 const api = {};
 
 api.listenToCallRequests = (onStreamCb, onCallCb) => {
@@ -39,6 +41,8 @@ api.listenToCallRequests = (onStreamCb, onCallCb) => {
     calleePeer.on(
       'close',
       () => {
+        console.log('close on calle');
+
         stream && stream.getTracks().forEach(t => t.stop());
         doc.ref.delete(); // todo maybe it's enough to let the caller do this
       });
