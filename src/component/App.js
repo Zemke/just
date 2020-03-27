@@ -20,10 +20,11 @@ export default function App() {
 
   useEffect(() => {
     Auth
-      .current()
+      .current(false)
       .then(currentUser => {
         if (!currentUser) {
           DataStore.alienateRememberedUser();
+          setCurrentUser(null);
           return;
         }
         webNotifications.requestPermission();

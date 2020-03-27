@@ -29,17 +29,17 @@ api.safariSignIn = (email, safariLink) =>
     .auth()
     .signInWithEmailLink(email, safariLink);
 
-api.current = () => {
-  const authFromStorage = window.localStorage.getItem('auth');
+api.current = (cached = true) => {
+  const authFromStorage = cached && window.localStorage.getItem('currentUser');
   return authFromStorage
     ? Promise.resolve(JSON.parse(authFromStorage))
     : new Promise(resolve => api.onAuthStateChanged(
       user => {
         if (user) {
-          window.localStorage.setItem('auth', JSON.stringify(user));
+          window.localStorage.setItem('currentUser', JSON.stringify(user));
           resolve(user);
         } else {
-          window.localStorage.removeItem('auth');
+          window.localStorage.removeItem('currentUser');
           resolve(null);
         }
       }));
