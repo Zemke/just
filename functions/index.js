@@ -6,6 +6,7 @@ exports.sendMessageNotification = functions.firestore
   .document('messages/{messageId}')
   .onCreate(async (snap, _context) => {
     const message = snap.data();
+    message.id = snap.id;
 
     console.log('Message created:', message);
 
