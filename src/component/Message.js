@@ -87,9 +87,10 @@ export default function Message(props) {
       }, 201)),
     []);
 
-  const proceedWithDetailView = async () =>
+  const proceedWithDetailView = useCallback(async () =>
     tapback !== props.message.id
-    && (!('ontouchstart' in window) || await pastDoubleTap());
+    && (!('ontouchstart' in window) || await pastDoubleTap()),
+    [tapback, props.message.id, pastDoubleTap]);
 
   if (props.message.id == null) console.log("there's no message ID");
 
