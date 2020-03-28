@@ -106,6 +106,11 @@ export default function Share(props) {
             onChange={e => setGiphyTerm(e.target.value)}
             value={giphyTerm}
             ref={giphyTermInputEl}/>
+            <div>
+              <a href="https://giphy.com/" target="_blank" rel="noopener noreferrer">
+                <img src="/giphy.png" className="giphy-attribution" alt="Powered by GIPHY"/>
+              </a>
+            </div>
           <div className="giphy-suggestions">
             {giphys ? (
               giphys.map(d =>

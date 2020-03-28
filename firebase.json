@@ -26,6 +26,15 @@
         ]
       },
       {
+        "source": "/giphy.png",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000"
+          }
+        ]
+      },
+      {
         "source": "/badge.png",
         "headers": [
           {
