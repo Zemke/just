@@ -42,7 +42,7 @@ export default function Chat(props) {
 
   const {messages: propsMessages} = props;
 
-  const arbitraryTolerance = 150;
+  const arbitraryTolerance = 100;
   const maxScrollTop = chatEl => chatEl.scrollHeight - chatEl.offsetHeight;
   const calcScrolledDown = useCallback(() => {
     return chatEl.current.scrollTop >= maxScrollTop(chatEl.current) - arbitraryTolerance
