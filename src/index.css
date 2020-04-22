@@ -61,7 +61,8 @@ button.form-control:focus {
   box-shadow: 0 0 0.2rem #151515;
 }
 
-p {
+p,
+.textMessage {
   margin: .3rem 0;
 }
 

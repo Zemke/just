@@ -25,7 +25,7 @@
   max-width: calc(60% + .8rem);
 }
 
-.chat > .body .message p.onlyEmoji {
+.chat > .body .message div.onlyEmoji {
   font-size: 4rem;
 }
 
@@ -47,11 +47,11 @@
   float: right;
 }
 
-.chat > .body .message p {
+.chat > .body .message .textMessage{
   word-break: break-word;
 }
 
-.chat > .body .message p a {
+.chat > .body .message .textMessage a {
   color: #ec173a;
   text-decoration: none;
   word-break: break-all;
@@ -61,7 +61,7 @@
   max-width: 100%;
 }
 
-.chat > .body .message p a:active {
+.chat > .body .message .textMessage a:active {
   color: #8a1733;
 }
 
