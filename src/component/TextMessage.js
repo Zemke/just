@@ -18,9 +18,9 @@ export default ({body}) => {
       .split('`')
       .map((curr, idx) => {
         if (idx % 2 !== 1) {
-          return (<span>{curr}</span>)
+          return (<span key={idx}>{curr}</span>)
         } else {
-          return (<code>{curr}</code>)
+          return (<code key={idx}>{curr}</code>)
         }
       });
   };
