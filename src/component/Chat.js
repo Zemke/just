@@ -47,7 +47,8 @@ export default function Chat(props) {
   const calcScrolledDown = useCallback(() => {
     return chatEl.current.scrollTop >= maxScrollTop(chatEl.current) - arbitraryTolerance
   }, []);
-  const forceScrollToBottom = useCallback(currChatEl => {
+  const forceScrollToBottom = useCallback((currChatEl, forceSmooth = false) => {
+    if (forceSmooth) currChatEl.classList.add('scrollSmooth');
     currChatEl.scrollTo(0, maxScrollTop(currChatEl));
     setInitMessages(true);
     setTimeout(() => {
@@ -259,7 +260,7 @@ export default function Chat(props) {
                                       {...{message, otherUser}} />))
         )}
         {!scrolledDown && (
-          <button onClick={() => forceScrollToBottom(chatEl.current)}
+          <button onClick={() => forceScrollToBottom(chatEl.current, true)}
                   className="scrollDown">
             &#8595;
           </button>
