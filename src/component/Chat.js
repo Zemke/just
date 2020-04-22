@@ -38,11 +38,15 @@ export default function Chat(props) {
   const [videoChat, setVideoChat] = useState(null);
   const [ownStream, setOwnStream] = useState(null);
   const [incomingCall, setIncomingCall] = useState(null);
+  const [scrolledDown, setScrolledDown] = useState(false);
 
   const {messages: propsMessages} = props;
 
   const arbitraryTolerance = 150;
   const maxScrollTop = chatEl => chatEl.scrollHeight - chatEl.offsetHeight;
+  const calcScrolledDown = useCallback(() => {
+    return chatEl.current.scrollTop >= maxScrollTop(chatEl.current) - arbitraryTolerance
+  }, []);
   const forceScrollToBottom = useCallback(currChatEl => {
     currChatEl.scrollTo(0, maxScrollTop(currChatEl));
     setInitMessages(true);
@@ -52,12 +56,16 @@ export default function Chat(props) {
     }, 300);
   }, []);
   const scrollToBottom = useCallback(() => {
+    scrolledDown && forceScrollToBottom(chatEl.current);
+  }, [forceScrollToBottom, scrolledDown]);
+
+  useEffect(() => {
     const currChatEl = chatEl.current;
     if (!currChatEl) return;
-    if (currChatEl.scrollTop >= maxScrollTop(currChatEl) - arbitraryTolerance) {
-      forceScrollToBottom(currChatEl);
-    }
-  }, [forceScrollToBottom]);
+    const scrollListener = () => setScrolledDown(calcScrolledDown());
+    currChatEl.addEventListener('scroll', scrollListener);
+    return () => currChatEl.removeEventListener('scroll', scrollListener);
+  });
 
   useEffect(() => {
     if (!Peering.supported || !props.currentUser || incomingCall) return;
@@ -250,10 +258,12 @@ export default function Chat(props) {
                                       lastOwnMessage={lastOwnMessage.id === message.id}
                                       {...{message, otherUser}} />))
         )}
-        <button onClick={() => forceScrollToBottom(chatEl.current)}
-                className="scrollDown">
-          &#8595;
-        </button>
+        {!scrolledDown && (
+          <button onClick={() => forceScrollToBottom(chatEl.current)}
+                  className="scrollDown">
+            &#8595;
+          </button>
+        )}
       </div>
       <div className="foot">
         <Foot chatBodyEl={chatBodyEl}
