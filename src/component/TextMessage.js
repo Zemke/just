@@ -14,10 +14,9 @@ export default ({body}) => {
     return message
       .split('```')
       .map((curr, idx) => {
-        const inlineCodeConverted = processMessageForInlineCode(curr);
         return idx % 2 !== 1
-          ? (<span key={idx}>{inlineCodeConverted}</span>)
-          : (<pre key={idx}>{inlineCodeConverted}</pre>);
+          ? (<span key={idx}>{processMessageForInlineCode(curr)}</span>)
+          : (<pre key={idx}>{curr}</pre>);
       });
   };
 
@@ -26,10 +25,14 @@ export default ({body}) => {
       .split('`')
       .map((curr, idx) => {
         const lineFeedConverted = curr.split('\n')
-          .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>));
+          .map((m, idx, arr) => (
+            <Fragment key={idx}>
+              {m}{(idx + 1 !== arr.length) && <br/>}
+            </Fragment>
+          ));
         return idx % 2 !== 1
           ? (<span key={idx}>{lineFeedConverted}</span>)
-          : (<code key={idx}>{lineFeedConverted}</code>);
+          : (<code key={idx}>{curr}</code>);
       });
   };
 

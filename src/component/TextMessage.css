@@ -1,6 +1,16 @@
-span > code {
+code, pre {
   background: lightgray;
   color: #272727;
   border-radius: .2rem;
-  padding: .05rem;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
+ pre {
+   padding: 0 .1rem 1rem .1rem;
+   font-size: .7rem;
+   overflow-x: scroll;
+ }
+
+ code {
+   padding: .05rem;
+   font-size: .9rem;
+ }
