@@ -1,4 +1,4 @@
-import React, {Fragment, useRef} from "react";
+import React, {Fragment} from "react";
 import Linkify from "react-linkify";
 import "./TextMessage.css";
 
