@@ -51,13 +51,10 @@ export default function Chat(props) {
     if (forceSmooth) currChatEl.classList.add('scrollSmooth');
     currChatEl.scrollTo(0, maxScrollTop(currChatEl));
     setInitMessages(true);
-    setTimeout(() => {
-      currChatEl.scrollTo(0, maxScrollTop(currChatEl));
-      currChatEl.classList.add('scrollSmooth');
-    }, 300);
+    setTimeout(() => currChatEl.classList.add('scrollSmooth'), 300);
   }, []);
   const scrollToBottom = useCallback(() => {
-    scrolledDown && forceScrollToBottom(chatEl.current);
+    setTimeout(() => !scrolledDown && forceScrollToBottom(chatEl.current), 100);
   }, [forceScrollToBottom, scrolledDown]);
 
   useEffect(() => {
