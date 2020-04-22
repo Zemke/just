@@ -43,18 +43,21 @@ export default function Chat(props) {
 
   const arbitraryTolerance = 150;
   const maxScrollTop = chatEl => chatEl.scrollHeight - chatEl.offsetHeight;
+  const forceScrollToBottom = useCallback(currChatEl => {
+    currChatEl.scrollTo(0, maxScrollTop(currChatEl));
+    setInitMessages(true);
+    setTimeout(() => {
+      currChatEl.scrollTo(0, maxScrollTop(currChatEl));
+      currChatEl.classList.add('scrollSmooth');
+    }, 300);
+  }, []);
   const scrollToBottom = useCallback(() => {
     const currChatEl = chatEl.current;
     if (!currChatEl) return;
     if (currChatEl.scrollTop >= maxScrollTop(currChatEl) - arbitraryTolerance) {
-      currChatEl.scrollTo(0, maxScrollTop(currChatEl));
-      setInitMessages(true);
-      setTimeout(() => {
-        currChatEl.scrollTo(0, maxScrollTop(currChatEl));
-        currChatEl.classList.add('scrollSmooth');
-      }, 300);
+      forceScrollToBottom(currChatEl);
     }
-  }, []);
+  }, [forceScrollToBottom]);
 
   useEffect(() => {
     if (!Peering.supported || !props.currentUser || incomingCall) return;
@@ -247,6 +250,10 @@ export default function Chat(props) {
                                       lastOwnMessage={lastOwnMessage.id === message.id}
                                       {...{message, otherUser}} />))
         )}
+        <button onClick={() => forceScrollToBottom(chatEl.current)}
+                className="scrollDown">
+          &#8595;
+        </button>
       </div>
       <div className="foot">
         <Foot chatBodyEl={chatBodyEl}

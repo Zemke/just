@@ -69,3 +69,27 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+button.scrollDown {
+  text-align: center;
+  position: absolute;
+  color: snow;
+  bottom: 5rem;
+  padding: .5rem 0;
+  width: 3.5rem;
+  left: calc(50% - 1.75rem);
+  z-index: 99999;
+  border-radius: 5rem;
+  backdrop-filter: blur(.9rem);
+  -webkit-backdrop-filter: blur(.9rem);
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-shadow: 0 0 .1rem #151515;
+}
+
+button.scrollDown:focus {
+  outline: none;
+  box-shadow: 0 0 .5rem #151515;
+}
