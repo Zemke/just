@@ -54,8 +54,8 @@ export default function Chat(props) {
     setTimeout(() => currChatEl.classList.add('scrollSmooth'), 300);
   }, []);
   const scrollToBottom = useCallback(() => {
-    setTimeout(() => !scrolledDown && forceScrollToBottom(chatEl.current), 100);
-  }, [forceScrollToBottom, scrolledDown]);
+    setTimeout(() => calcScrolledDown() && forceScrollToBottom(chatEl.current));
+  }, [forceScrollToBottom, calcScrolledDown]);
 
   useEffect(() => {
     const currChatEl = chatEl.current;
@@ -90,8 +90,8 @@ export default function Chat(props) {
   }, [props.currentUser, incomingCall]);
 
   useEffect(() => {
-    (props.initMessages && !initMessages) && scrollToBottom();
-  }, [scrollToBottom, props.initMessages, initMessages, props.messages, otherUser]);
+    props.initMessages && !initMessages && setTimeout(() => forceScrollToBottom(chatEl.current))
+  }, [forceScrollToBottom, props.initMessages, initMessages, props.messages, otherUser]);
 
   useEffect(() => {
     const resizeListener = () => scrollToBottom();
