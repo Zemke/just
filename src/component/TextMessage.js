@@ -13,26 +13,34 @@ export default ({body}) => {
       .replace(/[^\x00-\x7F]/g, "")
       .length;
 
-  const processMessage = message => {
+  const processMessageForBlockCode = message => {
+    return message
+      .split('```')
+      .map((curr, idx) => {
+        const inlineCodeConverted = processMessageForInlineCode(curr);
+        return idx % 2 !== 1
+          ? (<span key={idx}>{inlineCodeConverted}</span>)
+          : (<pre key={idx}>{inlineCodeConverted}</pre>);
+      });
+  };
+
+  const processMessageForInlineCode = message => {
     return message
       .split('`')
       .map((curr, idx) => {
-        if (idx % 2 !== 1) {
-          return (<span key={idx}>{curr}</span>)
-        } else {
-          return (<code key={idx}>{curr}</code>)
-        }
+        const lineFeedConverted = curr.split('\n')
+          .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>));
+        return idx % 2 !== 1
+          ? (<span key={idx}>{lineFeedConverted}</span>)
+          : (<code key={idx}>{lineFeedConverted}</code>);
       });
   };
 
   return (
-    <p className={isOnlyEmoji(body.trim()) ? 'onlyEmoji' : ''} ref={messageEl}>
+    <div className={isOnlyEmoji(body.trim()) ? 'onlyEmoji' : ''} ref={messageEl}>
       <Linkify properties={{target: '_blank'}}>
-        {body
-          .split('\n')
-          .map(processMessage)
-          .map((m, idx) => (<Fragment key={idx}>{m}<br/></Fragment>))}
+        {processMessageForBlockCode(body)}
       </Linkify>
-    </p>
+    </div>
   )
 };
