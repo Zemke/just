@@ -39,6 +39,7 @@ export default function Chat(props) {
   const [ownStream, setOwnStream] = useState(null);
   const [incomingCall, setIncomingCall] = useState(null);
   const [scrolledDown, setScrolledDown] = useState(false);
+  const [hasScrollbar, setHasScrollbar] = useState(false);
 
   const {messages: propsMessages} = props;
 
@@ -54,6 +55,8 @@ export default function Chat(props) {
     setTimeout(() => currChatEl.classList.add('scrollSmooth'), 300);
   }, []);
   const scrollToBottom = useCallback(() => {
+    setHasScrollbar(chatEl.current.scrollHeight > chatEl.current.clientHeight);
+    console.log('setHasScrollbar', chatEl.current.scrollHeight > chatEl.current.clientHeight);
     setTimeout(() => calcScrolledDown() && forceScrollToBottom(chatEl.current));
   }, [forceScrollToBottom, calcScrolledDown]);
 
@@ -256,7 +259,7 @@ export default function Chat(props) {
                                       lastOwnMessage={lastOwnMessage.id === message.id}
                                       {...{message, otherUser}} />))
         )}
-        {!scrolledDown && (
+        {(!scrolledDown && hasScrollbar) && (
           <button onClick={() => forceScrollToBottom(chatEl.current, true)}
                   className="scrollDown">
             &#8595;
