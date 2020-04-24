@@ -3,19 +3,15 @@ import Linkify from "react-linkify"
 import "./TextMessage.css";
 
 const LinkifyWrapper = React.memo(props => {
-  console.log('LinkifyWrapper()', props);
-
   /** @type {{current: HTMLAnchorElement}} */ const elem = useRef(null);
 
   const fetchPreview = useCallback(() => {
-    console.log('fetchPreview()');
     fetch(`https://guteurls.de/api/?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`)
       .then(response => response.json())
-      .then(json => {
-        const closestElem = elem.current.closest('[data-text-message]');
-        console.log('closest', closestElem);
-        closestElem.dispatchEvent(new CustomEvent('linkified', {detail: json}))
-      });
+      .then(json =>
+        elem.current
+          .closest('[data-text-message]')
+          .dispatchEvent(new CustomEvent('linkified', {detail: json})));
   }, [props.href]);
 
   useEffect(() => {
