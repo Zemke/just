@@ -1,20 +1,22 @@
-import React, {Fragment, useCallback, useEffect, useState} from "react";
-import Linkify from "react-linkify";
+import React, {Fragment, useCallback, useEffect, useRef} from "react";
+import Linkify from "react-linkify"
 import "./TextMessage.css";
 
+const LinkifyWrapper = React.memo(props => {
+  console.log('LinkifyWrapper()', props);
 
-const LinkifyWrapper = props => {
-
-  const [preview, setPreview] = useState(null);
+  /** @type {{current: HTMLAnchorElement}} */ const elem = useRef(null);
 
   const fetchPreview = useCallback(() => {
+    console.log('fetchPreview()');
     // curl "https://guteurls.de/api/" -d "u=http://apple.com/iphone&r=http://your-homepage.com/computer-news.php&e=your-email@my-homepage.com&t=json"
     // `https://guteurls.de/api/?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`
     fetch(`http://localhost:5000/guteurls.json?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`)
       .then(response => response.json())
       .then(json => {
-        console.log(json);
-        // todo do something with the response
+        const closestElem = elem.current.closest('[data-text-message]');
+        console.log('closest', closestElem);
+        closestElem.dispatchEvent(new CustomEvent('linkified', {detail: json}))
       });
   }, [props.href]);
 
@@ -22,15 +24,12 @@ const LinkifyWrapper = props => {
     fetchPreview();
   }, [fetchPreview]);
 
-  return (
-    <span>
-      <a {...props}/>
-      {preview && ({preview})}
-    </span>
-  )
-};
+  return <a ref={elem} {...props}/>
+});
 
-export default ({body}) => {
+export default React.memo(({body}) => {
+
+  const parentElem = useRef(null);
 
   const isOnlyEmoji = message =>
     !!message && !message
@@ -64,11 +63,20 @@ export default ({body}) => {
       });
   };
 
+  useEffect(() => {
+    const linkifiedListener = ({detail}) => console.log('detail', detail);
+    const currParentElem = parentElem.current;
+    currParentElem.addEventListener('linkified', linkifiedListener);
+    return () => currParentElem.removeEventListener('linkified', linkifiedListener)
+  }, []);
+
   return (
-    <div className={'textMessage' + (isOnlyEmoji(body.trim()) ? ' onlyEmoji' : '')}>
+    <div className={'textMessage' + (isOnlyEmoji(body.trim()) ? ' onlyEmoji' : '')}
+         ref={parentElem} data-text-message>
       <Linkify properties={{target: '_blank'}} component={LinkifyWrapper}>
         {processMessageForBlockCode(body)}
       </Linkify>
     </div>
   )
-};
+});
+
