@@ -9,7 +9,8 @@ const LinkifyWrapper = props => {
 
   const fetchPreview = useCallback(() => {
     // curl "https://guteurls.de/api/" -d "u=http://apple.com/iphone&r=http://your-homepage.com/computer-news.php&e=your-email@my-homepage.com&t=json"
-    fetch(`https://guteurls.de/api/?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`)
+    // `https://guteurls.de/api/?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`
+    fetch(`http://localhost:5000/guteurls.json?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`)
       .then(response => response.json())
       .then(json => {
         console.log(json);
