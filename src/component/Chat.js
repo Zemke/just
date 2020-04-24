@@ -56,7 +56,6 @@ export default function Chat(props) {
   }, []);
   const scrollToBottom = useCallback(() => {
     setHasScrollbar(chatEl.current.scrollHeight > chatEl.current.clientHeight);
-    console.log('setHasScrollbar', chatEl.current.scrollHeight > chatEl.current.clientHeight);
     setTimeout(() => calcScrolledDown() && forceScrollToBottom(chatEl.current));
   }, [forceScrollToBottom, calcScrolledDown]);
 

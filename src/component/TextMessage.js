@@ -38,7 +38,7 @@ export default ({body}) => {
 
   return (
     <div className={'textMessage' + (isOnlyEmoji(body.trim()) ? ' onlyEmoji' : '')}>
-      <Linkify properties={{target: '_blank'}}>
+      <Linkify properties={{target: '_blank'}} component="a">
         {processMessageForBlockCode(body)}
       </Linkify>
     </div>
