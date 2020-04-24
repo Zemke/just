@@ -1,4 +1,4 @@
-import React, {Fragment, useCallback, useEffect, useRef} from "react";
+import React, {Fragment, useCallback, useEffect, useRef, useState} from "react";
 import Linkify from "react-linkify"
 import "./TextMessage.css";
 
@@ -10,8 +10,8 @@ const LinkifyWrapper = React.memo(props => {
   const fetchPreview = useCallback(() => {
     console.log('fetchPreview()');
     // curl "https://guteurls.de/api/" -d "u=http://apple.com/iphone&r=http://your-homepage.com/computer-news.php&e=your-email@my-homepage.com&t=json"
-    // `https://guteurls.de/api/?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`
-    fetch(`http://localhost:5000/guteurls.json?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`)
+    fetch(`https://guteurls.de/api/?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`)
+      // fetch(`http://localhost:5000/guteurls.json?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io`)
       .then(response => response.json())
       .then(json => {
         const closestElem = elem.current.closest('[data-text-message]');
@@ -30,6 +30,8 @@ const LinkifyWrapper = React.memo(props => {
 export default React.memo(({body}) => {
 
   const parentElem = useRef(null);
+
+  const [previews, setPreviews] = useState([]);
 
   const isOnlyEmoji = message =>
     !!message && !message
@@ -64,19 +66,41 @@ export default React.memo(({body}) => {
   };
 
   useEffect(() => {
-    const linkifiedListener = ({detail}) => console.log('detail', detail);
+    const linkifiedListener = ({detail}) => setPreviews(curr => [...curr, detail]);
     const currParentElem = parentElem.current;
     currParentElem.addEventListener('linkified', linkifiedListener);
     return () => currParentElem.removeEventListener('linkified', linkifiedListener)
   }, []);
 
   return (
-    <div className={'textMessage' + (isOnlyEmoji(body.trim()) ? ' onlyEmoji' : '')}
-         ref={parentElem} data-text-message>
-      <Linkify properties={{target: '_blank'}} component={LinkifyWrapper}>
-        {processMessageForBlockCode(body)}
-      </Linkify>
-    </div>
+    <>
+      <div className={'textMessage' + (isOnlyEmoji(body.trim()) ? ' onlyEmoji' : '')}
+           ref={parentElem} data-text-message>
+        <Linkify properties={{target: '_blank'}} component={LinkifyWrapper}>
+          {processMessageForBlockCode(body)}
+        </Linkify>
+      </div>
+      <div className="previews">
+        {previews.map((preview, idx) => (
+          <div className="preview" key={idx}>
+            <a href={preview.url} target="_blank">
+              <h1>
+                <img src={preview.favicon} alt="Favicon"/>
+                <span dangerouslySetInnerHTML={{__html: preview.title}}/>
+              </h1>
+              {preview.img && <img src={preview.img} alt="Preview image"/>}
+              <p dangerouslySetInnerHTML={{__html: preview.description}}/>
+            </a>
+            <div dangerouslySetInnerHTML={{__html: preview.html}}/>
+          </div>
+        ))}
+        {!!previews.length && (
+          <div className="preview">
+            Powered by <a href="https://guteurls.de/">URL Preview Service</a>
+          </div>
+        )}
+      </div>
+    </>
   )
 });
 
