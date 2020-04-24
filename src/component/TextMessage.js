@@ -1,6 +1,33 @@
-import React, {Fragment} from "react";
+import React, {Fragment, useCallback, useEffect, useState} from "react";
 import Linkify from "react-linkify";
 import "./TextMessage.css";
+
+
+const LinkifyWrapper = props => {
+
+  const [preview, setPreview] = useState(null);
+
+  const fetchPreview = useCallback(() => {
+    // curl "https://guteurls.de/api/" -d "u=http://apple.com/iphone&r=http://your-homepage.com/computer-news.php&e=your-email@my-homepage.com&t=json"
+    fetch(`https://guteurls.de/api/?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`)
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+        // todo do something with the response
+      });
+  }, [props.href]);
+
+  useEffect(() => {
+    fetchPreview();
+  }, [fetchPreview]);
+
+  return (
+    <span>
+      <a {...props}/>
+      {preview && ({preview})}
+    </span>
+  )
+};
 
 export default ({body}) => {
 
@@ -38,7 +65,7 @@ export default ({body}) => {
 
   return (
     <div className={'textMessage' + (isOnlyEmoji(body.trim()) ? ' onlyEmoji' : '')}>
-      <Linkify properties={{target: '_blank'}} component="a">
+      <Linkify properties={{target: '_blank'}} component={LinkifyWrapper}>
         {processMessageForBlockCode(body)}
       </Linkify>
     </div>
