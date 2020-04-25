@@ -100,7 +100,6 @@ export default React.memo(({body}) => {
               )}
               <p dangerouslySetInnerHTML={{__html: preview.description}}/>
             </a>
-            <div dangerouslySetInnerHTML={{__html: preview.html}}/>
           </div>
         ))}
         {!!previews.find(p => !!p.guteUrl) && (
