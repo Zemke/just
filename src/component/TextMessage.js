@@ -5,13 +5,19 @@ import "./TextMessage.css";
 const LinkifyWrapper = React.memo(props => {
   /** @type {{current: HTMLAnchorElement}} */ const elem = useRef(null);
 
+  const emitEvent = detail =>
+    elem.current
+      .closest('[data-text-message]')
+      .dispatchEvent(new CustomEvent('linkified', {detail}));
+
   const fetchPreview = useCallback(() => {
-    fetch(`https://guteurls.de/api/?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`)
-      .then(response => response.json())
-      .then(json =>
-        elem.current
-          .closest('[data-text-message]')
-          .dispatchEvent(new CustomEvent('linkified', {detail: json})));
+    if (new URL(props.href).pathname.match(/\.(jpe?g|png|gif|$)/)) {
+      emitEvent({img: props.href, guteUrl: false});
+    } else {
+      fetch(`https://guteurls.de/api/?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`)
+        .then(response => response.json())
+        .then(json => emitEvent({...json, guteUrl: true}));
+    }
   }, [props.href]);
 
   useEffect(() => {
@@ -26,6 +32,7 @@ export default React.memo(({body}) => {
   const parentElem = useRef(null);
 
   const [previews, setPreviews] = useState([]);
+  const [listening, setListening] = useState(false);
 
   const isOnlyEmoji = message =>
     !!message && !message
@@ -63,6 +70,7 @@ export default React.memo(({body}) => {
     const linkifiedListener = ({detail}) => setPreviews(curr => [...curr, detail]);
     const currParentElem = parentElem.current;
     currParentElem.addEventListener('linkified', linkifiedListener);
+    setListening(true);
     return () => currParentElem.removeEventListener('linkified', linkifiedListener)
   }, []);
 
@@ -70,16 +78,18 @@ export default React.memo(({body}) => {
     <>
       <div className={'textMessage' + (isOnlyEmoji(body.trim()) ? ' onlyEmoji' : '')}
            ref={parentElem} data-text-message>
-        <Linkify properties={{target: '_blank'}} component={LinkifyWrapper}>
-          {processMessageForBlockCode(body)}
-        </Linkify>
+        {listening && (
+          <Linkify properties={{target: '_blank'}} component={LinkifyWrapper}>
+            {processMessageForBlockCode(body)}
+          </Linkify>
+        )}
       </div>
       <div className="previews">
         {previews.map((preview, idx) => (
           <div className="preview" key={idx}>
             <a href={preview.url} target="_blank">
               <h1>
-                <img src={preview.favicon} alt="Favicon"/>
+                {preview.favicon && <img src={preview.favicon} alt="Favicon"/>}
                 <span dangerouslySetInnerHTML={{__html: preview.title}}/>
               </h1>
               {preview.img && <img src={preview.img} alt="Preview image"/>}
@@ -88,7 +98,7 @@ export default React.memo(({body}) => {
             <div dangerouslySetInnerHTML={{__html: preview.html}}/>
           </div>
         ))}
-        {!!previews.length && (
+        {!!previews.find(p => !!p.guteUrl) && (
           <div className="preview">
             Powered by <a href="https://guteurls.de/">URL Preview Service</a>
           </div>
