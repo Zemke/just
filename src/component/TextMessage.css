@@ -16,17 +16,22 @@ code {
   font-size: .9rem;
 }
 
-.chat > .body .message-wrapper.from .message .preview {
+.chat > .body .message-wrapper.from .message .preview:not(.full) {
   border-top: 1px solid #151515;
 }
 
-.chat > .body .message-wrapper.to .message .preview {
+.chat > .body .message-wrapper.to .message .preview:not(.full) {
   border-top: 1px solid snow;
 }
 
 .preview {
   margin: 0 -.4rem;
   padding: .5rem .4rem;
+}
+
+.preview.full {
+  margin: 0 -.4rem -.6rem;
+  padding: 0;
 }
 
 .previews .attribution {
@@ -51,7 +56,7 @@ code {
   margin: 0 0 .4rem;
 }
 
-.preview img.previewImage {
+.preview:not(.full) img.previewImage {
   border-radius: .5rem;
 }
 

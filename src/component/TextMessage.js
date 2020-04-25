@@ -86,7 +86,8 @@ export default React.memo(({body}) => {
       </div>
       <div className="previews">
         {previews.map((preview, idx) => (
-          <div className="preview" key={idx}>
+          <div key={idx}
+               className={'preview' + (Object.keys(preview).length === 2 ? ' full' : '')}>
             <a href={preview.url} target="_blank">
               <h1>
                 {preview.favicon && <img src={preview.favicon} alt="Favicon"/>}
