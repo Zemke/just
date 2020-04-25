@@ -51,7 +51,7 @@ code {
   margin: 0 0 .4rem;
 }
 
-.preview > img {
+.preview img.previewImage {
   border-radius: .5rem;
 }
 

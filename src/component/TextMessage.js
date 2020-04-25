@@ -92,7 +92,11 @@ export default React.memo(({body}) => {
                 {preview.favicon && <img src={preview.favicon} alt="Favicon"/>}
                 <span dangerouslySetInnerHTML={{__html: preview.title}}/>
               </h1>
-              {preview.img && <img src={preview.img} alt="Preview image"/>}
+              {preview.img && (
+                <img src={preview.img}
+                     className="previewImage"
+                     alt="Preview image"/>
+              )}
               <p dangerouslySetInnerHTML={{__html: preview.description}}/>
             </a>
             <div dangerouslySetInnerHTML={{__html: preview.html}}/>
