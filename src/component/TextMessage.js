@@ -99,7 +99,7 @@ export default React.memo(({body}) => {
           </div>
         ))}
         {!!previews.find(p => !!p.guteUrl) && (
-          <div className="preview">
+          <div className="attribution preview">
             Powered by <a href="https://guteurls.de/">URL Preview Service</a>
           </div>
         )}

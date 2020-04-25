@@ -29,11 +29,11 @@ code {
   padding: .5rem .4rem;
 }
 
-.preview:last-child {
+.previews .attribution {
   font-size: .7rem;
   text-align: right;
-  margin-bottom: 0;
-  padding: .15rem .6rem
+  padding-top: 1px;
+  padding-bottom: 1px;
 }
 
 .preview h1 {
@@ -65,7 +65,7 @@ code {
 }
 
 .preview a a,
-.preview a:last-child {
+.previews .attribution a {
   color: #ec173a;
   text-decoration: none;
 }
