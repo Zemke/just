@@ -14,6 +14,7 @@ import VideoChat from "./VideoChat";
 import toName from '../util/toName';
 import Overlay from "./Overlay";
 import getUserMedia from "../util/getUserMedia";
+import ResizeObserver from 'resize-observer-polyfill';
 
 export default function Chat(props) {
 
