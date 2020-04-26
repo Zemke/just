@@ -99,3 +99,7 @@ p,
 @keyframes blinker {
   50% { opacity: 0; }
 }
+
+button:hover {
+  cursor: pointer;
+}
