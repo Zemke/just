@@ -45,7 +45,7 @@ export default function Chat(props) {
 
   const calcScrolledDown = useCallback(() => {
     return chatEl.current.scrollTop + chatEl.current.clientHeight
-      >= chatEl.current.scrollHeight; // todo tolerance
+      >= chatEl.current.scrollHeight;
   }, []);
   const forceScrollToBottom = useCallback((smooth = false) => {
     smooth
