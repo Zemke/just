@@ -20,7 +20,6 @@ export default function Chat(props) {
   /** @type {{current: HTMLDivElement}} */ const chatEl = useRef(null);
   /** @type {{current: HTMLDivElement}} */ const chatBodyEl = useRef(null);
 
-  const [initMessages, setInitMessages] = useState(false);
   const [otherUser, setOtherUser] = useState(() => {
     const otherUserFromPathname = window.location.pathname.substr(1);
     if (!!otherUserFromPathname) {
@@ -40,32 +39,54 @@ export default function Chat(props) {
   const [incomingCall, setIncomingCall] = useState(null);
   const [scrolledDown, setScrolledDown] = useState(false);
   const [hasScrollbar, setHasScrollbar] = useState(false);
+  const [scrollDetached, setScrollDetached] = useState(false);
 
   const {messages: propsMessages} = props;
 
-  const arbitraryTolerance = 100;
-  const maxScrollTop = chatEl => chatEl.clientHeight - chatEl.offsetHeight;
   const calcScrolledDown = useCallback(() => {
-    return chatEl.current.scrollTop >= maxScrollTop(chatEl.current) - arbitraryTolerance
+    return chatEl.current.scrollTop + chatEl.current.clientHeight
+      >= chatEl.current.scrollHeight; // todo tolerance
   }, []);
-  const forceScrollToBottom = useCallback((currChatEl, forceSmooth = false) => {
-    if (forceSmooth) currChatEl.classList.add('scrollSmooth');
-    currChatEl.scrollTo(0, maxScrollTop(currChatEl));
-    setInitMessages(true);
-    setTimeout(() => currChatEl.classList.add('scrollSmooth'), 300);
+  const forceScrollToBottom = useCallback((smooth = false) => {
+    smooth
+      ? chatEl.current.classList.add('scrollSmooth')
+      : chatEl.current.classList.remove('scrollSmooth');
+    chatEl.current.scrollTop = chatEl.current.scrollHeight;
+    setHasScrollbar(chatEl.current.scrollHeight > chatEl.current.clientHeight);
   }, []);
   const scrollToBottom = useCallback(() => {
-    setHasScrollbar(chatEl.current.scrollHeight > chatEl.current.clientHeight);
-    setTimeout(() => calcScrolledDown() && forceScrollToBottom(chatEl.current));
-  }, [forceScrollToBottom, calcScrolledDown]);
+    !scrollDetached && forceScrollToBottom();
+  }, [scrollDetached, forceScrollToBottom]);
+
+  useEffect(() => {
+    // todo https://github.com/que-etc/resize-observer-polyfill
+    if (!('ResizeObserver' in window)) {
+      console.warn('ResizeObserver not supported, not scrolling down automatically.');
+    }
+    const resizeObserver =
+      new ResizeObserver(() => !props.initMessages ? forceScrollToBottom() : scrollToBottom());
+    resizeObserver.observe(chatBodyEl.current);
+    resizeObserver.observe(chatEl.current);
+    return () => resizeObserver.disconnect();
+  }, [props.initMessages, forceScrollToBottom, scrollToBottom]);
 
   useEffect(() => {
     const currChatEl = chatEl.current;
-    if (!currChatEl) return;
-    const scrollListener = () => setScrolledDown(calcScrolledDown());
+    let lastScrollTop = currChatEl.scrollTop;
+    const scrollListener = () => {
+      setScrollDetached(curr => {
+        if (curr) {
+          return !calcScrolledDown();
+        } else {
+          return lastScrollTop > currChatEl.scrollTop;
+        }
+      });
+      lastScrollTop = currChatEl.scrollTop;
+      setScrolledDown(calcScrolledDown());
+    };
     currChatEl.addEventListener('scroll', scrollListener);
     return () => currChatEl.removeEventListener('scroll', scrollListener);
-  });
+  }, [calcScrolledDown]);
 
   useEffect(() => {
     if (!Peering.supported || !props.currentUser || incomingCall) return;
@@ -90,16 +111,6 @@ export default function Chat(props) {
     })();
     return async () => listenToCallRequestsSubscription && (await listenToCallRequestsSubscription)();
   }, [props.currentUser, incomingCall]);
-
-  useEffect(() => {
-    props.initMessages && !initMessages && setTimeout(() => forceScrollToBottom(chatEl.current))
-  }, [forceScrollToBottom, props.initMessages, initMessages, props.messages, otherUser]);
-
-  useEffect(() => {
-    const resizeListener = () => scrollToBottom();
-    window.addEventListener('resize', resizeListener);
-    return () => window.removeEventListener('resize', resizeListener);
-  }, [scrollToBottom]);
 
   useEffect(() => {
     const messageWithGap = props.messages.reduce((acc, curr, idx, arr) => {
@@ -134,7 +145,7 @@ export default function Chat(props) {
       api.onTokenRefresh(DataStore.saveToken);
       api.onMessage(({data}) =>
         (document.hidden || data.fromUid !== otherUser)
-          && webNotifications.notify(data.fromName, data.body, {fromUserUid: data.fromUid}));
+        && webNotifications.notify(data.fromName, data.body, {fromUserUid: data.fromUid}));
     }), [otherUser, props.currentUser]);
 
   useEffect(() => {
@@ -149,7 +160,7 @@ export default function Chat(props) {
 
   const onSelect = otherUser => {
     setOtherUser(otherUser);
-    scrollToBottom();
+    forceScrollToBottom(false);
   };
 
   useEffect(() => {
@@ -259,7 +270,7 @@ export default function Chat(props) {
                                       {...{message, otherUser}} />))
         )}
         {(!scrolledDown && hasScrollbar) && (
-          <button onClick={() => forceScrollToBottom(chatEl.current, true)}
+          <button onClick={() => forceScrollToBottom(true)}
                   className="scrollDown">
             &#8595;
           </button>
@@ -268,7 +279,6 @@ export default function Chat(props) {
       <div className="foot">
         <Foot chatBodyEl={chatBodyEl}
               chatEl={chatEl}
-              scrollToBottom={scrollToBottom}
               otherUser={otherUser}
               currentUser={props.currentUser}
               uploads={onUploads}/>

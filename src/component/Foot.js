@@ -26,29 +26,6 @@ export default function Foot(props) {
     return () => document.removeEventListener('keydown', documentKeydownHandler);
   });
 
-  useEffect(() => {
-    if ('ResizeObserver' in window) {
-      const resizeObserver = new ResizeObserver(() => {
-        props.chatEl.current.classList.remove('scrollSmooth');
-        props.scrollToBottom();
-      });
-      resizeObserver.observe(props.chatBodyEl.current);
-      return () => resizeObserver.disconnect();
-    } else {
-      const onFocusListener = () => {
-        window.isMobileJustDevice.then(isMobile => {
-          if (!isMobile) return;
-          props.chatEl.current.classList.remove('scrollSmooth');
-          props.scrollToBottom();
-        });
-      };
-      const inputFieldRef = inputField.current;
-      inputFieldRef.addEventListener('focus', onFocusListener);
-      return () => inputFieldRef.removeEventListener('focus', onFocusListener);
-    }
-  }, [props, props.scrollToBottom]);
-
-
   const onSubmit = e => {
     e.preventDefault();
 
@@ -141,8 +118,6 @@ export default function Foot(props) {
     const currChatBodyEl = props.chatBodyEl.current;
     if (!currChatEl || !currChatBodyEl) return;
     currChatBodyEl.style.marginBottom = inputFieldHeight + 'px';
-    currChatEl.classList.remove('scrollSmooth');
-    props.scrollToBottom();
   }, [inputFieldHeight, props]);
 
   const onVideoCall = () =>
