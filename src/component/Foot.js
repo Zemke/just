@@ -64,20 +64,20 @@ export default function Foot(props) {
       giphy: id,
     });
 
-  const onShareLocation =  () => {
-     navigator.geolocation.getCurrentPosition(position => {
-       const latitude  = position.coords.latitude;
-       const longitude = position.coords.longitude;
+  const onShareLocation = () => {
+    navigator.geolocation.getCurrentPosition(position => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
 
-       DataStore.sendMessage({
-         from: props.currentUser.uid,
-         to: props.otherUser,
-         body: null,
-         location: new firebase.firestore.GeoPoint(latitude, longitude)
-       });
-     }, () => {
-       alert('Could not get your current location for sending.');
-     }, {enableHighAccuracy: true});
+      DataStore.sendMessage({
+        from: props.currentUser.uid,
+        to: props.otherUser,
+        body: null,
+        location: new firebase.firestore.GeoPoint(latitude, longitude)
+      });
+    }, () => {
+      alert('Could not get your current location for sending.');
+    }, {enableHighAccuracy: true});
   };
 
   useEffect(() => {
