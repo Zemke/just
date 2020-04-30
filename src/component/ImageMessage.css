@@ -7,16 +7,23 @@
   margin-right: 0;
 }
 
-.chat > .body .message .image img {
+.chat > .body .message .image img,
+.chat > .body .message iframe.image {
   border-radius: .7rem;
   cursor: pointer;
 }
 
-.chat > .body .message-wrapper.from .message .image img {
+.chat > .body .message iframe.image {
+  height: 18rem;
+}
+
+.chat > .body .message-wrapper.from .message .image img,
+.chat > .body .message-wrapper.from .message iframe.image {
   border-bottom-left-radius: 0;
 }
 
-.chat > .body .message-wrapper.to .message .image img {
+.chat > .body .message-wrapper.to .message .image img,
+.chat > .body .message-wrapper.to .message iframe.image {
   border-bottom-right-radius: 0;
 }
 

@@ -129,6 +129,12 @@ export default function Share(props) {
             <span className="icon" role="img" aria-label="Gallery">🌉</span>
             Gallery
           </li>
+          {!!navigator.geolocation && (
+            <li onClick={props.onShareLocation}>
+              <span className="icon" role="img" aria-label="Pin">📍</span>
+              Send Location
+            </li>
+          )}
           <li onClick={() => setCameraActive(true)}>
             <span className="icon" role="img" aria-label="Camera">📷</span>
             Camera

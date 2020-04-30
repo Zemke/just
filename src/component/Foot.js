@@ -6,6 +6,7 @@ import Storage from "../util/storage.js";
 import './Foot.css';
 import randomString from "../util/randomString";
 import VideoChat from "./VideoChat";
+import * as firebase from "firebase";
 
 export default function Foot(props) {
 
@@ -62,6 +63,22 @@ export default function Foot(props) {
       body: null,
       giphy: id,
     });
+
+  const onShareLocation =  () => {
+     navigator.geolocation.getCurrentPosition(position => {
+       const latitude  = position.coords.latitude;
+       const longitude = position.coords.longitude;
+
+       DataStore.sendMessage({
+         from: props.currentUser.uid,
+         to: props.otherUser,
+         body: null,
+         location: new firebase.firestore.GeoPoint(latitude, longitude)
+       });
+     }, () => {
+       alert('Could not get your current location for sending.');
+     }, {enableHighAccuracy: true});
+  };
 
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
@@ -128,6 +145,7 @@ export default function Foot(props) {
       {videoChat && <VideoChat otherUser={props.otherUser} onClose={() => setVideoChat(false)}/>}
       <Share onFiles={setFiles}
              inputFieldHeight={inputFieldHeight}
+             onShareLocation={onShareLocation}
              onGiphyClick={onGiphyClick}
              onVideoCall={onVideoCall}/>
       <ContentEditable

@@ -6,6 +6,7 @@ import './Message.css';
 import DisplayTapback from "./DisplayTapback";
 import GiphyMessage from "./GiphyMessage";
 import TextMessage from "./TextMessage";
+import OpenStreetMapEmbed from "./OpenStreetMapEmbed";
 
 export default function Message(props) {
 
@@ -103,10 +104,12 @@ export default function Message(props) {
                           proceedWithDetailView={proceedWithDetailView}/>
           ) : props.message.giphy ? (
             <GiphyMessage id={props.message.giphy}/>
+          ) : props.message.location ? (
+            <OpenStreetMapEmbed geo={props.message.location}/>
           ) : (
             <>
               <div className="overlay"/>
-              <TextMessage body={props.message.body}/>
+              {!!props.message.body ? (<TextMessage body={props.message.body}/>) : <h1>{props.message.id}</h1>}
             </>
           )}
         </div>
