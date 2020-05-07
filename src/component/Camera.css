@@ -6,7 +6,19 @@
   border-radius: 2rem;
 }
 
-#cameraContainer.onVideo video#video {
+video#ownVideo {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30%;
+  padding: 0;
+  margin: 0;
+  border-radius: 1rem;
+  opacity: 0;
+}
+
+#cameraContainer.onVideo video#video,
+#cameraContainer.onVideo video#ownVideo {
   opacity: 1;
   transition: opacity 1s;
 }

@@ -10,6 +10,7 @@ import DataStore from '../util/dataStore';
 export default function VideoChat(props) {
 
   /** @type {{current: HTMLVideoElement}} */ const videoElem = useRef(null);
+  /** @type {{current: HTMLVideoElement}} */ const ownVideoElem = useRef();
   /** @type {{current: MediaStream}} */ const ownMediaStream =
     useRef(props.ownStream ? props.ownStream.stream : null);
   /** @type {{current: Function}} */ const hangUpCb =
@@ -27,18 +28,26 @@ export default function VideoChat(props) {
     videoElem.current.play().then(() => setPlaying(true));
   };
 
+  const displayOwnStream = () => {
+    console.log(ownMediaStream.current);
+    ownVideoElem.current.srcObject = ownMediaStream.current;
+    ownVideoElem.current.play();
+  };
+
   useEffect(() => {
     if (!props.stream) return;
     props.stream.getTracks().forEach(track =>
       track.onended = () =>
         setTimeout(() => props.onClose(), 1000));
     displayStream(props.stream);
+    displayOwnStream();
   }, [props]);
 
   useEffect(() => {
     if (props.stream || !props.otherUser) return;
     (async () => {
       ownMediaStream.current = await getUserMedia();
+      displayOwnStream();
       try {
         const otherStream =
           await Peering.requestCall(
@@ -113,6 +122,7 @@ export default function VideoChat(props) {
            tabIndex="10">
         <div className="videoWrapper">
           <video id="video" ref={videoElem}/>
+          <video id="ownVideo" ref={ownVideoElem}/>
         </div>
       </div>
       {playing && (
