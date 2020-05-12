@@ -1,14 +1,9 @@
-# Just — without the flutter and reacts
+# Just
 
-Just is a messenger without a contact list and the need of account creation while still offering the features you are used to from other messenger.
+Richly featured Instant Messenger with focus on just chatting.
 
-When you identify yourself using your email address you are given a code that is unique to you and you can share it with only the people you want to chat with.
+There's no registration, no syncing with your address book or sharing your phone number. You're anonymously identified by your personal unique Just code that you share only with the people you want to contact with.
 
-This is nothing like you are registering and all people in your contacts will get notified about it.
+Peer-to-peer video and voice calls, GIF sharing, image sharing, camera support, advanced link sharing, share from other Apps (on Android), location sharing, message reactions (tapbacks), Markdown inline and block code formatting, large emoji, Push notifications (on Android and Desktop) and much more.
 
-I personally only have one person I chat with and I can use this messenger for just doing that and not getting messaged by other people in my phone’s contacts out of nothing.
-
-Under the hood this is just a web app. Add it to your home screen and it will work like a native App (iOS not supported). \
-On your Desktop you can simply access the site and using Chrome you’re given the the opportunity of installing it as a standalone App on your computer.
-
-Messages are encrypted during transfer from your device to the server and to the recipient. Messages are not encrypted on the server and not encrypted on your device and the device of the person you are chatting with (unless device encryption is turned on but that is up to the people).
+![Screenshot 2020-05-12 at 11 05 47](https://user-images.githubusercontent.com/3391981/81665264-cb6da600-9440-11ea-9dc0-497ef32f2007.png)
