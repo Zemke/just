@@ -53,6 +53,7 @@
   left: 0;
   right: 0;
   z-index: 999;
+  background-color: rgba(255, 255, 255, .5);
   backdrop-filter: blur(.5rem);
   -webkit-backdrop-filter: blur(.5rem);
 }
@@ -80,9 +81,9 @@ button.scrollDown {
   left: calc(50% - 1.75rem);
   z-index: 99999;
   border-radius: 5rem;
+  background-color: rgba(255, 255, 255, .5);
   backdrop-filter: blur(.9rem);
   -webkit-backdrop-filter: blur(.9rem);
-  background: transparent;
   border: none;
   font-size: 1.1rem;
   font-weight: bold;
