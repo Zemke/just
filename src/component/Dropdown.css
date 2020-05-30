@@ -46,8 +46,8 @@
 }
 
 .dropdown ul > li {
-  text-shadow: 0 0 0.2rem #151515;
-  color: snow;
+  text-shadow: 0 0 0.2rem snow;
+  color: #151515;
   text-align: center;
   padding: .7rem 1.5rem;
   white-space: nowrap;

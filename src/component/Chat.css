@@ -63,8 +63,8 @@
   margin-left: 1rem;
   border: none;
   background: transparent;
-  text-shadow: 0 0 0.2rem #151515;
-  color: snow;
+  text-shadow: 0 0 0.2rem snow;
+  color: #151515;
   font-size: 1.3rem;
   font-weight: bold;
   overflow: hidden;
@@ -74,7 +74,7 @@
 button.scrollDown {
   text-align: center;
   position: absolute;
-  color: snow;
+  color: #151515;
   bottom: 5rem;
   padding: .5rem 0;
   width: 3.5rem;
@@ -87,7 +87,7 @@ button.scrollDown {
   border: none;
   font-size: 1.1rem;
   font-weight: bold;
-  text-shadow: 0 0 .1rem #151515;
+  text-shadow: 0 0 .1rem snow;
 }
 
 button.scrollDown:focus {

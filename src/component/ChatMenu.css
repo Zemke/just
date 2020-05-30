@@ -11,12 +11,12 @@
 .chat > .head .hamburger > .dot1,
 .chat > .head .hamburger > .dot2,
 .chat > .head .hamburger > .dot3 {
-  background-color: snow;
+  background-color: #151515;
   display: block;
   width: .3rem;
   height: .3rem;
   margin-top: .2rem;
-  box-shadow: 0 0 0.2rem #151515;
+  box-shadow: 0 0 0.2rem snow;
   border-radius: 50%;
 }
 

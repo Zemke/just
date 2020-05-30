@@ -3,8 +3,8 @@
   backdrop-filter: blur(.9rem);
   -webkit-backdrop-filter: blur(.9rem);
   position: absolute;
-  text-shadow: 0 0 0.2rem #151515;
-  color: snow;
+  text-shadow: 0 0 0.2rem snow;
+  color: #151515;
   left: 0;
   right: 0;
   top: 0;
