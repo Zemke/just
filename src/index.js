@@ -5,7 +5,13 @@ import App from './component/App';
 import * as serviceWorker from './serviceWorker';
 
 // Are we running as an Electron app?
-const isElectronFromStorage = JSON.parse(window.localStorage.getItem('electron'));
+let isElectronFromStorage;
+try {
+  isElectronFromStorage = JSON.parse(window.localStorage.getItem('electron'));
+} catch (e) {
+  isElectronFromStorage = false;
+  window.localStorage.removeItem('electron');
+}
 const searchParam = new URLSearchParams(window.location.search).get('electron');
 window.electron = isElectronFromStorage || Boolean(Number(searchParam));
 window.localStorage.setItem('electron', JSON.stringify(window.electron));
