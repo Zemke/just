@@ -20,10 +20,17 @@ const template = (text, placeholder, submitButton, cancelButton) => {
 };
 
 const dialog = (onSubmit, onCancel, template) => {
-  let resolver;
-  const promise = new Promise(resolve => resolver = resolve);
   const container = document.getElementById('appendToBodyContainer')
   const elem = document.createElement('div');
+  const outsideClickListener = e =>
+    e.target.closest('.alert') == null && resolver(onCancel && onCancel());
+  document.addEventListener('click', outsideClickListener);
+  let resolver;
+  const promise = new Promise(resolve => resolver = res => {
+    elem.remove();
+    document.removeEventListener('click', outsideClickListener);
+    resolve(res);
+  });
   elem.classList.add('alertContainer');
   elem.innerHTML = template;
   container.appendChild(elem);
@@ -36,21 +43,13 @@ const dialog = (onSubmit, onCancel, template) => {
     alertSubmitElem && alertSubmitElem.focus();
   }
   const alertCancel = document.getElementById('alertCancel');
-  alertCancel && alertCancel.addEventListener('click', () => {
-    resolver(onCancel && onCancel());
-    elem.remove();
-  });
+  alertCancel && alertCancel.addEventListener('click', () =>
+    resolver(onCancel && onCancel()));
   const alertSubmit = document.getElementById('alertSubmit');
-  alertSubmit && alertSubmit.addEventListener('click', () => {
-    resolver(onSubmit && onSubmit())
-    elem.remove();
-  });
-  elem.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      resolver(onCancel && onCancel())
-      elem.remove();
-    }
-  });
+  alertSubmit && alertSubmit.addEventListener('click', () =>
+    resolver(onSubmit && onSubmit()));
+  elem.addEventListener('keydown', e =>
+    e.key === 'Escape' && resolver(onCancel && onCancel()));
   return promise;
 }
 
