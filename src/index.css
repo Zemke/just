@@ -103,3 +103,31 @@ p,
 button:hover {
   cursor: pointer;
 }
+
+.alertContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  z-index: 99999;
+  position: absolute;
+  margin-top: 4rem;
+}
+
+.alert {
+  margin-left: 2rem;
+  margin-right: 2rem;
+  background-color: #151515;
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: .3rem .3rem 2rem #151515;
+  color: #fffafa;
+}
+
+.alert button:focus {
+  outline: none;
+  box-shadow: 0 0 0.6rem #fffafa;
+}
+
+.alert .text {
+  margin-bottom: 1rem;
+}
