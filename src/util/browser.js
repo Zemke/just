@@ -62,7 +62,7 @@ export const prompt = (text, placeholder) =>
 export const alert = text =>
   dialog(null, null, template(text, null, "Okay", null));
 
-export const confirm = (text, placeholder) =>
+export const confirm = text =>
   dialog(
     () => true,
     () => false,
