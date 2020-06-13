@@ -91,6 +91,13 @@ export default function Chat(props) {
   }, [calcScrolledDown]);
 
   useEffect(() => {
+    if (!window.electron) return;
+    const notificationClickHandler = e => setOtherUser(e.detail);
+    window.addEventListener('notificationClick', notificationClickHandler)
+    return () => window.removeEventListener('notificationClick', notificationClickHandler)
+  });
+
+  useEffect(() => {
     if (!Peering.supported || !props.currentUser || incomingCall) return;
     let listenToCallRequestsSubscription;
     (async () => {
