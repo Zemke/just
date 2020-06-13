@@ -48,8 +48,10 @@ const dialog = (onSubmit, onCancel, template) => {
   const alertSubmit = document.getElementById('alertSubmit');
   alertSubmit && alertSubmit.addEventListener('click', () =>
     resolver(onSubmit && onSubmit()));
-  elem.addEventListener('keydown', e =>
-    e.key === 'Escape' && resolver(onCancel && onCancel()));
+  elem.addEventListener('keydown', e => {
+    e.stopPropagation();
+    e.key === 'Escape' && resolver(onCancel && onCancel());
+  });
   return promise;
 }
 
