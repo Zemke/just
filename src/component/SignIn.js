@@ -18,6 +18,7 @@ export default function SignInComponent(props) {
     const isStandalone = (window.matchMedia('(display-mode: standalone)').matches);
     return isSafari && isStandalone;
   });
+  const [isElectron] = useState(window.electron);
 
   useEffect(() => {
     Auth
@@ -98,7 +99,7 @@ export default function SignInComponent(props) {
               </div>
               <button type="submit" disabled={emailSending} className="form-control">Sign In</button>
             </form>
-            {isMobileSafariStandalone && (
+            {(isMobileSafariStandalone || isElectron) && (
               <form onSubmit={onSafariSubmit} className="margin-top">
                 <div>
                   <label>Paste the link you were sent here</label>
