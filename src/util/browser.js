@@ -8,7 +8,7 @@ const template = (text, placeholder, submitButton, cancelButton) => {
   const inputTemplate = placeholder !== null
     ? `<input placeholder="${placeholder}" autocomplete="off" type="text" class="form-control" id="alertValue"/>`
     : '';
-  const templates = `
+  return `
 <div class="alert">
   <div class="text">${text}</div>
   <form>
@@ -17,7 +17,6 @@ const template = (text, placeholder, submitButton, cancelButton) => {
   </form>
 </div>
 `;
-  return templates;
 };
 
 const dialog = (onSubmit, onCancel, template) => {
