@@ -120,7 +120,7 @@ function ContentEditable(props, ref) {
       return false;
     } else if (e.key === 'Enter' && !e.shiftKey && !(isMobileJustDevice.current)) {
       e.preventDefault();
-      e.target.closest('form').dispatchEvent(new Event('submit'));
+      e.target.closest('form').dispatchEvent(new Event('submit', {cancelable: true}));
     }
   };
 
