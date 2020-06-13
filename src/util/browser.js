@@ -45,6 +45,12 @@ const dialog = (onSubmit, onCancel, template) => {
     resolver(onSubmit && onSubmit())
     elem.remove();
   });
+  elem.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      resolver(onCancel && onCancel())
+      elem.remove();
+    }
+  });
   return promise;
 }
 
