@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import DataStore from '../util/dataStore';
 import Close from "./Close";
+import {alert} from "../util/browser";
 
 export default function EnterAnotherCode(props) {
 
@@ -12,7 +13,7 @@ export default function EnterAnotherCode(props) {
     e.preventDefault();
 
     if (anotherCode === props.currentUser.uid) {
-      alert("This is your own code. Please, get a another person’s code.");
+      await alert("This is your own code. Please, get a another person’s code.");
       return;
     }
 

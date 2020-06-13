@@ -7,6 +7,7 @@ import './Foot.css';
 import randomString from "../util/randomString";
 import VideoChat from "./VideoChat";
 import * as firebase from "firebase";
+import {alert} from "../util/browser";
 
 export default function Foot(props) {
 
@@ -75,8 +76,8 @@ export default function Foot(props) {
         body: null,
         location: new firebase.firestore.GeoPoint(latitude, longitude)
       });
-    }, () => {
-      alert('Could not get your current location for sending.');
+    }, async () => {
+      await alert('Could not get your current location for sending.');
     }, {enableHighAccuracy: true});
   };
 

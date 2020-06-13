@@ -15,6 +15,7 @@ import toName from '../util/toName';
 import Overlay from "./Overlay";
 import getUserMedia from "../util/getUserMedia";
 import ResizeObserver from 'resize-observer-polyfill';
+import {alert} from "../util/browser";
 
 export default function Chat(props) {
 
@@ -154,7 +155,7 @@ export default function Chat(props) {
   }, [otherUser]);
 
   const deleteChat = async () => {
-    alert("The chat with that user is being deleted in the background. " +
+    await alert("The chat with that user is being deleted in the background. " +
       "It might take some time and the chat will just vanish once the deed is done.");
     await DataStore.deleteChatWithUser(otherUser);
   };

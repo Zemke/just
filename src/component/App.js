@@ -8,7 +8,6 @@ import Start from './Start';
 import Chat from "./Chat";
 import MessageUtils from "../util/messageUtils";
 import webNotifications from '../util/webNotification';
-import {prompt, alert, confirm} from '../util/browser';
 
 export default function App() {
 
