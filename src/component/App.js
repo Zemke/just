@@ -8,6 +8,7 @@ import Start from './Start';
 import Chat from "./Chat";
 import MessageUtils from "../util/messageUtils";
 import webNotifications from '../util/webNotification';
+import toName from "../util/toName";
 
 export default function App() {
 
@@ -17,6 +18,7 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [initMessages, setInitMessages] = useState(false);
   const [otherUser, setOtherUser] = useState(null);
+  const [names] = useState(DataStore.getCachedNames);
 
   useEffect(() => {
     Auth
@@ -77,6 +79,12 @@ export default function App() {
             message._hasPendingWrites = doc.metadata.hasPendingWrites;
             if (message.to === currentUser.uid && !message.delivered) {
               DataStore.setDelivered(doc.ref);
+              if (window.electron && (!document.hasFocus() || window.location.pathname.substr(1) !== message.from)) {
+                new Notification(toName(message.from, names), {
+                  body: message.body,
+                  data: {fromUserUid: message.from}
+                })
+              }
             }
             const existsAtIdx = acc.findIndex(m => m.id === doc.id);
             existsAtIdx === -1

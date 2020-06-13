@@ -147,7 +147,7 @@ export default function Chat(props) {
       api.onTokenRefresh(DataStore.saveToken);
       api.onMessage(({data}) =>
         (document.hidden || data.fromUid !== otherUser)
-        && webNotifications.notify(data.fromName, data.body, {fromUserUid: data.fromUid}));
+          && webNotifications.notify(data.fromName, data.body, {fromUserUid: data.fromUid}));
     }), [otherUser, props.currentUser]);
 
   useEffect(() => {
