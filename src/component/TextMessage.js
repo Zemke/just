@@ -85,7 +85,7 @@ export default React.memo(({body}) => {
         )}
       </div>
       <div className="previews">
-        {previews.map((preview, idx) => (
+        {previews.filter(p => p.url).map((preview, idx) => (
           <div key={idx}
                className={'preview' + (Object.keys(preview).length === 2 ? ' full' : '')}>
             <a href={preview.url} target="_blank">
@@ -102,7 +102,7 @@ export default React.memo(({body}) => {
             </a>
           </div>
         ))}
-        {!!previews.find(p => !!p.guteUrl) && (
+        {!!previews.filter(p => p.url).find(p => !!p.guteUrl) && (
           <div className="attribution preview">
             Powered by <a href="https://guteurls.de/">URL Preview Service</a>
           </div>
