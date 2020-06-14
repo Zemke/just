@@ -53,10 +53,13 @@
   left: 0;
   right: 0;
   z-index: 999;
-  padding-top: 1rem;
   background-color: rgba(255, 255, 255, .5);
   backdrop-filter: blur(.5rem);
   -webkit-backdrop-filter: blur(.5rem);
+}
+
+body.electron .chat > .head {
+  padding-top: 1rem;
 }
 
 body.electron .chat > .head {
@@ -70,7 +73,7 @@ body.electron .chat > .head .hamburger {
 
 .chat > .head .changeChat .otherUser {
   padding: .8rem 0;
-  margin-left: .55rem;
+  margin-left: 1rem;
   border: none;
   background: transparent;
   text-shadow: 0 0 0.2rem snow;
@@ -79,6 +82,10 @@ body.electron .chat > .head .hamburger {
   font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+body.electron .chat > .head .changeChat .otherUser {
+  margin-left: .55rem;
 }
 
 button.scrollDown {

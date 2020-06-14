@@ -11,12 +11,16 @@
   display: inline-block;
   z-index: 1;
   max-width: 60%;
-  margin: .1rem .4rem .1rem .55rem;
+  margin: .1rem .4rem .1rem 1rem;
   padding: .1rem .4rem;
   background: transparent;
   font-size: .9rem;
   border-radius: .7rem;
   overflow: hidden;
+}
+
+body.electron .chat > .body .message {
+  margin-left: .55rem;
 }
 
 .chat > .body .message.image {
