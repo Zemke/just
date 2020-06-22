@@ -16,7 +16,10 @@ const LinkifyWrapper = React.memo(props => {
     } else {
       fetch(`https://guteurls.de/api/?u=${props.href}&r=https://just.zemke.io/&e=florian@zemke.io&t=json`)
         .then(response => response.json())
-        .then(json => emitEvent({...json, guteUrl: true}));
+        .then(json => {
+          json.img && (json.img = json.img.replace('&amp;', '&'));
+          emitEvent({...json, guteUrl: true});
+        });
     }
   }, [props.href]);
 
