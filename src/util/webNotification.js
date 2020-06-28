@@ -13,7 +13,7 @@ api.notify = async (title, body, data) => {
 };
 
 api.notifyStandalone = (title, {body, image}, data) => {
-  const notification = new Notification(title, {body: body || image ? '📷' : '', data});
+  const notification = new Notification(title, {body: body || (image ? '📷' : ''), data});
   notification.onclick = e =>
     dispatchEvent(new CustomEvent('notificationClick', {detail: e.target.data.fromUserUid}));
 }
