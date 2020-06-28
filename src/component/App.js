@@ -80,12 +80,10 @@ export default function App() {
             if (message.to === currentUser.uid && !message.delivered) {
               DataStore.setDelivered(doc.ref);
               if (window.electron && (!document.hasFocus() || window.location.pathname.substr(1) !== message.from)) {
-                const notification = new Notification(toName(message.from, names), {
-                  body: message.body,
-                  data: {fromUserUid: message.from}
-                });
-                notification.onclick = e =>
-                  dispatchEvent(new CustomEvent('notificationClick', {detail: e.target.data.fromUserUid}))
+                webNotifications.notifyStandalone(
+                  toName(message.from, names),
+                  message,
+                  {fromUserUid: message.from});
               }
             }
             const existsAtIdx = acc.findIndex(m => m.id === doc.id);

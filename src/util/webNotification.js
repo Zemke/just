@@ -12,4 +12,10 @@ api.notify = async (title, body, data) => {
     title, {body, icon: '/logo192.png', badge: 'https://just.zemke.io/badge.png', data});
 };
 
+api.notifyStandalone = (title, {body, image}, data) => {
+  const notification = new Notification(title, {body: body || image ? '📷' : '', data});
+  notification.onclick = e =>
+    dispatchEvent(new CustomEvent('notificationClick', {detail: e.target.data.fromUserUid}));
+}
+
 export default api;
