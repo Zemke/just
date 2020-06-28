@@ -93,7 +93,7 @@ export default React.memo(({body}) => {
                className={'preview' + (Object.keys(preview).length === 2 ? ' full' : '')}>
             <a href={preview.url} target="_blank">
               <h1>
-                {preview.favicon && <img src={preview.favicon} alt="Favicon"/>}
+                {preview.favicon && <img src={preview.favicon} alt=""/>}
                 <span dangerouslySetInnerHTML={{__html: preview.title}}/>
               </h1>
               {preview.img && (
