@@ -7,7 +7,7 @@ import DataStore from "../util/dataStore";
 export default function ChatSelect(props) {
 
   const [otherUserName, setOtherUserName] = useState('');
-  const [dropdownTrigger, setDropdownTrigger] = useState(null);
+  consgt [dropdownTrigger, setDropdownTrigger] = useState(null);
   const [names, setNames] = useState(DataStore.getCachedNames);
 
   useEffect(() => {
@@ -25,6 +25,24 @@ export default function ChatSelect(props) {
       });
     return async () => (await onNamesSubscription)();
   }, [props.currentUser]);
+
+  useEffect(() => {
+    const keydownListener = e => {
+      const currFixedListUsers = [props.otherUser, ...props.otherUsers].sort();
+      const currUserIdx = currFixedListUsers.indexOf(props.otherUser);
+      let nextUser;
+      if (e.altKey === true && e.ctrlKey === true) {
+        if (e.key === 'ArrowUp') {
+          nextUser = currFixedListUsers[currUserIdx - 1];
+        } else if (e.key === 'ArrowDown') {
+          nextUser = currFixedListUsers[currUserIdx + 1];
+        }
+        nextUser != null && props.onSelect(nextUser);
+      }
+    };
+    document.addEventListener('keydown', keydownListener)
+    return () => document.removeEventListener('keydown', keydownListener);
+  }, [props]);
 
   return (<>
     {props.otherUsers.length > 0 ? (
