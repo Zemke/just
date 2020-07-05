@@ -7,7 +7,7 @@ import DataStore from "../util/dataStore";
 export default function ChatSelect(props) {
 
   const [otherUserName, setOtherUserName] = useState('');
-  consgt [dropdownTrigger, setDropdownTrigger] = useState(null);
+  const [dropdownTrigger, setDropdownTrigger] = useState(null);
   const [names, setNames] = useState(DataStore.getCachedNames);
 
   useEffect(() => {
