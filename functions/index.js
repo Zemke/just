@@ -248,3 +248,11 @@ async function performInBatches(subjects, onEach) {
 
   return await Promise.all(promises);
 }
+
+exports.createCustomToken = functions.https.onCall(async (data, context) => {
+  const userUid = data['userUid'];
+  if (userUid == null) {
+    return "userUid not found in payload";
+  }
+  return {customToken: await admin.auth().createCustomToken(userUid)};
+});
