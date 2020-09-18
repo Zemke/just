@@ -1,6 +1,6 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-admin.initializeApp();
+admin.initializeApp({credential: admin.credential.applicationDefault()});
 
 exports.sendMessageNotification = functions.firestore
   .document('messages/{messageId}')
@@ -36,19 +36,46 @@ exports.sendMessageNotification = functions.firestore
           ? nameDoc.data()[message.from] || message.from
           : message.from);
 
-    const notification = {
+    const data = {
       fromName: otherUserName,
       fromUid: message.from,
       body: message.body,
       message: JSON.stringify(message)
     };
 
-    console.log(`Sending to ${tokens.length} tokens:`, notification);
+    console.log(`Sending to ${tokens.length} tokens:`, data);
 
-    const response = await admin.messaging()
-      .sendToDevice(tokens, {data: notification});
+    const notification = {
+      title: data.fromName,
+      body: data.body,
+    };
 
-    const tokensToRemove = response.results
+    const {responses} = await admin.messaging()
+      .sendMulticast({
+        tokens,
+        data,
+        notification,
+        apns: {
+          payload: {
+            aps: {
+              mutableContent: true,
+              contentAvailable: true,
+            },
+          },
+          headers: {
+            'apns-push-type': 'background',
+            'apns-priority': '5',
+            'apns-topic': 'org.name.justnative'
+          }
+        },
+        android: {
+          data,
+          notification,
+          priority: 'high'
+        },
+      });
+
+    const tokensToRemove = responses
       .filter(({error}) =>
         !!error
           && (error.code === 'messaging/invalid-registration-token'
@@ -58,7 +85,7 @@ exports.sendMessageNotification = functions.firestore
 
     if (!tokensToRemove.length) {
       console.log('There are no invalid tokens to remove');
-      return Promise.resolve(notification);
+      return Promise.resolve(data);
     }
 
     console.log(`There are ${tokensToRemove.length} invalid tokens to remove.`);
@@ -66,7 +93,7 @@ exports.sendMessageNotification = functions.firestore
     await userDoc.ref
       .update({tokens: admin.firestore.FieldValue.arrayRemove(...tokensToRemove)});
 
-    return Promise.resolve(notification);
+    return Promise.resolve(data);
   });
 
 
