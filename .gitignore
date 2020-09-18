@@ -41,5 +41,3 @@ firestore-debug.log
 
 # End of https://www.gitignore.io/api/firebase
 
-functions/just-android.json
-
