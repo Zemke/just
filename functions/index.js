@@ -1,6 +1,11 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-admin.initializeApp();
+const defaultApp = admin.initializeApp();
+
+const androidApp = admin.initializeApp({
+  credential: admin.credential.cert(require("./just-android.json")),
+  databaseURL: "https://just-android-d142e.firebaseio.com"
+}, 'android');
 
 exports.sendMessageNotification = functions.firestore
   .document('messages/{messageId}')
@@ -45,29 +50,46 @@ exports.sendMessageNotification = functions.firestore
 
     console.log(`Sending to ${tokens.length} tokens:`, notification);
 
-    const response = await admin.messaging()
-      .sendToDevice(tokens, {data: notification});
+    console.log(`Sending to default app`);
+    await sendToDevice(notification, tokens, userDoc, defaultApp);
 
-    const tokensToRemove = response.results
-      .filter(({error}) =>
-        !!error
-          && (error.code === 'messaging/invalid-registration-token'
-          || error.code === 'messaging/registration-token-not-registered'))
-      .map((res, idx) => tokens[idx]);
-
-
-    if (!tokensToRemove.length) {
-      console.log('There are no invalid tokens to remove');
-      return Promise.resolve(notification);
-    }
-
-    console.log(`There are ${tokensToRemove.length} invalid tokens to remove.`);
-
-    await userDoc.ref
-      .update({tokens: admin.firestore.FieldValue.arrayRemove(...tokensToRemove)});
+    console.log(`Sending to android app`);
+    await sendToDevice(notification, tokens, userDoc, androidApp);
 
     return Promise.resolve(notification);
   });
+
+async function sendToDevice(notification, tokens, userDoc, app) {
+  console.log('notification.fromName', notification.fromName);
+
+  const response = await admin.messaging(app)
+    .sendToDevice(
+      tokens, {
+        data: notification,
+        notification: {
+          title: notification.fromName,
+          body: notification.body,
+        }
+      });
+
+  const tokensToRemove = response.results
+    .filter(({error}) =>
+      !!error
+      && (error.code === 'messaging/invalid-registration-token'
+      || error.code === 'messaging/registration-token-not-registered'))
+    .map((res, idx) => tokens[idx]);
+
+
+  if (!tokensToRemove.length) {
+    console.log('There are no invalid tokens to remove');
+    return Promise.resolve(notification);
+  }
+
+  console.log(`There are ${tokensToRemove.length} invalid tokens to remove.`);
+
+  await userDoc.ref
+    .update({tokens: admin.firestore.FieldValue.arrayRemove(...tokensToRemove)});
+}
 
 
 exports.createMessageForFile = functions.storage.object().onFinalize(async object => {
