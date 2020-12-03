@@ -33,6 +33,17 @@ body.electron .chat > .body .message {
   font-size: 4rem;
 }
 
+.chat > .body .message div.onlyEmoji.heartEmoji {
+  animation: pulse 1s infinite ease-out;
+  margin: .6rem;
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.2);
+  }
+}
+
 .chat > .body .message-container {
   position: relative;
   overflow: visible;
