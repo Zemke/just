@@ -6,4 +6,4 @@ There’s no registration, no syncing with your address book or sharing your pho
 
 Peer-to-peer video and voice calls, GIF sharing, image sharing, camera support, advanced link sharing, share from other Apps (on Android), location sharing, message reactions (tapbacks), Markdown inline and block code formatting, large emoji, Push notifications (on Android and Desktop) and much more.
 
-<img src="https://user-images.githubusercontent.com/3391981/81665264-cb6da600-9440-11ea-9dc0-497ef32f2007.png" width="350">
+<img width="479" alt="just" src="https://user-images.githubusercontent.com/3391981/148099431-d174201d-5d31-4d06-a6ba-eab417d9ed9f.png">
